@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+/**
+ * License: GPL
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License 2
+ * as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ */
+ -->
+<?import javafx.scene.effect.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="350.0" prefWidth="511.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="es.ubu.lsi.perikymata.vista.ImageSelectionController">
+   <children>
+      <SplitPane dividerPositions="0.5" layoutX="26.0" layoutY="24.0" prefHeight="302.0" prefWidth="464.0" AnchorPane.bottomAnchor="24.0" AnchorPane.leftAnchor="26.0" AnchorPane.rightAnchor="21.0" AnchorPane.topAnchor="24.0">
+         <items>
+            <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="300.0" prefWidth="209.0">
+               <children>
+                  <ListView fx:id="filesListView" prefHeight="226.0" prefWidth="228.0" AnchorPane.bottomAnchor="74.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                  <HBox layoutY="226.0" maxWidth="1.7976931348623157E308" prefHeight="25.0" spacing="5.0" AnchorPane.bottomAnchor="49.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                     <children>
+                        <Button alignment="CENTER" contentDisplay="CENTER" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleRemoveImage" text="Delete from list" HBox.hgrow="ALWAYS" />
+                        <Button alignment="CENTER" contentDisplay="CENTER" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleOpenMultiple" text="Load image pieces" HBox.hgrow="ALWAYS" />
+                     </children>
+                  </HBox>
+                  <HBox layoutY="251.0" prefHeight="25.0" prefWidth="255.0" AnchorPane.bottomAnchor="24.0" AnchorPane.leftAnchor="0.0">
+                     <children>
+                        <Label prefHeight="17.0" prefWidth="36.0" text="Status:" />
+                        <Label fx:id="status" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="17.0" prefWidth="130.0" text="None     " />
+                        <ImageView fx:id="loading" fitHeight="25.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true" />
+                     </children>
+                  </HBox>
+                  <Button alignment="CENTER" contentDisplay="CENTER" layoutX="67.0" layoutY="277.0" mnemonicParsing="false" onAction="#launchStitcher" prefHeight="25.0" prefWidth="200.0" text="Generate full image" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+               </children>
+            </AnchorPane>
+            <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="300.0" prefWidth="209.0">
+               <children>
+                  <Pane prefHeight="219.0" prefWidth="228.0" AnchorPane.bottomAnchor="81.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <children>
+                        <ImageView fx:id="previewImage" pickOnBounds="true" preserveRatio="true">
+                           <viewport>
+                              <Rectangle2D />
+                           </viewport>
+                        </ImageView>
+                     </children>
+                  </Pane>
+                  <Button mnemonicParsing="false" onAction="#handleRotate" text="Rotate 90º" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                  <Button alignment="CENTER" contentDisplay="CENTER" layoutX="-14.0" layoutY="225.0" mnemonicParsing="false" onMouseClicked="#handleOpen" prefHeight="25.0" prefWidth="200.0" text="Load full image" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+                  <Button alignment="CENTER" contentDisplay="CENTER" layoutY="261.0" mnemonicParsing="false" onAction="#nextScreen" prefHeight="25.0" prefWidth="200.0" text="Save project and continue" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+               </children>
+            </AnchorPane>
+         </items>
+      </SplitPane>
+   </children>
+</AnchorPane>
