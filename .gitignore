@@ -12,3 +12,5 @@ hs_err_pid*
 /bin/
 /sonar-project.properties
 /config.properties
+
+*.log

@@ -1,6 +1,10 @@
 #include < stdio.h >  
 #include < opencv2\opencv.hpp >  
 #include < opencv2\stitching\stitcher.hpp >
+/* AMT Includes for Linux 30/01/2017
+ * #include </usr/local/include/opencv2/opencv.hpp>
+ * #include </usr/local/include/opencv2/stitching/stitcher.hpp>
+ */
 
 #ifdef _DEBUG  
 #pragma comment(lib, "opencv_core2411d.lib")   
