@@ -202,7 +202,7 @@ public class MainApp extends Application {
 			while (!cont) {
 				Alert alert = new Alert(AlertType.CONFIRMATION);
 				alert.setTitle("A project needs to be open.");
-				alert.setHeaderText("You need to open o create a new project to continue.");
+				alert.setHeaderText("You need to open or create a new project to continue.");
 				alert.setContentText("Cancel will close the application.");
 
 				ButtonType buttonTypeNew = new ButtonType("New Project");
@@ -237,7 +237,8 @@ public class MainApp extends Application {
 			m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 
 			// Marshalling and saving XML to the file.
-			File projectXMLfile = new File(parent.toString() + "\\" + parent.getName() + ".xml");
+			//AMT Changed folder structure creation 30/01/2017
+			File projectXMLfile = new File(parent.toString() + File.separator + parent.getName() + ".xml");
 			m.marshal(getProject(), projectXMLfile);
 
 			// Save the file path to the registry.
@@ -569,9 +570,10 @@ public class MainApp extends Application {
 
 			// Makes the folder structure.
 			file.mkdir();
-			new File(file.toString() + "\\Fragments").mkdir();
-			new File(file.toString() + "\\Full_Image").mkdir();
-			new File(file.toString() + "\\Perikymata_Outputs").mkdir();
+			//AMT Changed folder structure creation 30/01/2017
+			new File(file.toString() + File.separator + "Fragments").mkdir();
+			new File(file.toString() + File.separator + "Full_Image").mkdir();
+			new File(file.toString() + File.separator + "Perikymata_Outputs").mkdir();
 			setProjectPath(file.getPath());
 			// Creates the XML project file.
 
