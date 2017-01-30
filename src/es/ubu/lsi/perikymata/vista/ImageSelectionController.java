@@ -211,7 +211,7 @@ public class ImageSelectionController {
 	}
 
 	/**
-	 * Handler runs the OpenCV code to Stitch images toguether.
+	 * Handler runs the OpenCV code to Stitch images together.
 	 */
 	@FXML
 	private void launchStitcher() {
@@ -228,7 +228,15 @@ public class ImageSelectionController {
 						.forEach(x -> tempList.add(Paths.get(mainApp.getProjectPath(), "Fragments", x).toString()));
 				for (String i : tempList)
 					tempString.append(" " + i);
-				Process stitcher = Runtime.getRuntime().exec("rsc/stitching/bin/Stitching.exe" + " "
+				//AMT 30/01/2017 Select Stitching executable depending on OS				
+				String executablePath;
+				if (System.getProperty("os.name").toUpperCase().contains("WIN")){
+					executablePath="rsc/stitching/bin/Stitching.exe";
+				}
+				else{
+					executablePath="./rsc/stitching/bin/Stitching.ubu";
+				}					
+				Process stitcher = Runtime.getRuntime().exec(executablePath + " "
 						+ Paths.get(mainApp.getProjectPath(), "Full_Image", "Full_Image.png") + " " + tempString);
 				int ok;
 				// OK exit code is 1.
