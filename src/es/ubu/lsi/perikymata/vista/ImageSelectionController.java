@@ -231,7 +231,7 @@ public class ImageSelectionController {
 				//AMT 30/01/2017 Select Stitching executable depending on OS				
 				String executablePath;
 				if (System.getProperty("os.name").toUpperCase().contains("WIN")){
-					executablePath="rsc/stitching/bin/Stitching.exe";
+					executablePath="rsc/stitching/bin/Stitching32.exe";
 				}
 				else{
 					executablePath="./rsc/stitching/bin/Stitching.ubu";

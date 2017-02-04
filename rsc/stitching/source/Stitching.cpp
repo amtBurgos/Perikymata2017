@@ -6,18 +6,7 @@
  * #include </usr/local/include/opencv2/stitching/stitcher.hpp>
  */
 
-#ifdef _DEBUG  
-#pragma comment(lib, "opencv_core2411d.lib")   
-#pragma comment(lib, "opencv_imgproc2411d.lib")   //MAT processing  
-#pragma comment(lib, "opencv_highgui2411d.lib")  
-#pragma comment(lib, "opencv_stitching2411d.lib")
-
-#else  
-#pragma comment(lib, "opencv_core2411.lib")  
-#pragma comment(lib, "opencv_imgproc2411.lib")  
-#pragma comment(lib, "opencv_highgui2411.lib")  
-#pragma comment(lib, "opencv_stitching2411.lib")
-#endif  
+//Using staticlib from OpenCV 2.4.11 with Visual Studio 2013
 
 using namespace cv;
 using namespace std;
