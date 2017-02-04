@@ -232,9 +232,14 @@ public class ImageSelectionController {
 				String executablePath;
 				if (System.getProperty("os.name").toUpperCase().contains("WIN")){
 					executablePath="rsc/stitching/bin/Stitching32.exe";
+					System.out.println(System.getProperty("os.arch"));
 				}
 				else{
-					executablePath="./rsc/stitching/bin/Stitching.ubu";
+					if(System.getProperty("os.arch").contains("64")){
+						executablePath="./rsc/stitching/bin/Stitching64Dinamic.ubu";
+					}else{
+						executablePath="./rsc/stitching/bin/Stitching32Dinamic.ubu";
+					}
 				}					
 				Process stitcher = Runtime.getRuntime().exec(executablePath + " "
 						+ Paths.get(mainApp.getProjectPath(), "Full_Image", "Full_Image.png") + " " + tempString);
