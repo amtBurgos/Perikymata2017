@@ -19,6 +19,8 @@ package es.ubu.lsi.perikymata.vista;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -228,16 +230,7 @@ public class ImageSelectionController {
 						.forEach(x -> tempList.add(Paths.get(mainApp.getProjectPath(), "Fragments", x).toString()));
 				for (String i : tempList)
 					tempString.append(" " + i);
-				//AMT 30/01/2017 Select Stitching executable depending on OS				
-				String executablePath;
-				if (System.getProperty("os.name").toUpperCase().contains("WIN")){
-					executablePath="rsc/stitching/bin/Stitching32.exe";
-				}
-				else{
-					executablePath="./rsc/stitching/bin/Stitching.ubu";
-				}					
-				Process stitcher = Runtime.getRuntime().exec(executablePath + " "
-						+ Paths.get(mainApp.getProjectPath(), "Full_Image", "Full_Image.png") + " " + tempString);
+				Process stitcher = Runtime.getRuntime().exec(getTempStitchingPath(tempString));
 				int ok;
 				// OK exit code is 1.
 				if ((ok = stitcher.waitFor()) == 1) {
@@ -276,6 +269,47 @@ public class ImageSelectionController {
 				mainApp.getRootLayout().setDisable(false);
 			}
 		}).start();
+	}
+
+	private String getTempStitchingPath(StringBuilder tempString) {
+		// AMT 07/02/2017 Select Stitching executable from resources depending
+		// Host OS
+		String resourcePath = "/rsc/stitching/bin/";
+		File stitchingTemp;
+		String tempStitchingPath = "";
+		try {
+			if (System.getProperty("os.name").toUpperCase().contains("WIN")) {
+				resourcePath += "Stitching32.exe";
+				stitchingTemp = File.createTempFile("Stitching32", ".exe");
+			} else {
+				if (System.getProperty("os.arch").contains("64")) {
+					resourcePath += "Stitching64Dinamic.ubu";
+					stitchingTemp = File.createTempFile("Stitching64Dinamic", ".ubu");
+				} else {
+					resourcePath += "Stitching32Dinamic.ubu";
+					stitchingTemp = File.createTempFile("Stitching32Dinamic", ".ubu");
+				}
+			}
+			BufferedInputStream stitchingInput = new BufferedInputStream(
+					MainApp.class.getResourceAsStream(resourcePath));
+			BufferedOutputStream stitchingOutput = new BufferedOutputStream(new FileOutputStream(stitchingTemp));
+			byte[] bytes = new byte[2048];
+			int i = stitchingInput.read(bytes);
+			while (i > 0) {
+				stitchingOutput.write(bytes, 0, i);
+				i = stitchingInput.read(bytes);
+			}
+			stitchingInput.close();
+			stitchingOutput.close();
+			stitchingTemp.deleteOnExit();
+			stitchingTemp.setExecutable(true, false);
+			tempStitchingPath = stitchingTemp.toString() + " "
+					+ Paths.get(mainApp.getProjectPath(), "Full_Image", "Full_Image.png") + " " + tempString;
+			return tempStitchingPath;
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return tempStitchingPath;
 	}
 
 	/**
