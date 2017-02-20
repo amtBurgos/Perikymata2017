@@ -22,6 +22,7 @@ import java.awt.image.BufferedImage;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -30,6 +31,7 @@ import java.util.ArrayList;
 
 import java.util.List;
 import java.util.logging.Level;
+import java.util.regex.Pattern;
 
 import es.ubu.lsi.perikymata.MainApp;
 import ij.io.Opener;
@@ -228,25 +230,57 @@ public class ImageSelectionController {
 				StringBuilder tempString = new StringBuilder();
 				mainApp.getFilesList()
 						.forEach(x -> tempList.add(Paths.get(mainApp.getProjectPath(), "Fragments", x).toString()));
-				for (String i : tempList)
-					tempString.append(" " + i);
+				for (String i : tempList) {
+					// AMT comprobar cada path y ver si hay espacios
+					tempString.append(" " + checkPath(i));
+					// tempString.append(" " + i);
+				}
 				Process stitcher = Runtime.getRuntime().exec(getTempStitchingPath(tempString));
 				int ok;
 				// OK exit code is 1.
 				if ((ok = stitcher.waitFor()) == 1) {
 
-					java.awt.Image full = new Opener()
-							.openImage(Paths.get(mainApp.getProjectPath(), "Full_Image", "Full_Image.png").toString())
-							.getImage();
+					// Copiar imagen a carpeta
+					File tempFullImage = new File(System.getProperty("java.io.tmpdir") + "Full_Image.png");
+					File finalFullImage = new File(
+							Paths.get(mainApp.getProjectPath(), "Full_Image", "Full_Image.png").toString());
 
-					changeStatus("Stitching completed!");
-					loading.setVisible(false);
-					mainApp.getRootLayout().setDisable(false);
-					Platform.runLater(() -> {
-						mainApp.setFullImage(SwingFXUtils.toFXImage((BufferedImage) full, null));
-						this.previewImage.setImage(SwingFXUtils.toFXImage((BufferedImage) full, null));
-						mainApp.setFilteredImage(SwingFXUtils.toFXImage((BufferedImage) full, null));
-					});
+					boolean copied = copyFile(tempFullImage, finalFullImage, true, false);
+
+					// BufferedInputStream source = new BufferedInputStream(new
+					// FileInputStream(tempFullImage));
+					// BufferedOutputStream target = new
+					// BufferedOutputStream(new
+					// FileOutputStream(finalFullImage));
+					// byte[] bytes = new byte[2048];
+					// int i = source.read(bytes);
+					// while (i > 0) {
+					// target.write(bytes, 0, i);
+					// i = source.read(bytes);
+					// }
+					// source.close();
+					// target.close();
+					//
+					// finalFullImage.setReadable(true, false);
+					// tempFullImage.deleteOnExit();
+
+					if (copied) {
+						java.awt.Image full = new Opener()
+								.openImage(
+										Paths.get(mainApp.getProjectPath(), "Full_Image", "Full_Image.png").toString())
+								.getImage();
+
+						changeStatus("Stitching completed!");
+						loading.setVisible(false);
+						mainApp.getRootLayout().setDisable(false);
+						Platform.runLater(() -> {
+							mainApp.setFullImage(SwingFXUtils.toFXImage((BufferedImage) full, null));
+							this.previewImage.setImage(SwingFXUtils.toFXImage((BufferedImage) full, null));
+							mainApp.setFilteredImage(SwingFXUtils.toFXImage((BufferedImage) full, null));
+						});
+					} else {
+						changeStatus("Failed to load full image");
+					}
 				} else {
 					changeStatus("Stitching failed.");
 					loading.setVisible(false);
@@ -271,10 +305,111 @@ public class ImageSelectionController {
 		}).start();
 	}
 
+	/**
+	 * Check if a path has whitespace.
+	 * 
+	 * @param path
+	 * @return path fixed with double quotes
+	 */
+	private String checkPath(String path) {
+		String fragmentPath = path;
+		if (path.contains(" ")) {
+			if (System.getProperty("java.io.tmpdir").contains(" ")) {
+				// TODO Preguntar por una carpeta temporal que no tenga espacios
+			} else {
+				String[] nameAndExtension = getImageNameAndExtension(path);
+				try {
+					File tempFragment = File.createTempFile(nameAndExtension[0], "." + nameAndExtension[1]);
+					File staticFragment = new File(path);
+					copyFile(staticFragment, tempFragment, false, true);
+					fragmentPath = tempFragment.getAbsolutePath();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return fragmentPath;
+	}
+
+	/**
+	 * /** Copy a file. Delete source file if success.
+	 * 
+	 * @param sourceFile
+	 *            source file
+	 * @param targetFile
+	 *            target file
+	 * @param deleteSource
+	 *            true if the source must be deleted when JVM ends.
+	 * @param deleteTarget
+	 *            true if the target must be deleted when JVM ends.
+	 * @return true/false if success
+	 */
+	private boolean copyFile(File sourceFile, File targetFile, boolean deleteSource, boolean deleteTarget) {
+		boolean copied = false;
+		BufferedInputStream source;
+		BufferedOutputStream target;
+		try {
+			source = new BufferedInputStream(new FileInputStream(sourceFile));
+			target = new BufferedOutputStream(new FileOutputStream(targetFile));
+			byte[] bytes = new byte[2048];
+			int i = source.read(bytes);
+			while (i > 0) {
+				target.write(bytes, 0, i);
+				i = source.read(bytes);
+			}
+			source.close();
+			target.close();
+			if (deleteSource == true) {
+				sourceFile.deleteOnExit();
+			}
+			if (deleteTarget == true) {
+				targetFile.deleteOnExit();
+			}
+			targetFile.setReadable(true, false);
+			copied = true;
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return copied;
+	}
+
+	/**
+	 * Get the name and extension of the image.
+	 * 
+	 * @param path
+	 *            of the image
+	 * @return string array with the name and extension of the image
+	 */
+	private String[] getImageNameAndExtension(String path) {
+		String[] splittedFileName = path.split(Pattern.quote(System.getProperty("file.separator")));
+		String[] nameAndExtension = splittedFileName[splittedFileName.length - 1].split(Pattern.quote("."));
+		return nameAndExtension;
+	}
+
+	/**
+	 * Check if a folder can be used as temporary folder
+	 * 
+	 * @param path
+	 *            of the folder to be checked
+	 * @return true/false
+	 */
+	private boolean checkTempFolder(String path) {
+		// TODO Comprobar que no hay espacios Comprobar que se puede leer y
+		// escribir
+		return true;
+	}
+
+	/**
+	 * Create the command which will be execute.
+	 * 
+	 * @param tempString
+	 *            string with the path of the different image fragments
+	 * @return string to be execute
+	 */
 	private String getTempStitchingPath(StringBuilder tempString) {
 		// AMT 07/02/2017 Select Stitching executable from resources depending
 		// Host OS
-		String resourcePath = "/rsc/stitching/bin/";
+		String resourcePath = "rsc/stitching/bin/";
 		File stitchingTemp;
 		String tempStitchingPath = "";
 		try {
@@ -290,21 +425,13 @@ public class ImageSelectionController {
 					stitchingTemp = File.createTempFile("Stitching32Dinamic", ".ubu");
 				}
 			}
-			BufferedInputStream stitchingInput = new BufferedInputStream(
-					MainApp.class.getResourceAsStream(resourcePath));
-			BufferedOutputStream stitchingOutput = new BufferedOutputStream(new FileOutputStream(stitchingTemp));
-			byte[] bytes = new byte[2048];
-			int i = stitchingInput.read(bytes);
-			while (i > 0) {
-				stitchingOutput.write(bytes, 0, i);
-				i = stitchingInput.read(bytes);
-			}
-			stitchingInput.close();
-			stitchingOutput.close();
-			stitchingTemp.deleteOnExit();
+
+			File stitchingResource = new File(resourcePath);
+			copyFile(stitchingResource, stitchingTemp, false, true);
 			stitchingTemp.setExecutable(true, false);
-			tempStitchingPath = stitchingTemp.toString() + " "
-					+ Paths.get(mainApp.getProjectPath(), "Full_Image", "Full_Image.png") + " " + tempString;
+			// TODO Comprobar la carpeta temporal por defecto
+			tempStitchingPath = stitchingTemp.toString() + " " + System.getProperty("java.io.tmpdir") + "Full_Image.png"
+					+ " " + tempString;
 			return tempStitchingPath;
 		} catch (IOException e) {
 			e.printStackTrace();

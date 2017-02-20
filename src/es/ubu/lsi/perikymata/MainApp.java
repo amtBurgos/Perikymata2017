@@ -403,7 +403,7 @@ public class MainApp extends Application {
 	/**
 	 * Returns the main stage.
 	 * 
-	 * @return
+	 * @return primaryStage
 	 */
 	public Stage getPrimaryStage() {
 		return primaryStage;
@@ -588,6 +588,8 @@ public class MainApp extends Application {
 	/**
 	 * Opens a FileChooser to let the user select a perikymata project file
 	 * (xml) to load.
+	 * 
+	 * @return true/false
 	 */
 	public Boolean openProject() {
 		FileChooser fileChooser = new FileChooser();
