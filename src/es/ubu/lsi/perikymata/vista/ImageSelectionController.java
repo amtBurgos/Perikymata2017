@@ -231,9 +231,7 @@ public class ImageSelectionController {
 				mainApp.getFilesList()
 						.forEach(x -> tempList.add(Paths.get(mainApp.getProjectPath(), "Fragments", x).toString()));
 				for (String i : tempList) {
-					// AMT comprobar cada path y ver si hay espacios
 					tempString.append(" " + checkPath(i));
-					// tempString.append(" " + i);
 				}
 				Process stitcher = Runtime.getRuntime().exec(getTempStitchingPath(tempString));
 				int ok;
@@ -244,26 +242,7 @@ public class ImageSelectionController {
 					File tempFullImage = new File(System.getProperty("java.io.tmpdir") + "Full_Image.png");
 					File finalFullImage = new File(
 							Paths.get(mainApp.getProjectPath(), "Full_Image", "Full_Image.png").toString());
-
 					boolean copied = copyFile(tempFullImage, finalFullImage, true, false);
-
-					// BufferedInputStream source = new BufferedInputStream(new
-					// FileInputStream(tempFullImage));
-					// BufferedOutputStream target = new
-					// BufferedOutputStream(new
-					// FileOutputStream(finalFullImage));
-					// byte[] bytes = new byte[2048];
-					// int i = source.read(bytes);
-					// while (i > 0) {
-					// target.write(bytes, 0, i);
-					// i = source.read(bytes);
-					// }
-					// source.close();
-					// target.close();
-					//
-					// finalFullImage.setReadable(true, false);
-					// tempFullImage.deleteOnExit();
-
 					if (copied) {
 						java.awt.Image full = new Opener()
 								.openImage(
