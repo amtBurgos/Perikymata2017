@@ -24,6 +24,11 @@
                   <MenuItem mnemonicParsing="false" onAction="#windowPerikymataCount" text="Count perikymata" />
             </items>
           </Menu>
+            <Menu mnemonicParsing="false" text="Configuration">
+               <items>
+                  <MenuItem mnemonicParsing="false" onAction="#handleTempFolder" text="Set temporary folder" />
+               </items>
+            </Menu>
           <Menu mnemonicParsing="false" text="Help">
             <items>
               <MenuItem mnemonicParsing="false" onAction="#handleAbout" text="About" />

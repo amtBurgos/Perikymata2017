@@ -25,7 +25,7 @@ import javafx.scene.control.Alert;
  * for the entire application in the top border and a free space at the center
  * to put in other layouts. This controller grants access to the FXML components
  * and has the handlers for this window actions.
- * 
+ *
  * @author Sergio Chico Carrancio
  */
 public class RootLayoutController {
@@ -38,7 +38,7 @@ public class RootLayoutController {
 	/**
 	 * Method called by the main application to set a reference to itself. This
 	 * is done to be able to call mainapp's methods.
-	 * 
+	 *
 	 * @param mainApp
 	 *            Reference to the main controller.
 	 */
@@ -116,6 +116,14 @@ public class RootLayoutController {
 				+ "This is free software, and you are welcome to redistribute it under "
 				+ "the conditions found in the license.");
 		alert.showAndWait();
+	}
+
+	/**
+	 * Opens a window with the temporary folder selection layout.
+	 */
+	@FXML
+	private void handleTempFolder() {
+		mainApp.showTemporaryFolderSelection(false);
 	}
 
 	/**

@@ -30,7 +30,7 @@ import javafx.scene.shape.PathElement;
 
 /**
  * Project class, stores persistent data. Is used to read or create a XML file.
- * 
+ *
  * @author Sergio Chico Carrancio
  */
 @XmlRootElement
@@ -70,8 +70,13 @@ public class Project {
 	private Double xDecileEnd = null;
 
 	/**
-	 * getter for project name, used to read from a XML.
-	 * 
+	 * Temporary folder for temporary files.
+	 */
+	private String temporaryFolder;
+
+	/**
+	 * Getter for project name, used to read from a XML.
+	 *
 	 * @return project name.
 	 */
 	public String getProjectName() {
@@ -80,7 +85,7 @@ public class Project {
 
 	/**
 	 * Setter for project name.
-	 * 
+	 *
 	 * @param projectName
 	 *            name to set.
 	 */
@@ -91,7 +96,7 @@ public class Project {
 	/**
 	 * Getter for the list of filters, used to read from a XML. If you want to
 	 * add a new filter, see:
-	 * 
+	 *
 	 * @see FiltersXmlAdapter
 	 * @return list of filters.
 	 */
@@ -103,7 +108,7 @@ public class Project {
 
 	/**
 	 * Setter for the list of applied filters.
-	 * 
+	 *
 	 * @param filterList
 	 *            applied filters.
 	 */
@@ -112,7 +117,7 @@ public class Project {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return the free draw linepath
 	 */
 	@XmlJavaTypeAdapter(DrawLineXmlAdapter.class)
@@ -121,7 +126,7 @@ public class Project {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param linePath
 	 *            the linePath to set
 	 */
@@ -187,6 +192,24 @@ public class Project {
 	 */
 	public void setxDecileEnd(Double xDecileEnd) {
 		this.xDecileEnd = xDecileEnd;
+	}
+
+	/**
+	 * Getter for the temporary folder path.
+	 *
+	 * @return temporary folder path
+	 */
+	public String getTemporaryFolder() {
+		return temporaryFolder;
+	}
+
+	/**
+	 * Setter for the temporary folder.
+	 *
+	 * @param tempFolderPath
+	 */
+	public void setTemporaryFolder(String tempFolderPath) {
+		this.temporaryFolder = tempFolderPath;
 	}
 
 }

@@ -38,18 +38,21 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
 import es.ubu.lsi.perikymata.MainApp;
+import es.ubu.lsi.perikymata.util.StitchingUtil;
 import es.ubu.lsi.perikymata.modelo.Project;
 import es.ubu.lsi.perikymata.modelo.filters.Filter;
 import es.ubu.lsi.perikymata.vista.ImageFiltersController;
 import es.ubu.lsi.perikymata.vista.ImageSelectionController;
 import es.ubu.lsi.perikymata.vista.PerikymataCountController;
 import es.ubu.lsi.perikymata.vista.RootLayoutController;
+import es.ubu.lsi.perikymata.vista.TemporaryFolderSelectionController;
 import ij.io.Opener;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
@@ -65,7 +68,7 @@ import javafx.stage.Stage;
  * Controller for the main application, contains the data that needs to be
  * accessed by any of the other windows and has common operations, like
  * navigation between windows or data access.
- * 
+ *
  * @author Sergio Chico Carrancio
  */
 public class MainApp extends Application {
@@ -129,8 +132,13 @@ public class MainApp extends Application {
 	private String projectPath;
 
 	/**
+	 * Util for temporary folder validation.
+	 */
+	private StitchingUtil tempUtil = new StitchingUtil();
+
+	/**
 	 * Launches the applications, no args needed.
-	 * 
+	 *
 	 * @param args
 	 */
 	public static void main(String[] args) {
@@ -237,7 +245,6 @@ public class MainApp extends Application {
 			m.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 
 			// Marshalling and saving XML to the file.
-			//AMT Changed folder structure creation 30/01/2017
 			File projectXMLfile = new File(parent.toString() + File.separator + parent.getName() + ".xml");
 			m.marshal(getProject(), projectXMLfile);
 
@@ -256,7 +263,7 @@ public class MainApp extends Application {
 
 	/**
 	 * Loads a Project XML file into the application.
-	 * 
+	 *
 	 * @param file
 	 *            XML project.
 	 */
@@ -401,8 +408,40 @@ public class MainApp extends Application {
 	}
 
 	/**
+	 * Shows the Temporary folder selection Window.
+	 */
+	public void showTemporaryFolderSelection(boolean showCancel) {
+		try {
+			// Loads the FXML view.
+			FXMLLoader loader = new FXMLLoader();
+			loader.setLocation(MainApp.class.getResource("vista/TemporaryFolderSelection.fxml"));
+			Parent parent = (Parent) loader.load();
+			Stage window = new Stage();
+			window.setScene(new Scene(parent));
+			window.setTitle("Temporary Folder Selection");
+			window.show();
+
+			// Gives a mainapp's reference to the controller of the layout.
+			TemporaryFolderSelectionController controller = loader.getController();
+			controller.setMainApp(this);
+			controller.disableCancel(showCancel);
+			controller.initializeComponents();
+
+
+		} catch (Exception e) {
+			this.getLogger().log(Level.SEVERE, "Exception occur loading temporary folder selection window.", e);
+			Alert alert = new Alert(Alert.AlertType.INFORMATION);
+			alert.setTitle("Internal error.");
+			alert.setHeaderText("Error loading temporary folder selection window.\n");
+			alert.setContentText("This application will close now, please try again.\n");
+			alert.showAndWait();
+			System.exit(-1);
+		}
+	}
+
+	/**
 	 * Returns the main stage.
-	 * 
+	 *
 	 * @return primaryStage
 	 */
 	public Stage getPrimaryStage() {
@@ -426,7 +465,7 @@ public class MainApp extends Application {
 
 	/**
 	 * Gets the full image of the tooth.
-	 * 
+	 *
 	 * @return Image of the tooth.
 	 */
 	public Image getFullImage() {
@@ -435,7 +474,7 @@ public class MainApp extends Application {
 
 	/**
 	 * Sets the full image of the tooth.
-	 * 
+	 *
 	 * @param fullImage
 	 *            Full image of the tooth.
 	 */
@@ -445,7 +484,7 @@ public class MainApp extends Application {
 
 	/**
 	 * Gets the full image of the tooth.
-	 * 
+	 *
 	 * @return Image of the tooth.
 	 */
 	public Image getFilteredImage() {
@@ -454,7 +493,7 @@ public class MainApp extends Application {
 
 	/**
 	 * Sets the full image of the tooth.
-	 * 
+	 *
 	 * @param fullImage
 	 *            Full image of the tooth.
 	 */
@@ -464,7 +503,7 @@ public class MainApp extends Application {
 
 	/**
 	 * Gets the project data.
-	 * 
+	 *
 	 * @return Project with the project data.
 	 */
 	public Project getProject() {
@@ -473,7 +512,7 @@ public class MainApp extends Application {
 
 	/**
 	 * Sets the project data.
-	 * 
+	 *
 	 * @param project
 	 *            Project with the data of a perikymata project.
 	 */
@@ -483,7 +522,7 @@ public class MainApp extends Application {
 
 	/**
 	 * Saves the property of the last opened project file.
-	 * 
+	 *
 	 * @param file
 	 *            Project file to store into preferences or null to remove the
 	 *            preference.
@@ -510,7 +549,7 @@ public class MainApp extends Application {
 
 	/**
 	 * Loads the preference of the last opened project file.
-	 * 
+	 *
 	 * @return null if project wasn't found in the preferences, File of the last
 	 *         opened project otherwise.
 	 */
@@ -547,7 +586,7 @@ public class MainApp extends Application {
 	/**
 	 * Creates a new project (folder structure and project xml) by choosing a
 	 * file-chooser.
-	 * 
+	 *
 	 * @return
 	 */
 	public Boolean createProject() {
@@ -568,9 +607,16 @@ public class MainApp extends Application {
 			setProject(new Project());
 			getProject().setProjectName(file.getName());
 
+			if (tempUtil.isTempFolderValid(System.getProperty("java.io.tmpdir"))) {
+				getProject().setTemporaryFolder("DEFAULT");
+			} else {
+				// Ask for the temp folder is system folder is not valid
+				showTemporaryFolderSelection(true);
+			}
+
 			// Makes the folder structure.
 			file.mkdir();
-			//AMT Changed folder structure creation 30/01/2017
+			// AMT Changed folder structure creation 30/01/2017
 			new File(file.toString() + File.separator + "Fragments").mkdir();
 			new File(file.toString() + File.separator + "Full_Image").mkdir();
 			new File(file.toString() + File.separator + "Perikymata_Outputs").mkdir();
@@ -583,12 +629,13 @@ public class MainApp extends Application {
 			return true;
 		}
 		return false;
+
 	}
 
 	/**
 	 * Opens a FileChooser to let the user select a perikymata project file
 	 * (xml) to load.
-	 * 
+	 *
 	 * @return true/false
 	 */
 	public Boolean openProject() {

@@ -16,3 +16,4 @@ hs_err_pid*
 *.log
 errorLog_2017-02-05_00-49-26.log.lck
 *.lck
+build.fxbuild
