@@ -82,6 +82,7 @@ public class StitchingUtil {
 				targetFile.deleteOnExit();
 			}
 			targetFile.setReadable(true, false);
+			targetFile.setExecutable(true, false);
 			copied = true;
 		} catch (IOException e) {
 			e.printStackTrace();

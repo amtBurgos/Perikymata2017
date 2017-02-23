@@ -253,6 +253,11 @@ public class ImageSelectionController {
 					if (tempFolder.toUpperCase().equals("DEFAULT")) {
 						tempFolder = System.getProperty("java.io.tmpdir");
 					}
+
+					if (!tempFolder.substring(tempFolder.length()-1).equals(System.getProperty("file.separator"))) {
+						tempFolder+=System.getProperty("file.separator");
+					}
+
 					File tempFullImage = new File(tempFolder + "Full_Image.png");
 					File finalFullImage = new File(
 							Paths.get(mainApp.getProjectPath(), "Full_Image", "Full_Image.png").toString());
@@ -315,6 +320,10 @@ public class ImageSelectionController {
 			tempFolder = System.getProperty("java.io.tmpdir");
 		}
 
+		if (!tempFolder.substring(tempFolder.length()-1).equals(System.getProperty("file.separator"))) {
+			tempFolder+=System.getProperty("file.separator");
+		}
+
 		if (isResource) {
 			sourceFile = new File(mainApp.getClass().getClassLoader().getResource(path).getFile());
 		} else {
@@ -357,6 +366,10 @@ public class ImageSelectionController {
 		String tempFolder = mainApp.getProject().getTemporaryFolder();
 		if (tempFolder.toUpperCase().equals("DEFAULT")) {
 			tempFolder = System.getProperty("java.io.tmpdir");
+		}
+
+		if (!tempFolder.substring(tempFolder.length()-1).equals(System.getProperty("file.separator"))) {
+			tempFolder+=System.getProperty("file.separator");
 		}
 
 		try {
