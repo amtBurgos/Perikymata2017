@@ -24,7 +24,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 /**
- * Utility class for temporary folder validation and for copying files.
+ * Utility class for temporary folder validation and for copying files to
+ * prepare the environment for stitching.
  *
  * @author Andres Miguel Teran
  *

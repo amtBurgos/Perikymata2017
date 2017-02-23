@@ -19,10 +19,7 @@ package es.ubu.lsi.perikymata.vista;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -49,7 +46,7 @@ import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
 
 /**
- * Handle
+ * Controller for the layout that is used to the image fragments.
  *
  * @author Sergio Chico Carrancio
  *
@@ -71,7 +68,7 @@ public class ImageSelectionController {
 	/**
 	 * Utility for prepare the application for stitching.
 	 */
-	private StitchingUtil copyUtil;
+	private StitchingUtil stitchingUtil;
 
 	/**
 	 * Reference to the main application.
@@ -101,7 +98,7 @@ public class ImageSelectionController {
 	private void initialize() {
 		previewImage.fitHeightProperty().bind(((Pane) previewImage.getParent()).heightProperty());
 		previewImage.fitWidthProperty().bind(((Pane) previewImage.getParent()).widthProperty());
-		copyUtil = new StitchingUtil();
+		stitchingUtil = new StitchingUtil();
 
 		// Loads loading gif.
 		loading.setImage(new Image(this.getClass().getResource("/rsc/482.gif").toExternalForm()));
@@ -241,21 +238,25 @@ public class ImageSelectionController {
 				mainApp.getRootLayout().setDisable(true);
 				List<String> tempList = new ArrayList<>();
 				StringBuilder tempString = new StringBuilder();
+				String tempFolder = mainApp.getProject().getTemporaryFolder();
 				mainApp.getFilesList()
 						.forEach(x -> tempList.add(Paths.get(mainApp.getProjectPath(), "Fragments", x).toString()));
 				for (String i : tempList) {
-					tempString.append(" " + checkPath(i));
+					tempString.append(" " + createTemporaryFile(i, false));
 				}
-				Process stitcher = Runtime.getRuntime().exec(getTempStitchingPath(tempString));
+				Process stitcher = Runtime.getRuntime().exec(getStitchingCommand(tempString));
 				int ok;
 				// OK exit code is 1.
 				if ((ok = stitcher.waitFor()) == 1) {
 
-					// Copiar imagen a carpeta
-					File tempFullImage = new File(System.getProperty("java.io.tmpdir") + "Full_Image.png");
+					// Copy full image to project
+					if (tempFolder.toUpperCase().equals("DEFAULT")) {
+						tempFolder = System.getProperty("java.io.tmpdir");
+					}
+					File tempFullImage = new File(tempFolder + "Full_Image.png");
 					File finalFullImage = new File(
 							Paths.get(mainApp.getProjectPath(), "Full_Image", "Full_Image.png").toString());
-					boolean copied = copyUtil.copyFile(tempFullImage, finalFullImage, true, false);
+					boolean copied = stitchingUtil.copyFile(tempFullImage, finalFullImage, true, false);
 					if (copied) {
 						java.awt.Image full = new Opener()
 								.openImage(
@@ -298,29 +299,30 @@ public class ImageSelectionController {
 	}
 
 	/**
-	 * Check if a path has whitespace.
+	 * Create a temporary file in the application temporary folder
 	 *
 	 * @param path
+	 *            to the source file
 	 * @return path fixed with double quotes
 	 */
-	private String checkPath(String path) {
-		String fragmentPath = path;
-		if (path.contains(" ")) {
-			if (System.getProperty("java.io.tmpdir").contains(" ")) {
-				// TODO Preguntar por una carpeta temporal que no tenga espacios
-			} else {
-				String[] nameAndExtension = getImageNameAndExtension(path);
-				try {
-					File tempFragment = File.createTempFile(nameAndExtension[0], "." + nameAndExtension[1]);
-					File staticFragment = new File(path);
-					copyUtil.copyFile(staticFragment, tempFragment, false, true);
-					fragmentPath = tempFragment.getAbsolutePath();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
+	private String createTemporaryFile(String path, boolean isResource) {
+		String tempFolder = mainApp.getProject().getTemporaryFolder();
+		File sourceFile = null;
+		File tempFile = null;
+		String[] nameAndExtension = getNameAndExtension(path, isResource);
+
+		if (tempFolder.toUpperCase().equals("DEFAULT")) {
+			tempFolder = System.getProperty("java.io.tmpdir");
 		}
-		return fragmentPath;
+
+		if (isResource) {
+			sourceFile = new File(mainApp.getClass().getClassLoader().getResource(path).getFile());
+		} else {
+			sourceFile = new File(path);
+		}
+		tempFile = new File(tempFolder + nameAndExtension[0] + "." + nameAndExtension[1]);
+		stitchingUtil.copyFile(sourceFile, tempFile, false, true);
+		return tempFile.getAbsolutePath();
 	}
 
 	/**
@@ -330,8 +332,13 @@ public class ImageSelectionController {
 	 *            of the image
 	 * @return string array with the name and extension of the image
 	 */
-	private String[] getImageNameAndExtension(String path) {
-		String[] splittedFileName = path.split(Pattern.quote(System.getProperty("file.separator")));
+	private String[] getNameAndExtension(String path, boolean isResource) {
+		String[] splittedFileName = null;
+		if (isResource) {
+			splittedFileName = path.split(Pattern.quote("/"));
+		} else {
+			splittedFileName = path.split(Pattern.quote(System.getProperty("file.separator")));
+		}
 		String[] nameAndExtension = splittedFileName[splittedFileName.length - 1].split(Pattern.quote("."));
 		return nameAndExtension;
 	}
@@ -343,36 +350,33 @@ public class ImageSelectionController {
 	 *            string with the path of the different image fragments
 	 * @return string to be execute
 	 */
-	private String getTempStitchingPath(StringBuilder tempString) {
+	private String getStitchingCommand(StringBuilder tempString) {
 		// Select Stitching executable from resources depending OS
 		String resourcePath = "rsc/stitching/bin/";
-		File stitchingTemp;
-		String tempStitchingPath = "";
+		String stitchingCommand = "";
+		String tempFolder = mainApp.getProject().getTemporaryFolder();
+		if (tempFolder.toUpperCase().equals("DEFAULT")) {
+			tempFolder = System.getProperty("java.io.tmpdir");
+		}
+
 		try {
 			if (System.getProperty("os.name").toUpperCase().contains("WIN")) {
 				resourcePath += "Stitching32.exe";
-				stitchingTemp = File.createTempFile("Stitching32", ".exe");
 			} else {
 				if (System.getProperty("os.arch").contains("64")) {
 					resourcePath += "Stitching64Dinamic.ubu";
-					stitchingTemp = File.createTempFile("Stitching64Dinamic", ".ubu");
 				} else {
 					resourcePath += "Stitching32Dinamic.ubu";
-					stitchingTemp = File.createTempFile("Stitching32Dinamic", ".ubu");
 				}
 			}
 
-			File stitchingResource = new File(resourcePath);
-			copyUtil.copyFile(stitchingResource, stitchingTemp, false, true);
-			stitchingTemp.setExecutable(true, false);
-			// TODO Comprobar la carpeta temporal por defecto
-			tempStitchingPath = stitchingTemp.toString() + " " + System.getProperty("java.io.tmpdir") + "Full_Image.png"
-					+ " " + tempString;
-			return tempStitchingPath;
-		} catch (IOException e) {
+			String stitchingTemp = createTemporaryFile(resourcePath, true);
+			stitchingCommand = stitchingTemp + " " + tempFolder + "Full_Image.png" + " " + tempString;
+			return stitchingCommand;
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return tempStitchingPath;
+		return stitchingCommand;
 	}
 
 	/**
@@ -397,7 +401,7 @@ public class ImageSelectionController {
 		if (mainApp.getFullImage() != null) {
 			previewImage.setImage(mainApp.getFullImage());
 		}
-	
+
 		// Add observable list data to the table
 		filesListView.setItems(mainApp.getFilesList());
 	}

@@ -40,7 +40,6 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -81,12 +80,6 @@ public class TemporaryFolderSelectionController {
 	private CheckBox cbTempFolder;
 
 	/**
-	 * Label as error when the default system temporary folder has whitespaces.
-	 */
-	@FXML
-	private Label lbErrorDefaultTempFolder;
-
-	/**
 	 * Button for choosing a folder.
 	 */
 	@FXML
@@ -97,12 +90,6 @@ public class TemporaryFolderSelectionController {
 	 */
 	@FXML
 	private TextField tfSelectedPath;
-
-	/**
-	 * Label as error when the selected folder its not valid.
-	 */
-	@FXML
-	private Label lbErrorCustomFolder;
 
 	/**
 	 * Cancel Button.
@@ -139,7 +126,7 @@ public class TemporaryFolderSelectionController {
 	/**
 	 * Util for validate temporary paths.
 	 */
-	private StitchingUtil tempUtil;
+	private StitchingUtil stitchingUtil;
 
 	/**
 	 * Initializes the controller class. This method is automatically called
@@ -147,9 +134,7 @@ public class TemporaryFolderSelectionController {
 	 */
 	@FXML
 	private void initialize() {
-		tempUtil = new StitchingUtil();
-		lbErrorCustomFolder.setVisible(false);
-		lbErrorDefaultTempFolder.setVisible(false);
+		stitchingUtil = new StitchingUtil();
 		cbTempFolder.setAllowIndeterminate(false);
 		defaultTempFolder = System.getProperty("java.io.tmpdir");
 	}
@@ -166,10 +151,10 @@ public class TemporaryFolderSelectionController {
 			public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
 				if (newValue == true) {
 					// Check if system temporary is valid
-					if (!tempUtil.isTempFolderValid(defaultTempFolder)) {
+					if (!stitchingUtil.isTempFolderValid(defaultTempFolder)) {
 						cb.setSelected(false);
 						cb.setDisable(true);
-						lbErrorDefaultTempFolder.setVisible(true);
+						showErrorDefautlTempFolder();
 						btnChooseFolder.setDisable(false);
 						tfSelectedPath.setDisable(false);
 						tfSelectedPath.setEditable(true);
@@ -177,7 +162,6 @@ public class TemporaryFolderSelectionController {
 					} else {
 						// If default is valid
 						tempFolder = Folder.DEFAULT;
-						lbErrorDefaultTempFolder.setVisible(false);
 						btnChooseFolder.setDisable(true);
 						tfSelectedPath.setDisable(true);
 					}
@@ -197,18 +181,15 @@ public class TemporaryFolderSelectionController {
 	 */
 	@FXML
 	private void chooseFolder() {
-		// FileChooser fileChooser = new FileChooser();
-
 		DirectoryChooser directoryChooser = new DirectoryChooser();
 		directoryChooser.setTitle("Choose a folder without whitespace and enough permissions");
 		File selectedFolder = directoryChooser.showDialog(mainApp.getPrimaryStage());
-		if (tempUtil.isTempFolderValid(selectedFolder.toString())) {
-			lbErrorCustomFolder.setVisible(false);
+		if (stitchingUtil.isTempFolderValid(selectedFolder.toString())) {
 			tempFolder = Folder.CUSTOM;
 			tfSelectedPath.setText(selectedFolder.toString());
 
 		} else {
-			lbErrorCustomFolder.setVisible(true);
+			showErrorCustomTempFolder();
 		}
 	}
 
@@ -217,32 +198,31 @@ public class TemporaryFolderSelectionController {
 	 */
 	@FXML
 	private void save() {
+		boolean save = false;
 		if (tempFolder == Folder.DEFAULT) {
-			if (tempUtil.isTempFolderValid(defaultTempFolder)) {
+			if (stitchingUtil.isTempFolderValid(defaultTempFolder)) {
 				mainApp.getProject().setTemporaryFolder("DEFAULT");
+				save = true;
 			} else {
-				Alert alert = new Alert(Alert.AlertType.INFORMATION);
-				alert.setTitle("Invalid path");
-				alert.setHeaderText("The default system temporary path is invalid.\n");
-				alert.setContentText(
-						"Please, select a custom location without whitespaces and with enough permissions.\n");
-				alert.showAndWait();
+				showErrorDefautlTempFolder();
 			}
 		} else if (tempFolder == Folder.CUSTOM) {
-			if (tempUtil.isTempFolderValid(tfSelectedPath.getText())) {
-				mainApp.getProject().setTemporaryFolder(tfSelectedPath.getText());
+			if (stitchingUtil.isTempFolderValid(tfSelectedPath.getText())) {
+				String tmpFolder = tfSelectedPath.getText();
+				if (!tmpFolder.substring(tmpFolder.length() - 1).equals(System.getProperty("file.separator"))) {
+					tmpFolder += File.separator;
+				}
+				mainApp.getProject().setTemporaryFolder(tmpFolder);
+				save = true;
 			} else {
-				Alert alert = new Alert(Alert.AlertType.INFORMATION);
-				alert.setTitle("Invalid path");
-				alert.setHeaderText("Invalid custom temporary path.\n");
-				alert.setContentText(
-						"Please, select a custom location without whitespaces and with enough permissions.\n");
-				alert.showAndWait();
+				showErrorCustomTempFolder();
 			}
 		}
-		mainApp.makeProjectXml();
-		Stage stage = (Stage) btnSave.getScene().getWindow();
-		stage.close();
+		if (save) {
+			mainApp.makeProjectXml();
+			Stage stage = (Stage) btnSave.getScene().getWindow();
+			stage.close();
+		}
 	}
 
 	/**
@@ -280,12 +260,12 @@ public class TemporaryFolderSelectionController {
 
 	/**
 	 * Initialize some components. It is necessary because when the initialize()
-	 * is executed mainapp it's not set yet.
+	 * is executed if mainapp it's not set yet.
 	 */
 	public void initializeComponents() {
 		xmlTempFolder = mainApp.getProject().getTemporaryFolder();
 		if (xmlTempFolder.toUpperCase().equals("DEFAULT")) {
-			if (tempUtil.isTempFolderValid(defaultTempFolder)) {
+			if (stitchingUtil.isTempFolderValid(defaultTempFolder)) {
 				tempFolder = Folder.DEFAULT;
 				cbTempFolder.setSelected(true);
 				cbTempFolder.setDisable(false);
@@ -296,29 +276,52 @@ public class TemporaryFolderSelectionController {
 				tempFolder = Folder.CUSTOM;
 				cbTempFolder.setSelected(false);
 				cbTempFolder.setDisable(true);
-				lbErrorDefaultTempFolder.setVisible(true);
+				showErrorDefautlTempFolder();
 				tfSelectedPath.setText("");
 				tfSelectedPath.setEditable(true);
 			}
 		} else {
 			// If there is not the default folder in XML
-			if (!tempUtil.isTempFolderValid(defaultTempFolder)) {
+			if (!stitchingUtil.isTempFolderValid(defaultTempFolder)) {
 				tempFolder = Folder.CUSTOM;
 				cbTempFolder.setSelected(false);
 				cbTempFolder.setDisable(true);
-				lbErrorDefaultTempFolder.setVisible(true);
+				showErrorCustomTempFolder();
 				tfSelectedPath.setText(xmlTempFolder);
 				tfSelectedPath.setEditable(true);
 			} else {
 				tempFolder = Folder.CUSTOM;
 				cbTempFolder.setSelected(false);
 				cbTempFolder.setDisable(false);
-				lbErrorDefaultTempFolder.setVisible(false);
 				tfSelectedPath.setText(xmlTempFolder);
 				tfSelectedPath.setEditable(true);
 			}
 		}
 		checkBoxBehaviour(cbTempFolder);
+	}
+
+	/**
+	 * Shows an alert windows explaining why the default temporary folder option
+	 * can not be marked.
+	 */
+	private void showErrorDefautlTempFolder() {
+		Alert alert = new Alert(Alert.AlertType.ERROR);
+		alert.setTitle("Default temporary folder invalid");
+		alert.setHeaderText("The default system temporary path is invalid.\n");
+		alert.setContentText("Please, select a custom location without whitespaces and with enough permissions.\n");
+		alert.showAndWait();
+	}
+
+	/**
+	 * Shows an alert windows explaining why the custom temporary folder option
+	 * can not be selected.
+	 */
+	private void showErrorCustomTempFolder() {
+		Alert alert = new Alert(Alert.AlertType.ERROR);
+		alert.setTitle("Custom temporary folder invalid");
+		alert.setHeaderText("The custom temporary path selected is invalid.\n");
+		alert.setContentText("Please, select a location without whitespaces and with enough permissions.\n");
+		alert.showAndWait();
 	}
 
 }

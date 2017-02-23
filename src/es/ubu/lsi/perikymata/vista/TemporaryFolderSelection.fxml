@@ -18,18 +18,18 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
  -->
+
+<?import javafx.scene.effect.*?>
 <?import javafx.scene.control.*?>
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="es.ubu.lsi.perikymata.vista.TemporaryFolderSelectionController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="170.0" prefWidth="440.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="es.ubu.lsi.perikymata.vista.TemporaryFolderSelectionController">
    <children>
-      <CheckBox fx:id="cbTempFolder" layoutX="73.0" layoutY="45.0" mnemonicParsing="false" text="Use default system temporary folder" />
-      <Label fx:id="lbErrorDefaultTempFolder" layoutX="74.0" layoutY="81.0" text="Error: default folder has whitespaces." />
-      <Button fx:id="btnChooseFolder" onAction="#chooseFolder" layoutX="73.0" layoutY="120.0" mnemonicParsing="false" text="Choose Folder" />
-      <TextField fx:id="tfSelectedPath" layoutX="192.0" layoutY="120.0" prefHeight="25.0" prefWidth="338.0" />
-      <Label fx:id="lbErrorCustomFolder" layoutX="70.0" layoutY="164.0" text="The folder can not contain whitespaces and must has enought permissions." />
-      <Button fx:id="btnCancel" onAction="#cancel" layoutX="73.0" layoutY="200.0" mnemonicParsing="false" text="Cancel" />
-      <Button fx:id="btnSave" onAction="#save" layoutX="422.0" layoutY="200.0" mnemonicParsing="false" text="Save and Continue" />
+      <CheckBox fx:id="cbTempFolder" layoutX="32.0" layoutY="23.0" mnemonicParsing="false" text="Use default system temporary folder" />
+      <Button fx:id="btnChooseFolder" layoutX="32.0" layoutY="67.0" mnemonicParsing="false" onAction="#chooseFolder" text="Choose Folder" />
+      <TextField fx:id="tfSelectedPath" layoutX="152.0" layoutY="67.0" prefHeight="25.0" prefWidth="260.0" />
+      <Button fx:id="btnCancel" layoutX="32.0" layoutY="119.0" mnemonicParsing="false" onAction="#cancel" text="Cancel" />
+      <Button fx:id="btnSave" layoutX="296.0" layoutY="119.0" mnemonicParsing="false" onAction="#save" text="Save and Continue" />
    </children>
 </AnchorPane>
