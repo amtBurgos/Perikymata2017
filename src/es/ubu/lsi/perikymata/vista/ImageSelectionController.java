@@ -22,6 +22,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -254,8 +255,8 @@ public class ImageSelectionController {
 						tempFolder = System.getProperty("java.io.tmpdir");
 					}
 
-					if (!tempFolder.substring(tempFolder.length()-1).equals(System.getProperty("file.separator"))) {
-						tempFolder+=System.getProperty("file.separator");
+					if (!tempFolder.substring(tempFolder.length() - 1).equals(System.getProperty("file.separator"))) {
+						tempFolder += System.getProperty("file.separator");
 					}
 
 					File tempFullImage = new File(tempFolder + "Full_Image.png");
@@ -311,6 +312,7 @@ public class ImageSelectionController {
 	 * @return path fixed with double quotes
 	 */
 	private String createTemporaryFile(String path, boolean isResource) {
+
 		String tempFolder = mainApp.getProject().getTemporaryFolder();
 		File sourceFile = null;
 		File tempFile = null;
@@ -320,12 +322,25 @@ public class ImageSelectionController {
 			tempFolder = System.getProperty("java.io.tmpdir");
 		}
 
-		if (!tempFolder.substring(tempFolder.length()-1).equals(System.getProperty("file.separator"))) {
-			tempFolder+=System.getProperty("file.separator");
+		if (!tempFolder.substring(tempFolder.length() - 1).equals(System.getProperty("file.separator"))) {
+			tempFolder += System.getProperty("file.separator");
 		}
 
 		if (isResource) {
-			sourceFile = new File(mainApp.getClass().getClassLoader().getResource(path).getFile());
+//			// System.out.println(this.getClass().getProtectionDomain().getCodeSource().getLocation().getPath());
+//			System.out.println("");
+//			File n = new File("");
+//			String absolutePath = n.getAbsolutePath();
+//			n.delete();
+//			absolutePath += System.getProperty("file.separator");
+//			absolutePath += "Perikymata_v14.jar" + System.getProperty("file.separator") + "rsc"
+//					+ System.getProperty("file.separator") + "stitching" + System.getProperty("file.separator") + "bin"
+//					+ System.getProperty("file.separator") + "Stitching32.exe";
+//			System.out.println(absolutePath);
+//			// /rsc/stitching/bin/
+//			sourceFile = new File(this.getClass().getClassLoader().getResource(absolutePath).getFile());
+
+			sourceFile = new File(this.getClass().getClassLoader().getResource(path).getFile());
 		} else {
 			sourceFile = new File(path);
 		}
@@ -368,8 +383,8 @@ public class ImageSelectionController {
 			tempFolder = System.getProperty("java.io.tmpdir");
 		}
 
-		if (!tempFolder.substring(tempFolder.length()-1).equals(System.getProperty("file.separator"))) {
-			tempFolder+=System.getProperty("file.separator");
+		if (!tempFolder.substring(tempFolder.length() - 1).equals(System.getProperty("file.separator"))) {
+			tempFolder += System.getProperty("file.separator");
 		}
 
 		try {

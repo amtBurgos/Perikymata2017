@@ -65,7 +65,6 @@ public class StitchingUtil {
 		boolean copied = false;
 		BufferedInputStream source = null;
 		BufferedOutputStream target = null;
-		;
 		try {
 			source = new BufferedInputStream(new FileInputStream(sourceFile));
 			target = new BufferedOutputStream(new FileOutputStream(targetFile));
