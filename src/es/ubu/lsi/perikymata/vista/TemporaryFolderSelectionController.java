@@ -17,6 +17,7 @@ package es.ubu.lsi.perikymata.vista;
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 import java.io.File;
+import java.util.logging.Level;
 
 /**
  * License: GPL
@@ -305,6 +306,7 @@ public class TemporaryFolderSelectionController {
 	 * can not be marked.
 	 */
 	private void showErrorDefautlTempFolder() {
+		mainApp.getLogger().log(Level.INFO, "Default temporary folder can't be saved because is invalid.");
 		Alert alert = new Alert(Alert.AlertType.ERROR);
 		alert.setTitle("Default temporary folder invalid");
 		alert.setHeaderText("The default system temporary path is invalid.\n");
@@ -317,6 +319,7 @@ public class TemporaryFolderSelectionController {
 	 * can not be selected.
 	 */
 	private void showErrorCustomTempFolder() {
+		mainApp.getLogger().log(Level.INFO, "Custom temporary folder can't be saved because is invalid.");
 		Alert alert = new Alert(Alert.AlertType.ERROR);
 		alert.setTitle("Custom temporary folder invalid");
 		alert.setHeaderText("The custom temporary path selected is invalid.\n");

@@ -47,7 +47,7 @@ import javafx.util.Pair;
 
 /**
  * Controller for the layout that is used to count perikyma.
- * 
+ *
  * @author Sergio Chico Carrancio
  *
  */
@@ -291,7 +291,7 @@ public class PerikymataCountController {
 	/**
 	 * Modifies the line to a new position defined by the coordinates of the
 	 * mouseEvent and returns the X coordinate on the real image.
-	 * 
+	 *
 	 * @param me
 	 *            Mouse event that shows the new position of the line.
 	 * @param line
@@ -520,7 +520,7 @@ public class PerikymataCountController {
 	 * Is called by the main application to give a reference back to itself.
 	 * Also, sets the full Image. This is done here because when the method
 	 * initialize is called, there is no reference to the mainapp.
-	 * 
+	 *
 	 * @param mainApp
 	 */
 	public void setMainApp(MainApp mainApp) {
@@ -709,7 +709,7 @@ public class PerikymataCountController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return the proportion between the original image and the imageview.
 	 */
 	private double getImageToImageViewRatio() {
