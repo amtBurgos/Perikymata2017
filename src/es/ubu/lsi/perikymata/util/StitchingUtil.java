@@ -22,6 +22,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * Utility class for temporary folder validation and for copying files to
@@ -93,6 +94,49 @@ public class StitchingUtil {
 					e.printStackTrace();
 				}
 			}
+			if (target != null) {
+				try {
+					target.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return copied;
+	}
+
+	/**
+	 * Copy a file. Delete source file if success. * @param sourceInputStream
+	 * source file inside JAR
+	 *
+	 * @param targetFile
+	 *            target file
+	 * @param deleteTarget
+	 *            true if the target must be deleted when JVM ends
+	 * @return true/false if success
+	 */
+	public boolean copyFile(InputStream sourceInputStream, File targetFile, boolean deleteTarget) {
+		boolean copied = false;
+		BufferedInputStream source = null;
+		BufferedOutputStream target = null;
+		try {
+			source = new BufferedInputStream(sourceInputStream);
+			target = new BufferedOutputStream(new FileOutputStream(targetFile));
+			byte[] bytes = new byte[2048];
+			int i = source.read(bytes);
+			while (i > 0) {
+				target.write(bytes, 0, i);
+				i = source.read(bytes);
+			}
+			if (deleteTarget == true) {
+				targetFile.deleteOnExit();
+			}
+			targetFile.setReadable(true, false);
+			targetFile.setExecutable(true, false);
+			copied = true;
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
 			if (target != null) {
 				try {
 					target.close();

@@ -22,7 +22,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.URISyntaxException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -315,6 +315,7 @@ public class ImageSelectionController {
 
 		String tempFolder = mainApp.getProject().getTemporaryFolder();
 		File sourceFile = null;
+		InputStream sourceInputStream = null;
 		File tempFile = null;
 		String[] nameAndExtension = getNameAndExtension(path, isResource);
 
@@ -326,26 +327,14 @@ public class ImageSelectionController {
 			tempFolder += System.getProperty("file.separator");
 		}
 
+		tempFile = new File(tempFolder + nameAndExtension[0] + "." + nameAndExtension[1]);
 		if (isResource) {
-//			// System.out.println(this.getClass().getProtectionDomain().getCodeSource().getLocation().getPath());
-//			System.out.println("");
-//			File n = new File("");
-//			String absolutePath = n.getAbsolutePath();
-//			n.delete();
-//			absolutePath += System.getProperty("file.separator");
-//			absolutePath += "Perikymata_v14.jar" + System.getProperty("file.separator") + "rsc"
-//					+ System.getProperty("file.separator") + "stitching" + System.getProperty("file.separator") + "bin"
-//					+ System.getProperty("file.separator") + "Stitching32.exe";
-//			System.out.println(absolutePath);
-//			// /rsc/stitching/bin/
-//			sourceFile = new File(this.getClass().getClassLoader().getResource(absolutePath).getFile());
-
-			sourceFile = new File(this.getClass().getClassLoader().getResource(path).getFile());
+			sourceInputStream = MainApp.class.getResourceAsStream(path);
+			stitchingUtil.copyFile(sourceInputStream, tempFile, true);
 		} else {
 			sourceFile = new File(path);
+			stitchingUtil.copyFile(sourceFile, tempFile, false, true);
 		}
-		tempFile = new File(tempFolder + nameAndExtension[0] + "." + nameAndExtension[1]);
-		stitchingUtil.copyFile(sourceFile, tempFile, false, true);
 		return tempFile.getAbsolutePath();
 	}
 
@@ -376,7 +365,7 @@ public class ImageSelectionController {
 	 */
 	private String getStitchingCommand(StringBuilder tempString) {
 		// Select Stitching executable from resources depending OS
-		String resourcePath = "rsc/stitching/bin/";
+		String resourcePath = "/rsc/stitching/bin/";
 		String stitchingCommand = "";
 		String tempFolder = mainApp.getProject().getTemporaryFolder();
 		if (tempFolder.toUpperCase().equals("DEFAULT")) {
