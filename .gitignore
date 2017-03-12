@@ -23,3 +23,7 @@ build.fxbuild
 *.fxbuild
 *.fxbuild
 *.fxbuild
+prototypes/.ipynb_checkpoints/Evaluar solución-checkpoint.ipynb
+prototypes/.ipynb_checkpoints/1 Detección de bordes-checkpoint.ipynb
+prototypes/__pycache__/_frangi.cpython-35.pyc
+*.db
