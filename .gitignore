@@ -30,3 +30,8 @@ prototypes/__pycache__/_frangi.cpython-35.pyc
 *.iml
 ImageProcessingPython/.idea/workspace.xml
 ImageProcessingPython/.ipynb_checkpoints/Pruebas nuevo modulo-checkpoint.ipynb
+*.bmp
+*.png
+*.tif
+*.pyc
+prototypes/.ipynb_checkpoints/Optimizacion-checkpoint.ipynb
