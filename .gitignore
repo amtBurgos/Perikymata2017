@@ -35,3 +35,5 @@ ImageProcessingPython/.ipynb_checkpoints/Pruebas nuevo modulo-checkpoint.ipynb
 *.tif
 *.pyc
 prototypes/.ipynb_checkpoints/Optimizacion-checkpoint.ipynb
+prototypes/Optimize/.idea/misc.xml
+prototypes/Optimize/.idea/modules.xml
