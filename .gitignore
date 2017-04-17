@@ -37,3 +37,11 @@ ImageProcessingPython/.ipynb_checkpoints/Pruebas nuevo modulo-checkpoint.ipynb
 prototypes/.ipynb_checkpoints/Optimizacion-checkpoint.ipynb
 prototypes/Optimize/.idea/misc.xml
 prototypes/Optimize/.idea/modules.xml
+*.toc
+ImageProcessingPython/build/PyinstallerTest2/base_library.zip
+*.pkg
+ImageProcessingPython/build/*
+ImageProcessingPython/cmd.exe
+ImageProcessingPython/dist/*
+ImageProcessingPython/hook-skimage.io.py
+*.spec

@@ -105,8 +105,8 @@ class ImageProcessingTest(unittest.TestCase):
         self.assertEquals(counter, 22)
 
 
-if __name__ == '__main__':
-    unittest.main()
+#if __name__ == '__main__':
+#    unittest.main()
 
 # prepareEnvironment()
 # GeneralTest()
