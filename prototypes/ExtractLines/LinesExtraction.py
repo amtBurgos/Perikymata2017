@@ -6,18 +6,19 @@ from skimage.color import rgb2grey
 from skimage import exposure
 from skimage.restoration import denoise_tv_chambolle
 from _frangi import frangi, hessian
-from skimage.filters import threshold_adaptive
+from skimage.filters import threshold_adaptive, threshold_local
 from skimage import morphology
 from skimage.color import rgb2gray
 from skimage.morphology import skeletonize
 import warnings as war
 from scipy import misc
-from scipy.ndimage.filters import prewitt
+from scipy.ndimage.filters import prewitt, sobel
 from scipy import misc
 
 from Procesado import *
 
 import matplotlib.pyplot as plt
+import numpy as np
 
 
 class LinesExtraction():
@@ -84,8 +85,30 @@ class LinesExtraction():
             plt.imshow(result, cmap='gray')
         return result
 
-    # Funciones para mostrar la imagen y las lineas encontradas
+    # Probar filtro sobel
+    def sobelY(self, img):
+        # dx = ndimage.sobel(img, 0, mode='constant', cval=0.0)  # horizontal derivative
+        dy = sobel(img, 1, mode='constant', cval=0.0)  # vertical derivative
+        # mag = np.hypot(dx, dy)  # magnitude
+        # mag *= 255.0 / np.max(mag)  # normalize (Q&D)
+        return dy
 
+    # Probar filtro sobel
+    def sobelX(self, img):
+        dx = sobel(img, 0, mode='constant', cval=0.0)  # horizontal derivative
+        # mag = np.hypot(dx, dy)  # magnitude
+        # mag *= 255.0 / np.max(mag)  # normalize (Q&D)
+        return dx
+
+    def sobelEntero(self, img):
+        dx = sobel(img, 0, mode='constant', cval=0.0)  # horizontal derivative
+        dy = sobel(img, 1, mode='constant', cval=0.0)  # vertical derivative
+        mag = np.hypot(dx, dy)  # magnitude
+        mag *= 255.0 / np.max(mag)  # normalize (Q&D)
+        return mag
+
+
+    # Funciones para mostrar la imagen y las lineas encontradas
     '''
     Muesta imagen con los segmentos superpuestos
     '''
@@ -116,13 +139,25 @@ class LinesExtraction():
         misc.toimage(img, cmin=False, cmax=True).save(path)
 
     """
-    Muestra una imagen
+    Muestra una imagen. Solo para el diente 2 y lo muestra en grande
     """
-    def mostratImagen(self, img):
+    def mostrarImagen(self, img):
         alto = len(img)
         ancho = len(img[0])
         plt.figure(figsize=(ancho / 50, alto / 50), dpi=300)
         plt.imshow(img, cmap='gray')
+
+    """
+        Muestra una imagen normal y la guarda
+        """
+    def mostrarYGuardarImagen(self, img, mostrar=True,title=None,path=None, guardar=False):
+        if mostrar==True:
+            plt.figure()
+            if title!=None:
+                plt.title(title)
+            plt.imshow(img, cmap='gray')
+        if guardar==True:
+            misc.toimage(img, cmin=False, cmax=True).save(path)
 
     '''
     Muestra el segmento i-esimo
