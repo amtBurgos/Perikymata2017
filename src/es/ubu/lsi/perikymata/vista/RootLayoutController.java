@@ -27,6 +27,7 @@ import javafx.scene.control.Alert;
  * and has the handlers for this window actions.
  *
  * @author Sergio Chico Carrancio
+ * @author Andres Miguel Teran
  */
 public class RootLayoutController {
 
@@ -62,6 +63,15 @@ public class RootLayoutController {
 	@FXML
 	private void windowImageFilters() {
 		mainApp.showImageFilters();
+	}
+
+	/**
+	 * Handler that calls the main controller and changes the content of the
+	 * graphic interface to the Image filters application stage.
+	 */
+	@FXML
+	private void windowRotation() {
+		mainApp.showRotationWindow();
 	}
 
 	/**

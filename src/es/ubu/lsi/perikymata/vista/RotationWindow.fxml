@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+/**
+ * License: GPL
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License 2
+ * as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ */
+ -->
+
+<?import javafx.scene.image.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="482.0" prefWidth="796.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="es.ubu.lsi.perikymata.vista.RotationWindowController">
+   <children>
+      <SplitPane dividerPositions="0.22" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="482.0" prefWidth="796.0">
+         <items>
+            <AnchorPane prefHeight="470.0" prefWidth="186.0">
+               <children>
+                  <Label id="labelRotation" layoutX="18.0" layoutY="45.0" text="Rotation (degrees):" />
+                  <TextField id="inputRotation" fx:id="textField" layoutX="18.0" layoutY="85.0" prefHeight="25.0" prefWidth="103.0" />
+                  <Button id="back" fx:id="backBtn" layoutX="20.0" layoutY="175.0" mnemonicParsing="false" onMouseClicked="#previousScreen" text="Back" />
+                  <Button id="applyRotation" fx:id="applyBtn" layoutX="17.0" layoutY="130.0" mnemonicParsing="false" onMouseClicked="#applyRotation" text="Apply" />
+                  <Button id="continue" fx:id="continueBtn" layoutX="77.0" layoutY="175.0" mnemonicParsing="false" onMouseClicked="#nextScreen" text="Continue" />
+               </children>
+            </AnchorPane>
+            <AnchorPane prefHeight="470.0" prefWidth="576.0">
+               <children>
+                  <Pane fx:id="imagePane" layoutY="35.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="319.0" minWidth="431.0" prefHeight="410.0" prefWidth="616.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="35.0">
+                     <children>
+                        <ImageView fx:id="previewImage" fitHeight="323.0" fitWidth="467.0" layoutX="75.0" layoutY="51.0" pickOnBounds="true" preserveRatio="true" />
+                     </children>
+                  </Pane>
+               </children>
+            </AnchorPane>
+         </items>
+      </SplitPane>
+   </children>
+</AnchorPane>

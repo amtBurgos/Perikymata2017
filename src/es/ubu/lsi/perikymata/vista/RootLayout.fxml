@@ -22,6 +22,7 @@
               <MenuItem mnemonicParsing="false" onAction="#windowImageSelection" text="Select images" />
                   <MenuItem mnemonicParsing="false" onAction="#windowImageFilters" text="Apply filters" />
                   <MenuItem mnemonicParsing="false" onAction="#windowPerikymataCount" text="Count perikymata" />
+                  <MenuItem mnemonicParsing="false" onAction="#windowRotation" text="Rotate image" />
             </items>
           </Menu>
             <Menu mnemonicParsing="false" text="Configuration">

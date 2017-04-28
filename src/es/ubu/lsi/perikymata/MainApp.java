@@ -45,6 +45,7 @@ import es.ubu.lsi.perikymata.vista.ImageFiltersController;
 import es.ubu.lsi.perikymata.vista.ImageSelectionController;
 import es.ubu.lsi.perikymata.vista.PerikymataCountController;
 import es.ubu.lsi.perikymata.vista.RootLayoutController;
+import es.ubu.lsi.perikymata.vista.RotationWindowController;
 import es.ubu.lsi.perikymata.vista.TemporaryFolderSelectionController;
 import ij.io.Opener;
 import javafx.application.Application;
@@ -373,6 +374,34 @@ public class MainApp extends Application {
 			Alert alert = new Alert(Alert.AlertType.INFORMATION);
 			alert.setTitle("Internal error.");
 			alert.setHeaderText("Error loading image filtering stage.\n");
+			alert.setContentText("This application will close now, please try again.\n");
+			alert.showAndWait();
+			System.exit(-1);
+		}
+	}
+
+	/**
+	 * Shows the Rotation Window.
+	 */
+	public void showRotationWindow() {
+		try {
+			// Loads the FXML view.
+			FXMLLoader loader = new FXMLLoader();
+			loader.setLocation(MainApp.class.getResource("vista/RotationWindow.fxml"));
+			AnchorPane rotationWindow = (AnchorPane) loader.load();
+
+			// Shows this layout in the center of the rootLayout.
+			rootLayout.setCenter(rotationWindow);
+
+			// Gives a mainapp's reference to the controller of the layout.
+			RotationWindowController controller = loader.getController();
+			controller.setMainApp(this);
+
+		} catch (IOException e) {
+			this.getLogger().log(Level.SEVERE, "Exception occur loading rotation Stage.", e);
+			Alert alert = new Alert(Alert.AlertType.ERROR);
+			alert.setTitle("Internal error.");
+			alert.setHeaderText("Error loading rotation stage.\n");
 			alert.setContentText("This application will close now, please try again.\n");
 			alert.showAndWait();
 			System.exit(-1);
