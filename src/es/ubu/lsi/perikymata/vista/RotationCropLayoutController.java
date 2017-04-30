@@ -51,6 +51,18 @@ public class RotationCropLayoutController {
 	private Button saveAndContinueBtn; // Value injected by FXMLLoader
 
 	/**
+	 * Area selector button.
+	 */
+	@FXML // fx:id="areaSelectorBtn"
+	private Button areaSelectorBtn; // Value injected by FXMLLoader
+
+	/**
+	 * Image for the area selector button.
+	 */
+	@FXML // fx:id="areaSelectorBtnImage"
+	private ImageView areaSelectorBtnImage; // Value injected by FXMLLoader
+
+	/**
 	 * Slider for rotation.
 	 */
 	@FXML // fx:id="rotationSlider"
@@ -85,7 +97,7 @@ public class RotationCropLayoutController {
 	private BufferedImage img;
 
 	/**
-	 * Rotation radians for the image.
+	 * Rotation in radians for the image.
 	 */
 	private Double rotationRadians;
 
@@ -95,15 +107,19 @@ public class RotationCropLayoutController {
 	 */
 	@FXML
 	private void initialize() {
+		areaSelectorBtnImage.setImage(new Image(this.getClass().getResource("/rsc/Square-icon.png").toExternalForm()));
 		previewImage.fitHeightProperty().bind(((Pane) previewImage.getParent()).heightProperty());
 		previewImage.fitWidthProperty().bind(((Pane) previewImage.getParent()).widthProperty());
 		rotationRadians = 0.0;
 	}
 
+	/**
+	 * Goes to the previous stage, image selection and stitching.
+	 */
 	@FXML
-	void previousScreen() {
+	private void previousScreen() {
 		try {
-			System.out.println("Previous Screen");
+			mainApp.showImageSelection();
 		} catch (Exception e) {
 			mainApp.getLogger().log(Level.SEVERE, "Exception loading previous stage.", e);
 			Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -115,10 +131,12 @@ public class RotationCropLayoutController {
 
 	}
 
+	/**
+	 * Handles the rotation feature.
+	 */
 	@FXML
-	void handleRotation() {
+	private void handleRotation() {
 		try {
-			System.out.println(rotationSlider.getValue());
 			rotationRadians = Math.toRadians(rotationSlider.getValue());
 			AffineTransform transform = new AffineTransform();
 			transform.rotate(rotationRadians, img.getWidth() / 2, img.getHeight() / 2);
@@ -138,8 +156,11 @@ public class RotationCropLayoutController {
 
 	}
 
+	/**
+	 * Handle the crop feature.
+	 */
 	@FXML
-	void handleCrop() {
+	private void handleCrop() {
 		try {
 			System.out.println("Crop");
 		} catch (Exception e) {
@@ -153,14 +174,35 @@ public class RotationCropLayoutController {
 
 	}
 
+	/**
+	 * Handles the opening of the area selector.
+	 */
 	@FXML
-	void nextScreen() {
+	private void handleSelectorArea() {
+		try {
+			System.out.println("Area Selector");
+		} catch (Exception e) {
+			mainApp.getLogger().log(Level.SEVERE, "Exception occur opening area selectore.", e);
+			Alert alert = new Alert(Alert.AlertType.ERROR);
+			alert.setTitle("Error opening area selector.");
+			alert.setHeaderText("Can't open area selector.\n");
+			alert.setContentText("Can't open area selector.");
+			alert.showAndWait();
+		}
+	}
+
+	/**
+	 * Goes to the next stage, perikymata counter.
+	 */
+	@FXML
+	private void nextScreen() {
 		try {
 			System.out.println("Next Screen");
-			System.out.println("saving at: " + mainApp.getProjectPath()+File.separator);
+			System.out.println("saving at: " + mainApp.getProjectPath() + File.separator);
 			File outputfile = new File(mainApp.getProjectPath() + File.separator + "TEST.jpg");
-			ImageIO.write(SwingFXUtils.fromFXImage(mainApp.getFilteredImage(),null), "png", outputfile);
-			// mainApp.showPerikymataCount();
+			ImageIO.write(SwingFXUtils.fromFXImage(mainApp.getFilteredImage(), null), "png", outputfile);
+			// TODO Aplicar cambios y guardar
+			//mainApp.showPerikymataCount();
 		} catch (Exception e) {
 			mainApp.getLogger().log(Level.SEVERE, "Exception saving project and loading next stage.", e);
 			Alert alert = new Alert(Alert.AlertType.ERROR);

@@ -44,3 +44,4 @@ ImageProcessingPython/build/*
 ImageProcessingPython/cmd.exe
 ImageProcessingPython/dist/*
 *.spec
+!src/rsc/Square-icon.png
