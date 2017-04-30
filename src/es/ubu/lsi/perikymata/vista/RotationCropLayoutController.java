@@ -1,4 +1,5 @@
 package es.ubu.lsi.perikymata.vista;
+
 /**
  * License: GPL
  *
@@ -20,102 +21,84 @@ import es.ubu.lsi.perikymata.MainApp;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
+import javafx.scene.control.Slider;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 
 /**
- * View for image rotation.
+ * Control for the rotation and crop view.
  *
  * @author Andres Miguel Teran
  *
  */
-public class RotationWindowController {
+public class RotationCropLayoutController {
 
-	/**
-	 * Container for the image.
-	 */
-	@FXML // fx:id="imagePane"
-	private Pane imagePane; // Value injected by FXMLLoader
+    /**
+     * Save and continue button.
+     */
+    @FXML // fx:id="saveAndContinueBtn"
+    private Button saveAndContinueBtn; // Value injected by FXMLLoader
 
-	/**
-	 * Back button.
-	 */
-	@FXML // fx:id="backBtn"
-	private Button backBtn; // Value injected by FXMLLoader
+    /**
+     * Slider for rotation.
+     */
+    @FXML // fx:id="rotationSlider"
+    private Slider rotationSlider; // Value injected by FXMLLoader
 
-	/**
-	 * Continue button.
-	 */
-	@FXML // fx:id="continueBtn"
-	private Button continueBtn; // Value injected by FXMLLoader
+    /**
+     * Crop button.
+     */
+    @FXML // fx:id="cropBtn"
+    private Button cropBtn; // Value injected by FXMLLoader
 
-	/**
-	 * Apply button.
-	 */
-	@FXML // fx:id="applyBtn"
-	private Button applyBtn; // Value injected by FXMLLoader
+    /**
+     * Preview image.
+     */
+    @FXML // fx:id="previewImage"
+    private ImageView previewImage; // Value injected by FXMLLoader
 
-	/**
-	 * Text field.
-	 */
-	@FXML // fx:id="textField"
-	private TextField textField; // Value injected by FXMLLoader
+    /**
+     * Return button.
+     */
+    @FXML // fx:id="returnBtn"
+    private Button returnBtn; // Value injected by FXMLLoader
 
-	/**
+    /**
 	 * Reference to the main application.
 	 */
-	private MainApp mainApp;
+    private MainApp mainApp;
 
-	/**
-	 * preview of the full tooth Image.
+    /**
+	 * Initializes the controller class. This method is automatically called
+	 * after the fxml file has been loaded.
 	 */
 	@FXML
-	private ImageView previewImage;
-
-	/**
-	 * Initializes components of the window.
-	 */
-	@FXML
-	void initialize() {
+	private void initialize() {
 		previewImage.fitHeightProperty().bind(((Pane) previewImage.getParent()).heightProperty());
 		previewImage.fitWidthProperty().bind(((Pane) previewImage.getParent()).widthProperty());
-	}
+    }
 
-	/**
-	 * Goes to the previous screen.
-	 *
-	 * @param event
-	 *            event
-	 */
-	@FXML
-	private void previousScreen(ActionEvent event) {
-		mainApp.showImageSelection();
-	}
+    @FXML
+    void previousScreen(ActionEvent event) {
 
-	/**
-	 * Apply the inserted rotation.
-	 *
-	 * @param event
-	 *            event
-	 */
-	@FXML
-	private void applyRotation(ActionEvent event) {
+    }
 
-	}
+    @FXML
+    void handleRotation(ActionEvent event) {
 
-	/**
-	 * Goes to the next screen.
-	 *
-	 * @param event
-	 *            event
-	 */
-	@FXML
-	private void nextScreen(ActionEvent event) {
-		mainApp.showImageFilters();
-	}
+    }
 
-	/**
+    @FXML
+    void handleCrop(ActionEvent event) {
+
+    }
+
+    @FXML
+    void nextScreen(ActionEvent event) {
+
+    }
+
+    /**
 	 * Is called by the main application to give a reference back to itself.
 	 * Also, sets the Images. This is done here because when the method
 	 * initialize is called, there is no reference to the mainapp.
@@ -127,8 +110,5 @@ public class RotationWindowController {
 		if (mainApp.getFullImage() != null) {
 			previewImage.setImage(mainApp.getFullImage());
 		}
-
-		// Add observable list data to the table
-		//filesListView.setItems(mainApp.getFilesList());
 	}
 }

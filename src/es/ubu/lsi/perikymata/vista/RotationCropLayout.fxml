@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.BorderPane?>
+
+<BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="es.ubu.lsi.perikymata.vista.RotationCropLayoutController">
+   <left>
+      <HBox prefHeight="291.0" prefWidth="25.0" BorderPane.alignment="CENTER" />
+   </left>
+   <right>
+      <HBox prefHeight="291.0" prefWidth="25.0" BorderPane.alignment="CENTER" />
+   </right>
+   <top>
+      <AnchorPane maxWidth="1.7976931348623157E308" prefHeight="42.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+         <children>
+            <HBox alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" prefHeight="41.0" prefWidth="270.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+               <children>
+                  <Label prefHeight="17.0" prefWidth="80.0" text="Rotation" />
+                  <Slider fx:id="rotationSlider" onMouseClicked="#handleRotation" prefHeight="14.0" prefWidth="163.0" />
+               </children>
+            </HBox>
+            <HBox alignment="CENTER_RIGHT" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" prefHeight="41.0" prefWidth="297.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+               <children>
+                  <Button fx:id="cropBtn" mnemonicParsing="false" onMouseClicked="#handleCrop" text="Crop" />
+               </children>
+            </HBox>
+         </children>
+         <BorderPane.margin>
+            <Insets left="5.0" right="5.0" top="5.0" />
+         </BorderPane.margin>
+         <padding>
+            <Insets left="8.0" right="8.0" top="8.0" />
+         </padding>
+      </AnchorPane>
+   </top>
+   <bottom>
+      <AnchorPane prefHeight="40.0" prefWidth="590.0" BorderPane.alignment="CENTER">
+         <children>
+            <HBox alignment="CENTER_LEFT" layoutX="24.0" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" prefHeight="41.0" prefWidth="270.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+               <children>
+                  <Button fx:id="returnBtn" mnemonicParsing="false" onMouseClicked="#previousScreen" text="Return" />
+               </children>
+            </HBox>
+            <HBox alignment="CENTER_RIGHT" layoutX="16.0" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" prefHeight="41.0" prefWidth="297.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+               <children>
+                  <Button fx:id="saveAndContinueBtn" alignment="CENTER_RIGHT" mnemonicParsing="false" onMouseClicked="#nextScreen" text="Save and Continue" />
+               </children>
+            </HBox>
+         </children>
+         <BorderPane.margin>
+            <Insets left="5.0" right="5.0" top="5.0" />
+         </BorderPane.margin>
+         <padding>
+            <Insets bottom="2.0" left="8.0" right="8.0" top="8.0" />
+         </padding>
+      </AnchorPane>
+   </bottom>
+   <center>
+      <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+         <children>
+            <ImageView fx:id="previewImage" fitHeight="150.0" fitWidth="200.0" nodeOrientation="INHERIT" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+         </children>
+      </AnchorPane>
+   </center>
+</BorderPane>

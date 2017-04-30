@@ -70,8 +70,8 @@ public class RootLayoutController {
 	 * graphic interface to the Image filters application stage.
 	 */
 	@FXML
-	private void windowRotation() {
-		mainApp.showRotationWindow();
+	private void windowRotationCrop() {
+		mainApp.showRotationCrop();
 	}
 
 	/**

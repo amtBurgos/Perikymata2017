@@ -45,7 +45,7 @@ import es.ubu.lsi.perikymata.vista.ImageFiltersController;
 import es.ubu.lsi.perikymata.vista.ImageSelectionController;
 import es.ubu.lsi.perikymata.vista.PerikymataCountController;
 import es.ubu.lsi.perikymata.vista.RootLayoutController;
-import es.ubu.lsi.perikymata.vista.RotationWindowController;
+import es.ubu.lsi.perikymata.vista.RotationCropLayoutController;
 import es.ubu.lsi.perikymata.vista.TemporaryFolderSelectionController;
 import ij.io.Opener;
 import javafx.application.Application;
@@ -383,22 +383,22 @@ public class MainApp extends Application {
 	/**
 	 * Shows the Rotation Window.
 	 */
-	public void showRotationWindow() {
+	public void showRotationCrop() {
 		try {
 			// Loads the FXML view.
 			FXMLLoader loader = new FXMLLoader();
-			loader.setLocation(MainApp.class.getResource("vista/RotationWindow.fxml"));
-			AnchorPane rotationWindow = (AnchorPane) loader.load();
+			loader.setLocation(MainApp.class.getResource("vista/RotationCropLayout.fxml"));
+			BorderPane window = (BorderPane) loader.load();
 
 			// Shows this layout in the center of the rootLayout.
-			rootLayout.setCenter(rotationWindow);
+			rootLayout.setCenter(window);
 
 			// Gives a mainapp's reference to the controller of the layout.
-			RotationWindowController controller = loader.getController();
+			RotationCropLayoutController controller = loader.getController();
 			controller.setMainApp(this);
 
 		} catch (IOException e) {
-			this.getLogger().log(Level.SEVERE, "Exception occur loading rotation Stage.", e);
+			this.getLogger().log(Level.SEVERE, "Exception occur loading rotation and crop Stage.", e);
 			Alert alert = new Alert(Alert.AlertType.ERROR);
 			alert.setTitle("Internal error.");
 			alert.setHeaderText("Error loading rotation stage.\n");
