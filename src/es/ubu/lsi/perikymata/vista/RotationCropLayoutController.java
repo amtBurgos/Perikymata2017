@@ -1,14 +1,5 @@
 package es.ubu.lsi.perikymata.vista;
 
-import java.awt.geom.AffineTransform;
-import java.awt.image.AffineTransformOp;
-import java.awt.image.BufferedImage;
-import java.awt.image.RenderedImage;
-import java.io.File;
-import java.util.logging.Level;
-
-import javax.imageio.ImageIO;
-
 /**
  * License: GPL
  *
@@ -26,14 +17,23 @@ import javax.imageio.ImageIO;
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import java.awt.geom.AffineTransform;
+import java.awt.image.AffineTransformOp;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.util.logging.Level;
+import javax.imageio.ImageIO;
 import es.ubu.lsi.perikymata.MainApp;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Slider;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 
 /**
@@ -79,6 +79,12 @@ public class RotationCropLayoutController {
 	 */
 	@FXML // fx:id="previewImage"
 	private ImageView previewImage; // Value injected by FXMLLoader
+
+	/**
+	 * Input for the degrees rotation.
+	 */
+	@FXML // fx:id="inputDegrees"
+	private TextField inputDegrees; // Value injected by FXMLLoader
 
 	/**
 	 * Return button.
@@ -143,8 +149,9 @@ public class RotationCropLayoutController {
 			AffineTransformOp op = new AffineTransformOp(transform, AffineTransformOp.TYPE_BILINEAR);
 			Image i = SwingFXUtils.toFXImage(op.filter(img, null), null);
 			previewImage.setImage(i);
-			mainApp.setFullImage(i);
-			mainApp.setFilteredImage(i);
+			//mainApp.setFullImage(i);
+			//mainApp.setFilteredImage(i);
+			inputDegrees.setText(String.valueOf(Math.floor(rotationSlider.getValue())));
 		} catch (Exception e) {
 			mainApp.getLogger().log(Level.SEVERE, "Exception occur rotating image.", e);
 			Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -153,7 +160,67 @@ public class RotationCropLayoutController {
 			alert.setContentText("Can't rotate image");
 			alert.showAndWait();
 		}
+	}
 
+	/**
+	 * Handles the input for the rotation.
+	 */
+	@FXML
+	private void handleInputDegrees(KeyEvent event) {
+		if (event.getCode() == KeyCode.ENTER) {
+			String input = inputDegrees.getText();
+			if (validateInputDegrees(input)) {
+				try {
+					Double degrees = Double.parseDouble(input);
+					rotationRadians = Math.toRadians(degrees);
+					AffineTransform transform = new AffineTransform();
+					transform.rotate(rotationRadians, img.getWidth() / 2, img.getHeight() / 2);
+					AffineTransformOp op = new AffineTransformOp(transform, AffineTransformOp.TYPE_BILINEAR);
+					Image i = SwingFXUtils.toFXImage(op.filter(img, null), null);
+					previewImage.setImage(i);
+					//mainApp.setFullImage(i);
+					//mainApp.setFilteredImage(i);
+					rotationSlider.setValue(degrees);
+				} catch (Exception e) {
+					mainApp.getLogger().log(Level.SEVERE, "Exception occur rotating image.", e);
+					Alert alert = new Alert(Alert.AlertType.ERROR);
+					alert.setTitle("Error rotating image");
+					alert.setHeaderText("Can't rotate image.\n");
+					alert.setContentText("Can't rotate image");
+					alert.showAndWait();
+				}
+			} else {
+				Alert alert = new Alert(Alert.AlertType.WARNING);
+				alert.setTitle("Can't rotate image");
+				alert.setHeaderText("Invalid input.\n");
+				alert.setContentText("Please, insert a number between -180.0 and 180.0.");
+				alert.showAndWait();
+			}
+		} else {
+			event.consume();
+		}
+	}
+
+	/**
+	 * Validate a input for rotation.
+	 *
+	 * @param input
+	 *            user input
+	 * @return true/false if its a valid degree
+	 */
+	@SuppressWarnings("finally")
+	private boolean validateInputDegrees(String input) {
+		boolean valid = false;
+		try {
+			Double value = Double.parseDouble(input);
+			if (value <= 180.0 && value >= -180.0) {
+				valid = true;
+			}
+		} catch (NumberFormatException e) {
+			mainApp.getLogger().log(Level.WARNING, "The input it´s not a number", e);
+		} finally {
+			return valid;
+		}
 	}
 
 	/**
@@ -202,7 +269,9 @@ public class RotationCropLayoutController {
 			File outputfile = new File(mainApp.getProjectPath() + File.separator + "TEST.jpg");
 			ImageIO.write(SwingFXUtils.fromFXImage(mainApp.getFilteredImage(), null), "png", outputfile);
 			// TODO Aplicar cambios y guardar
-			//mainApp.showPerikymataCount();
+			//mainApp.setFullImage(previewImage.getImage());
+			//mainApp.setFilteredImage(previewImage.getImage());
+			// mainApp.showPerikymataCount();
 		} catch (Exception e) {
 			mainApp.getLogger().log(Level.SEVERE, "Exception saving project and loading next stage.", e);
 			Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -227,6 +296,7 @@ public class RotationCropLayoutController {
 			previewImage.setImage(mainApp.getFullImage());
 			// Full image from the previous screen
 			img = SwingFXUtils.fromFXImage(previewImage.getImage(), null);
+			inputDegrees.setText("0.0");
 		}
 	}
 }
