@@ -35,6 +35,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.image.PixelReader;
+import javafx.scene.image.WritableImage;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
@@ -317,18 +319,39 @@ public class RotationCropLayoutController {
 	}
 
 	/**
-	 * Handle the crop feature.
+	 * Handle the crop feature, load the image cropped and save a copy to disk.
 	 */
 	@FXML
 	private void handleCrop() {
 		try {
 			// If the user has selected an area to crop
 			if (rect != null) {
-				// TODO
 				System.out.println("Cropping");
 
+				// Only need X or Y because of the preservate ratio checkin in
+				// the fxml file
+				Double ratio = previewImage.getBoundsInParent().getWidth() / previewImage.getImage().getWidth();
+
+				// Translate local coordinates of the area selector rectangle to
+				// image pixel
+
+				Point2D.Double start = new Point2D.Double(croppingPoints[0].x / ratio, croppingPoints[0].y / ratio);
+
+				// Point2D.Double end = new Point2D.Double(rect.getX() / ratio,
+				// rect.getY() / ratio);
+				Point2D.Double end = new Point2D.Double(croppingPoints[1].x / ratio, croppingPoints[1].y / ratio);
+
+				// Get image and apply crop rectangle
+
+				PixelReader pReader = previewImage.getImage().getPixelReader();
+				WritableImage imageCropped = new WritableImage(pReader, (int) start.x, (int) start.y,
+						(int) (end.x - start.x), (int) (end.y - start.y));
+
 				// Save cropped image to disk, and load it in the image preview
-				// TODO button for reset to the original image
+				BufferedImage renderedImage = SwingFXUtils.fromFXImage(imageCropped, null);
+				File outputfile = new File(mainApp.getProjectPath() + File.separator + "TEST_CROP.png");
+				outputfile.setWritable(true, false);
+				ImageIO.write(renderedImage, "png", outputfile);
 			}
 		} catch (Exception e) {
 			mainApp.getLogger().log(Level.SEVERE, "Exception occur cropping image.", e);
@@ -356,7 +379,7 @@ public class RotationCropLayoutController {
 
 				previewImage.setCursor(Cursor.CROSSHAIR);
 			} else {
-				// Remove listeners
+				// Remove listeners and possibles rectangles areas
 				previewImage.removeEventHandler(MouseEvent.MOUSE_PRESSED, mousePressedHandler);
 				previewImage.removeEventHandler(MouseEvent.MOUSE_DRAGGED, mouseDraggedHandler);
 				previewImage.removeEventHandler(MouseEvent.MOUSE_RELEASED, mouseReleasedHandler);
@@ -382,6 +405,7 @@ public class RotationCropLayoutController {
 			System.out.println("Next Screen");
 			System.out.println("saving at: " + mainApp.getProjectPath() + File.separator);
 			File outputfile = new File(mainApp.getProjectPath() + File.separator + "TEST.jpg");
+			outputfile.setWritable(true, false);
 			ImageIO.write(SwingFXUtils.fromFXImage(mainApp.getFilteredImage(), null), "png", outputfile);
 			// TODO Aplicar cambios y guardar
 			// mainApp.setFullImage(previewImage.getImage());
