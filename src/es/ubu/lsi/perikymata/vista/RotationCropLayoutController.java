@@ -21,8 +21,6 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.function.Predicate;
 import java.util.logging.Level;
 import javax.imageio.ImageIO;
@@ -119,11 +117,6 @@ public class RotationCropLayoutController {
 	private Double rotationRadians;
 
 	/**
-	 * True if the crop button is selected.
-	 */
-	private boolean cropping;
-
-	/**
 	 * List with the points to create a rectangle.
 	 */
 	private Point2D.Double[] croppingPoints;
@@ -153,7 +146,6 @@ public class RotationCropLayoutController {
 		previewImage.fitHeightProperty().bind(((Pane) previewImage.getParent()).heightProperty());
 		previewImage.fitWidthProperty().bind(((Pane) previewImage.getParent()).widthProperty());
 		rotationRadians = 0.0;
-		cropping = false;
 		croppingPoints = new Point2D.Double[2];
 		pane = (Pane) previewImage.getParent();
 		rect = null;
@@ -164,15 +156,14 @@ public class RotationCropLayoutController {
 	 * Initializes the mouse event handler.
 	 */
 	private void initMouseEventHandler() {
+
+		// Handler for press event
 		mousePressedHandler = new EventHandler<MouseEvent>() {
 
 			@Override
 			public void handle(MouseEvent event) {
-				if (cropping == false) {
-					// First click
-					System.out.println("Primer click");
-					croppingPoints[0] = new Point2D.Double(event.getX(), event.getY());
-
+				// The interaction will be with the left button of the mouse
+				if (!event.isSecondaryButtonDown()) {
 					// Discard previous rectangles in the pane
 					pane.getChildren().removeIf(new Predicate<Object>() {
 						@Override
@@ -180,22 +171,15 @@ public class RotationCropLayoutController {
 							return o instanceof Rectangle;
 						}
 					});
-
-					// Change flag
-					cropping = true;
-				} else {
-					// Second click
-					System.out.println("Segundo click");
-					croppingPoints[1] = new Point2D.Double(event.getX(), event.getY());
-
-					rect = new Rectangle(croppingPoints[0].x, croppingPoints[0].y,
-							Math.abs(croppingPoints[1].x - croppingPoints[0].x),
-							Math.abs(croppingPoints[1].y - croppingPoints[0].y));
-					rect.setStroke(Color.BLUE);
+					croppingPoints[0] = new Point2D.Double(event.getX(), event.getY());
+					rect = new Rectangle(croppingPoints[0].x, croppingPoints[0].y, 0, 0);
+					rect.setStroke(Color.WHITE);
 					rect.setStrokeWidth(0.8);
 					rect.setStrokeLineCap(StrokeLineCap.SQUARE);
-					rect.setFill(Color.LIGHTBLUE.deriveColor(0, 1.2, 1, 0.6));
+					rect.setFill(Color.WHITE.deriveColor(0, 1.2, 1, 0.6));
 
+					// TODO ?? REDIMENSIONAR CON LA VENTANA --> No se si se
+					// puede
 					// Bind rectangle to parent container (Pane)
 					// rect.heightProperty().bind(pane.heightProperty().subtract(20));
 					// rect.widthProperty().bind(pane.widthProperty().subtract(20));
@@ -204,10 +188,26 @@ public class RotationCropLayoutController {
 					// rect.widthProperty().bind(previewImage.fitWidthProperty());
 
 					pane.getChildren().add(rect);
-
-					// Change flag
-					cropping = false;
 				}
+			}
+		};
+
+		// Handler for drag event
+		mouseDraggedHandler = new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent event) {
+				rect.setWidth(Math.abs(event.getX() - croppingPoints[0].x));
+				rect.setHeight(Math.abs(event.getY() - croppingPoints[0].y));
+			}
+
+		};
+
+		// Handler triggered when the mouse button is released
+		mouseReleasedHandler = new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent event) {
+				// Save the final coordinates
+				croppingPoints[1] = new Point2D.Double(event.getX(), event.getY());
 			}
 		};
 	}
@@ -322,11 +322,13 @@ public class RotationCropLayoutController {
 	@FXML
 	private void handleCrop() {
 		try {
-			System.out.println("Cropping");
-
 			// If the user has selected an area to crop
 			if (rect != null) {
+				// TODO
+				System.out.println("Cropping");
 
+				// Save cropped image to disk, and load it in the image preview
+				// TODO button for reset to the original image
 			}
 		} catch (Exception e) {
 			mainApp.getLogger().log(Level.SEVERE, "Exception occur cropping image.", e);
@@ -340,21 +342,26 @@ public class RotationCropLayoutController {
 	}
 
 	/**
-	 * Handles the opening of the area selector.
+	 * Handles the opening of the area selector, setting up event handlers for
+	 * the image preview node.
 	 */
 	@FXML
 	private void handleSelectorArea() {
 		try {
 			if (areaSelectorBtn.isSelected()) {
-				previewImage.setCursor(Cursor.CROSSHAIR);
-				System.out.println("Area Selector selected");
 				// Add listener to start a rectangle on the image
-				previewImage.addEventHandler(MouseEvent.MOUSE_CLICKED, mousePressedHandler);
+				previewImage.addEventHandler(MouseEvent.MOUSE_PRESSED, mousePressedHandler);
+				previewImage.addEventHandler(MouseEvent.MOUSE_DRAGGED, mouseDraggedHandler);
+				previewImage.addEventHandler(MouseEvent.MOUSE_RELEASED, mouseReleasedHandler);
+
+				previewImage.setCursor(Cursor.CROSSHAIR);
 			} else {
-				System.out.println("Area Selector deselected");
+				// Remove listeners
+				previewImage.removeEventHandler(MouseEvent.MOUSE_PRESSED, mousePressedHandler);
+				previewImage.removeEventHandler(MouseEvent.MOUSE_DRAGGED, mouseDraggedHandler);
+				previewImage.removeEventHandler(MouseEvent.MOUSE_RELEASED, mouseReleasedHandler);
+
 				previewImage.setCursor(Cursor.DEFAULT);
-				// Remove listener to start a rectangle on the image
-				previewImage.removeEventHandler(MouseEvent.MOUSE_CLICKED, mousePressedHandler);
 			}
 		} catch (Exception e) {
 			mainApp.getLogger().log(Level.SEVERE, "Exception occur opening area selectore.", e);
@@ -400,7 +407,7 @@ public class RotationCropLayoutController {
 	 */
 	public void setMainApp(MainApp mainApp) {
 		this.mainApp = mainApp;
-		mainApp.getPrimaryStage().setFullScreen(true);
+		mainApp.getPrimaryStage().setMaximized(true);
 		if (mainApp.getFullImage() != null) {
 			previewImage.setImage(mainApp.getFullImage());
 			// Full image from the previous screen
