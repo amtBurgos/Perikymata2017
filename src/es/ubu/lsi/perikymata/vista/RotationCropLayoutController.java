@@ -114,6 +114,12 @@ public class RotationCropLayoutController {
 	private BufferedImage img;
 
 	/**
+	 * Auxiliar image, used to reset the previewImage when reset button is
+	 * pressed.
+	 */
+	private BufferedImage imgAux;
+
+	/**
 	 * Rotation in radians for the image.
 	 */
 	private Double rotationRadians;
@@ -139,6 +145,11 @@ public class RotationCropLayoutController {
 	private EventHandler<MouseEvent> mousePressedHandler, mouseDraggedHandler, mouseReleasedHandler;
 
 	/**
+	 * image cropped.
+	 */
+	private WritableImage imageCropped;
+
+	/**
 	 * Initializes the controller class. This method is automatically called
 	 * after the fxml file has been loaded.
 	 */
@@ -151,6 +162,7 @@ public class RotationCropLayoutController {
 		croppingPoints = new Point2D.Double[2];
 		pane = (Pane) previewImage.getParent();
 		rect = null;
+		imageCropped = null;
 		initMouseEventHandler();
 	}
 
@@ -167,18 +179,13 @@ public class RotationCropLayoutController {
 				// The interaction will be with the left button of the mouse
 				if (!event.isSecondaryButtonDown()) {
 					// Discard previous rectangles in the pane
-					pane.getChildren().removeIf(new Predicate<Object>() {
-						@Override
-						public boolean test(Object o) {
-							return o instanceof Rectangle;
-						}
-					});
+					removeRectanglesFromView();
 					croppingPoints[0] = new Point2D.Double(event.getX(), event.getY());
 					rect = new Rectangle(croppingPoints[0].x, croppingPoints[0].y, 0, 0);
 					rect.setStroke(Color.WHITE);
-					rect.setStrokeWidth(0.8);
+					rect.setStrokeWidth(0.6);
 					rect.setStrokeLineCap(StrokeLineCap.SQUARE);
-					rect.setFill(Color.WHITE.deriveColor(0, 1.2, 1, 0.6));
+					rect.setFill(Color.WHITE.deriveColor(0, 0, 1, 0.4));
 
 					// TODO ?? REDIMENSIONAR CON LA VENTANA --> No se si se
 					// puede
@@ -212,6 +219,22 @@ public class RotationCropLayoutController {
 				croppingPoints[1] = new Point2D.Double(event.getX(), event.getY());
 			}
 		};
+	}
+
+	/**
+	 * Removes all rectangles from the image preview.
+	 */
+	private void removeRectanglesFromView() {
+		pane.getChildren().removeIf(new Predicate<Object>() {
+			@Override
+			public boolean test(Object o) {
+				boolean isInstance = false;
+				if (o instanceof Rectangle) {
+					isInstance = true;
+				}
+				return isInstance;
+			}
+		});
 	}
 
 	/**
@@ -326,32 +349,24 @@ public class RotationCropLayoutController {
 		try {
 			// If the user has selected an area to crop
 			if (rect != null) {
-				System.out.println("Cropping");
-
-				// Only need X or Y because of the preservate ratio checkin in
+				// Only needed X or Y because of the 'preservate ratio' check-in
+				// in
 				// the fxml file
 				Double ratio = previewImage.getBoundsInParent().getWidth() / previewImage.getImage().getWidth();
 
 				// Translate local coordinates of the area selector rectangle to
 				// image pixel
-
 				Point2D.Double start = new Point2D.Double(croppingPoints[0].x / ratio, croppingPoints[0].y / ratio);
-
-				// Point2D.Double end = new Point2D.Double(rect.getX() / ratio,
-				// rect.getY() / ratio);
 				Point2D.Double end = new Point2D.Double(croppingPoints[1].x / ratio, croppingPoints[1].y / ratio);
 
-				// Get image and apply crop rectangle
-
+				// Get image and apply crop area
 				PixelReader pReader = previewImage.getImage().getPixelReader();
 				WritableImage imageCropped = new WritableImage(pReader, (int) start.x, (int) start.y,
 						(int) (end.x - start.x), (int) (end.y - start.y));
 
-				// Save cropped image to disk, and load it in the image preview
-				BufferedImage renderedImage = SwingFXUtils.fromFXImage(imageCropped, null);
-				File outputfile = new File(mainApp.getProjectPath() + File.separator + "TEST_CROP.png");
-				outputfile.setWritable(true, false);
-				ImageIO.write(renderedImage, "png", outputfile);
+				previewImage.setImage(imageCropped);
+				img = SwingFXUtils.fromFXImage(previewImage.getImage(), null);
+				removeRectanglesFromView();
 			}
 		} catch (Exception e) {
 			mainApp.getLogger().log(Level.SEVERE, "Exception occur cropping image.", e);
@@ -385,6 +400,7 @@ public class RotationCropLayoutController {
 				previewImage.removeEventHandler(MouseEvent.MOUSE_RELEASED, mouseReleasedHandler);
 
 				previewImage.setCursor(Cursor.DEFAULT);
+				removeRectanglesFromView();
 			}
 		} catch (Exception e) {
 			mainApp.getLogger().log(Level.SEVERE, "Exception occur opening area selectore.", e);
@@ -402,15 +418,16 @@ public class RotationCropLayoutController {
 	@FXML
 	private void nextScreen() {
 		try {
-			System.out.println("Next Screen");
-			System.out.println("saving at: " + mainApp.getProjectPath() + File.separator);
-			File outputfile = new File(mainApp.getProjectPath() + File.separator + "TEST.jpg");
-			outputfile.setWritable(true, false);
-			ImageIO.write(SwingFXUtils.fromFXImage(mainApp.getFilteredImage(), null), "png", outputfile);
-			// TODO Aplicar cambios y guardar
-			// mainApp.setFullImage(previewImage.getImage());
-			// mainApp.setFilteredImage(previewImage.getImage());
-			// mainApp.showPerikymataCount();
+			if (imageCropped != null) {
+				// Save cropped image to disk, and load it in the image preview
+				BufferedImage bfImage = SwingFXUtils.fromFXImage(imageCropped, null);
+				File outputfile = new File(mainApp.getProjectPath() + File.separator + "Cropped_Image.png");
+				outputfile.setWritable(true, false);
+				ImageIO.write(bfImage, "png", outputfile);
+			}
+			mainApp.setFullImage(previewImage.getImage());
+			mainApp.setFilteredImage(previewImage.getImage());
+			mainApp.showPerikymataCount();
 		} catch (Exception e) {
 			mainApp.getLogger().log(Level.SEVERE, "Exception saving project and loading next stage.", e);
 			Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -436,6 +453,7 @@ public class RotationCropLayoutController {
 			previewImage.setImage(mainApp.getFullImage());
 			// Full image from the previous screen
 			img = SwingFXUtils.fromFXImage(previewImage.getImage(), null);
+			imgAux = SwingFXUtils.fromFXImage(previewImage.getImage(), null);
 			inputDegrees.setText("0.0");
 		}
 	}
