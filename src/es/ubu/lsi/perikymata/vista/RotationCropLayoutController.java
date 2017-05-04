@@ -21,20 +21,31 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Predicate;
 import java.util.logging.Level;
 import javax.imageio.ImageIO;
 import es.ubu.lsi.perikymata.MainApp;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
+import javafx.scene.Cursor;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.StrokeLineCap;
+import javafx.event.EventHandler;
+import java.awt.geom.Point2D;
 
 /**
  * Control for the rotation and crop view.
@@ -54,7 +65,7 @@ public class RotationCropLayoutController {
 	 * Area selector button.
 	 */
 	@FXML // fx:id="areaSelectorBtn"
-	private Button areaSelectorBtn; // Value injected by FXMLLoader
+	private ToggleButton areaSelectorBtn; // Value injected by FXMLLoader
 
 	/**
 	 * Image for the area selector button.
@@ -108,6 +119,31 @@ public class RotationCropLayoutController {
 	private Double rotationRadians;
 
 	/**
+	 * True if the crop button is selected.
+	 */
+	private boolean cropping;
+
+	/**
+	 * List with the points to create a rectangle.
+	 */
+	private Point2D.Double[] croppingPoints;
+
+	/**
+	 * Rectangle for crop.
+	 */
+	private Rectangle rect;
+
+	/**
+	 * Pane for the previewImage.
+	 */
+	private Pane pane;
+
+	/**
+	 * Customs mouse event handler.
+	 */
+	private EventHandler<MouseEvent> mousePressedHandler, mouseDraggedHandler, mouseReleasedHandler;
+
+	/**
 	 * Initializes the controller class. This method is automatically called
 	 * after the fxml file has been loaded.
 	 */
@@ -117,6 +153,63 @@ public class RotationCropLayoutController {
 		previewImage.fitHeightProperty().bind(((Pane) previewImage.getParent()).heightProperty());
 		previewImage.fitWidthProperty().bind(((Pane) previewImage.getParent()).widthProperty());
 		rotationRadians = 0.0;
+		cropping = false;
+		croppingPoints = new Point2D.Double[2];
+		pane = (Pane) previewImage.getParent();
+		rect = null;
+		initMouseEventHandler();
+	}
+
+	/**
+	 * Initializes the mouse event handler.
+	 */
+	private void initMouseEventHandler() {
+		mousePressedHandler = new EventHandler<MouseEvent>() {
+
+			@Override
+			public void handle(MouseEvent event) {
+				if (cropping == false) {
+					// First click
+					System.out.println("Primer click");
+					croppingPoints[0] = new Point2D.Double(event.getX(), event.getY());
+
+					// Discard previous rectangles in the pane
+					pane.getChildren().removeIf(new Predicate<Object>() {
+						@Override
+						public boolean test(Object o) {
+							return o instanceof Rectangle;
+						}
+					});
+
+					// Change flag
+					cropping = true;
+				} else {
+					// Second click
+					System.out.println("Segundo click");
+					croppingPoints[1] = new Point2D.Double(event.getX(), event.getY());
+
+					rect = new Rectangle(croppingPoints[0].x, croppingPoints[0].y,
+							Math.abs(croppingPoints[1].x - croppingPoints[0].x),
+							Math.abs(croppingPoints[1].y - croppingPoints[0].y));
+					rect.setStroke(Color.BLUE);
+					rect.setStrokeWidth(0.8);
+					rect.setStrokeLineCap(StrokeLineCap.SQUARE);
+					rect.setFill(Color.LIGHTBLUE.deriveColor(0, 1.2, 1, 0.6));
+
+					// Bind rectangle to parent container (Pane)
+					// rect.heightProperty().bind(pane.heightProperty().subtract(20));
+					// rect.widthProperty().bind(pane.widthProperty().subtract(20));
+
+					// rect.heightProperty().bind(previewImage.fitHeightProperty());
+					// rect.widthProperty().bind(previewImage.fitWidthProperty());
+
+					pane.getChildren().add(rect);
+
+					// Change flag
+					cropping = false;
+				}
+			}
+		};
 	}
 
 	/**
@@ -149,8 +242,8 @@ public class RotationCropLayoutController {
 			AffineTransformOp op = new AffineTransformOp(transform, AffineTransformOp.TYPE_BILINEAR);
 			Image i = SwingFXUtils.toFXImage(op.filter(img, null), null);
 			previewImage.setImage(i);
-			//mainApp.setFullImage(i);
-			//mainApp.setFilteredImage(i);
+			// mainApp.setFullImage(i);
+			// mainApp.setFilteredImage(i);
 			inputDegrees.setText(String.valueOf(Math.floor(rotationSlider.getValue())));
 		} catch (Exception e) {
 			mainApp.getLogger().log(Level.SEVERE, "Exception occur rotating image.", e);
@@ -178,8 +271,8 @@ public class RotationCropLayoutController {
 					AffineTransformOp op = new AffineTransformOp(transform, AffineTransformOp.TYPE_BILINEAR);
 					Image i = SwingFXUtils.toFXImage(op.filter(img, null), null);
 					previewImage.setImage(i);
-					//mainApp.setFullImage(i);
-					//mainApp.setFilteredImage(i);
+					// mainApp.setFullImage(i);
+					// mainApp.setFilteredImage(i);
 					rotationSlider.setValue(degrees);
 				} catch (Exception e) {
 					mainApp.getLogger().log(Level.SEVERE, "Exception occur rotating image.", e);
@@ -229,7 +322,12 @@ public class RotationCropLayoutController {
 	@FXML
 	private void handleCrop() {
 		try {
-			System.out.println("Crop");
+			System.out.println("Cropping");
+
+			// If the user has selected an area to crop
+			if (rect != null) {
+
+			}
 		} catch (Exception e) {
 			mainApp.getLogger().log(Level.SEVERE, "Exception occur cropping image.", e);
 			Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -247,7 +345,17 @@ public class RotationCropLayoutController {
 	@FXML
 	private void handleSelectorArea() {
 		try {
-			System.out.println("Area Selector");
+			if (areaSelectorBtn.isSelected()) {
+				previewImage.setCursor(Cursor.CROSSHAIR);
+				System.out.println("Area Selector selected");
+				// Add listener to start a rectangle on the image
+				previewImage.addEventHandler(MouseEvent.MOUSE_CLICKED, mousePressedHandler);
+			} else {
+				System.out.println("Area Selector deselected");
+				previewImage.setCursor(Cursor.DEFAULT);
+				// Remove listener to start a rectangle on the image
+				previewImage.removeEventHandler(MouseEvent.MOUSE_CLICKED, mousePressedHandler);
+			}
 		} catch (Exception e) {
 			mainApp.getLogger().log(Level.SEVERE, "Exception occur opening area selectore.", e);
 			Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -269,8 +377,8 @@ public class RotationCropLayoutController {
 			File outputfile = new File(mainApp.getProjectPath() + File.separator + "TEST.jpg");
 			ImageIO.write(SwingFXUtils.fromFXImage(mainApp.getFilteredImage(), null), "png", outputfile);
 			// TODO Aplicar cambios y guardar
-			//mainApp.setFullImage(previewImage.getImage());
-			//mainApp.setFilteredImage(previewImage.getImage());
+			// mainApp.setFullImage(previewImage.getImage());
+			// mainApp.setFilteredImage(previewImage.getImage());
 			// mainApp.showPerikymataCount();
 		} catch (Exception e) {
 			mainApp.getLogger().log(Level.SEVERE, "Exception saving project and loading next stage.", e);
@@ -292,6 +400,7 @@ public class RotationCropLayoutController {
 	 */
 	public void setMainApp(MainApp mainApp) {
 		this.mainApp = mainApp;
+		mainApp.getPrimaryStage().setFullScreen(true);
 		if (mainApp.getFullImage() != null) {
 			previewImage.setImage(mainApp.getFullImage());
 			// Full image from the previous screen

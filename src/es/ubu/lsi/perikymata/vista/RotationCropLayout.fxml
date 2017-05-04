@@ -22,26 +22,29 @@
                <children>
                   <Label prefHeight="17.0" prefWidth="53.0" text="Rotation" />
                   <Slider fx:id="rotationSlider" blockIncrement="1.0" max="180.0" min="-180.0" onMouseReleased="#handleRotation" prefHeight="14.0" prefWidth="216.0" />
-                  <TextField fx:id="inputDegrees" onKeyReleased="#handleInputDegrees" prefHeight="25.0" prefWidth="54.0">
+                  <TextField fx:id="inputDegrees" onKeyReleased="#handleInputDegrees" prefHeight="25.0" prefWidth="47.0">
                      <HBox.margin>
                         <Insets left="12.0" />
                      </HBox.margin>
+                     <tooltip>
+                        <Tooltip text="Enter a degree between -180 and 180, then press enter" />
+                     </tooltip>
                   </TextField>
                </children>
             </HBox>
             <HBox alignment="CENTER_RIGHT" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" prefHeight="41.0" prefWidth="148.0" AnchorPane.rightAnchor="16.0">
                <children>
-                  <Button fx:id="areaSelectorBtn" mnemonicParsing="false" onMouseClicked="#handleSelectorArea" prefHeight="32.0" prefWidth="40.0">
-                     <HBox.margin>
-                        <Insets right="10.0" />
-                     </HBox.margin>
-                     <tooltip>
-                        <Tooltip text="Select area to crop" />
-                     </tooltip>
+                  <ToggleButton fx:id="areaSelectorBtn" mnemonicParsing="false" onMouseClicked="#handleSelectorArea">
                      <graphic>
                         <ImageView fx:id="areaSelectorBtnImage" fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true" x="0.0" />
                      </graphic>
-                  </Button>
+                     <tooltip>
+                        <Tooltip text="Select area to crop" />
+                     </tooltip>
+                     <HBox.margin>
+                        <Insets right="10.0" />
+                     </HBox.margin>
+                  </ToggleButton>
                   <Button fx:id="cropBtn" mnemonicParsing="false" onMouseClicked="#handleCrop" prefHeight="32.0" text="Crop">
                      <tooltip>
                         <Tooltip text="Crop selected area" />
@@ -82,9 +85,9 @@
    <center>
       <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <children>
-            <Pane prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <Pane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <children>
-                  <ImageView fx:id="previewImage" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fx:id="previewImage" pickOnBounds="true" preserveRatio="true" smooth="false">
                      <viewport>
                         <Rectangle2D />
                      </viewport></ImageView>
