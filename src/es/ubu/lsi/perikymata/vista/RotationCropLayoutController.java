@@ -117,7 +117,6 @@ public class RotationCropLayoutController {
 	 * Auxiliar image, used to reset the previewImage when reset button is
 	 * pressed.
 	 */
-	@SuppressWarnings("unused")
 	private BufferedImage imgAux;
 
 	/**
@@ -156,7 +155,7 @@ public class RotationCropLayoutController {
 	 */
 	@FXML
 	private void initialize() {
-		areaSelectorBtnImage.setImage(new Image(this.getClass().getResource("/rsc/Square-icon.png").toExternalForm()));
+		areaSelectorBtnImage.setImage(new Image(this.getClass().getResource("/rsc/White-Square-icon.png").toExternalForm()));
 		previewImage.fitHeightProperty().bind(((Pane) previewImage.getParent()).heightProperty());
 		previewImage.fitWidthProperty().bind(((Pane) previewImage.getParent()).widthProperty());
 		rotationRadians = 0.0;
