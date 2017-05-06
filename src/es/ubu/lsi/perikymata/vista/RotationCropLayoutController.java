@@ -117,6 +117,7 @@ public class RotationCropLayoutController {
 	 * Auxiliar image, used to reset the previewImage when reset button is
 	 * pressed.
 	 */
+	@SuppressWarnings("unused")
 	private BufferedImage imgAux;
 
 	/**
@@ -186,16 +187,6 @@ public class RotationCropLayoutController {
 					rect.setStrokeWidth(0.6);
 					rect.setStrokeLineCap(StrokeLineCap.SQUARE);
 					rect.setFill(Color.WHITE.deriveColor(0, 0, 1, 0.4));
-
-					// TODO ?? REDIMENSIONAR CON LA VENTANA --> No se si se
-					// puede
-					// Bind rectangle to parent container (Pane)
-					// rect.heightProperty().bind(pane.heightProperty().subtract(20));
-					// rect.widthProperty().bind(pane.widthProperty().subtract(20));
-
-					// rect.heightProperty().bind(previewImage.fitHeightProperty());
-					// rect.widthProperty().bind(previewImage.fitWidthProperty());
-
 					pane.getChildren().add(rect);
 				}
 			}
@@ -350,8 +341,7 @@ public class RotationCropLayoutController {
 			// If the user has selected an area to crop
 			if (rect != null) {
 				// Only needed X or Y because of the 'preservate ratio' check-in
-				// in
-				// the fxml file
+				// in the fxml file
 				Double ratio = previewImage.getBoundsInParent().getWidth() / previewImage.getImage().getWidth();
 
 				// Translate local coordinates of the area selector rectangle to
@@ -409,6 +399,29 @@ public class RotationCropLayoutController {
 			alert.setHeaderText("Can't open area selector.\n");
 			alert.setContentText("Can't open area selector.");
 			alert.showAndWait();
+		}
+	}
+
+	/**
+	 * Resets the view of the image to zero degrees rotation and original image.
+	 */
+	@FXML
+	private void handleReset() {
+		try {
+			removeRectanglesFromView();
+			previewImage.setImage(SwingFXUtils.toFXImage(imgAux, null));
+			img = SwingFXUtils.fromFXImage(previewImage.getImage(), null);
+			rotationSlider.setValue(0.0);
+			inputDegrees.setText("0.0");
+			if (areaSelectorBtn.isSelected()) {
+				previewImage.removeEventHandler(MouseEvent.MOUSE_PRESSED, mousePressedHandler);
+				previewImage.removeEventHandler(MouseEvent.MOUSE_DRAGGED, mouseDraggedHandler);
+				previewImage.removeEventHandler(MouseEvent.MOUSE_RELEASED, mouseReleasedHandler);
+				previewImage.setCursor(Cursor.DEFAULT);
+				areaSelectorBtn.setSelected(false);
+			}
+		} catch (Exception e) {
+			mainApp.getLogger().log(Level.SEVERE, "Exception occur resetting view", e);
 		}
 	}
 
