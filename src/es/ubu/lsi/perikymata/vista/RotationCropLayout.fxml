@@ -21,16 +21,16 @@
             <HBox alignment="CENTER_LEFT" layoutX="32.0" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" prefHeight="41.0" prefWidth="600.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
                <children>
                   <Label prefHeight="17.0" prefWidth="53.0" text="Rotation" />
-                  <Slider fx:id="rotationSlider" blockIncrement="1.0" max="180.0" min="-180.0" onMouseReleased="#handleRotation" prefHeight="14.0" prefWidth="216.0">
+                  <Slider fx:id="rotationSlider" blockIncrement="1.0" max="40.0" min="-40.0" onMouseReleased="#handleRotation" prefHeight="14.0" prefWidth="216.0">
                      <tooltip>
                         <Tooltip text="Slide to rotate the image" />
                      </tooltip></Slider>
-                  <TextField fx:id="inputDegrees" onKeyReleased="#handleInputDegrees" prefHeight="25.0" prefWidth="47.0">
+                  <TextField fx:id="inputDegrees" onKeyReleased="#handleInputDegrees" prefHeight="25.0" prefWidth="50.0">
                      <HBox.margin>
                         <Insets left="12.0" />
                      </HBox.margin>
                      <tooltip>
-                        <Tooltip text="Enter a degree between -180 and 180, then press enter" />
+                        <Tooltip text="Enter a degree between -40 and 40, then press enter" />
                      </tooltip>
                   </TextField>
                   <Label text="Degrees">

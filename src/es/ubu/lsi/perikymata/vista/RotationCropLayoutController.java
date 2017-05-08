@@ -21,6 +21,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.util.Locale;
 import java.util.function.Predicate;
 import java.util.logging.Level;
 import javax.imageio.ImageIO;
@@ -255,7 +256,7 @@ public class RotationCropLayoutController {
 	}
 
 	/**
-	 * Handles the rotation feature.
+	 * Handles the rotation feature with the slider item.
 	 */
 	@FXML
 	private void handleRotation() {
@@ -266,9 +267,7 @@ public class RotationCropLayoutController {
 			AffineTransformOp op = new AffineTransformOp(transform, AffineTransformOp.TYPE_BILINEAR);
 			Image i = SwingFXUtils.toFXImage(op.filter(img, null), null);
 			previewImage.setImage(i);
-			// mainApp.setFullImage(i);
-			// mainApp.setFilteredImage(i);
-			inputDegrees.setText(String.valueOf(Math.floor(rotationSlider.getValue())));
+			inputDegrees.setText(String.format(Locale.US, "%.2f%n", rotationSlider.getValue()));
 		} catch (Exception e) {
 			mainApp.getLogger().log(Level.SEVERE, "Exception occur rotating image.", e);
 			Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -295,8 +294,6 @@ public class RotationCropLayoutController {
 					AffineTransformOp op = new AffineTransformOp(transform, AffineTransformOp.TYPE_BILINEAR);
 					Image i = SwingFXUtils.toFXImage(op.filter(img, null), null);
 					previewImage.setImage(i);
-					// mainApp.setFullImage(i);
-					// mainApp.setFilteredImage(i);
 					rotationSlider.setValue(degrees);
 				} catch (Exception e) {
 					mainApp.getLogger().log(Level.SEVERE, "Exception occur rotating image.", e);
@@ -310,7 +307,7 @@ public class RotationCropLayoutController {
 				Alert alert = new Alert(Alert.AlertType.WARNING);
 				alert.setTitle("Can't rotate image");
 				alert.setHeaderText("Invalid input.\n");
-				alert.setContentText("Please, insert a number between -180.0 and 180.0.");
+				alert.setContentText("Please, insert a number between -40.0 and 40.0.");
 				alert.showAndWait();
 			}
 		} else {
@@ -330,7 +327,7 @@ public class RotationCropLayoutController {
 		boolean valid = false;
 		try {
 			Double value = Double.parseDouble(input);
-			if (value <= 180.0 && value >= -180.0) {
+			if (value <= 40.0 && value >= -40.0) {
 				valid = true;
 			}
 		} catch (NumberFormatException e) {
