@@ -49,10 +49,13 @@
                         <Insets left="15.0" right="10.0" />
                      </HBox.margin>
                   </ToggleButton>
-                  <Button fx:id="cropBtn" mnemonicParsing="false" onMouseClicked="#handleCrop" prefHeight="32.0" text="Crop">
+                  <Button fx:id="cropBtn" mnemonicParsing="false" onMouseClicked="#handleCrop" prefHeight="32.0">
                      <tooltip>
                         <Tooltip text="Crop selected area" />
-                     </tooltip></Button>
+                     </tooltip>
+                     <graphic>
+                        <ImageView fx:id="cropBtnImage" fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true" x="0.0" />
+                     </graphic></Button>
                   <Button mnemonicParsing="false" onMouseClicked="#handleReset" text="Reset">
                      <HBox.margin>
                         <Insets left="15.0" />

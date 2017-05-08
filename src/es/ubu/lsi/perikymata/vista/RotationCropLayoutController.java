@@ -86,6 +86,12 @@ public class RotationCropLayoutController {
 	private Button cropBtn; // Value injected by FXMLLoader
 
 	/**
+	 * Image for the crop button.
+	 */
+	@FXML // fx:id="cropBtnImage"
+	private ImageView cropBtnImage; // Value injected by FXMLLoader
+
+	/**
 	 * Preview image.
 	 */
 	@FXML // fx:id="previewImage"
@@ -155,7 +161,9 @@ public class RotationCropLayoutController {
 	 */
 	@FXML
 	private void initialize() {
-		areaSelectorBtnImage.setImage(new Image(this.getClass().getResource("/rsc/White-Square-icon.png").toExternalForm()));
+		areaSelectorBtnImage
+				.setImage(new Image(this.getClass().getResource("/rsc/White-Square-icon.png").toExternalForm()));
+		cropBtnImage.setImage(new Image(this.getClass().getResource("/rsc/Crop-2-icon.png").toExternalForm()));
 		previewImage.fitHeightProperty().bind(((Pane) previewImage.getParent()).heightProperty());
 		previewImage.fitWidthProperty().bind(((Pane) previewImage.getParent()).widthProperty());
 		rotationRadians = 0.0;
