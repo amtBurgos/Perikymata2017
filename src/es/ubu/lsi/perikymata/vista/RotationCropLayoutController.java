@@ -169,6 +169,7 @@ public class RotationCropLayoutController {
 		rotationRadians = 0.0;
 		croppingPoints = new Point2D.Double[2];
 		pane = (Pane) previewImage.getParent();
+		pane.setStyle("-fx-background-color: #000000;");
 		rect = null;
 		imageCropped = null;
 		initMouseEventHandler();
