@@ -18,24 +18,22 @@
    <top>
       <AnchorPane maxWidth="1.7976931348623157E308" prefHeight="42.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <children>
-            <HBox alignment="CENTER_LEFT" layoutX="32.0" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" prefHeight="41.0" prefWidth="600.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
-               <children>
+            <ToolBar prefHeight="40.0" prefWidth="200.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+               <items>
                   <Label prefHeight="17.0" prefWidth="53.0" text="Rotation" />
                   <Slider fx:id="rotationSlider" blockIncrement="1.0" max="40.0" min="-40.0" onMouseReleased="#handleRotation" prefHeight="14.0" prefWidth="216.0">
                      <tooltip>
                         <Tooltip text="Slide to rotate the image" />
-                     </tooltip></Slider>
+                     </tooltip>
+                  </Slider>
                   <TextField fx:id="inputDegrees" onKeyReleased="#handleInputDegrees" prefHeight="25.0" prefWidth="50.0">
-                     <HBox.margin>
-                        <Insets left="12.0" />
-                     </HBox.margin>
                      <tooltip>
                         <Tooltip text="Enter a degree between -40 and 40, then press enter" />
                      </tooltip>
                   </TextField>
                   <Label text="Degrees">
                      <padding>
-                        <Insets left="5.0" />
+                        <Insets left="5.0" right="5.0" />
                      </padding>
                   </Label>
                   <ToggleButton fx:id="areaSelectorBtn" mnemonicParsing="false" onMouseClicked="#handleSelectorArea">
@@ -45,9 +43,6 @@
                      <tooltip>
                         <Tooltip text="Select area to crop" />
                      </tooltip>
-                     <HBox.margin>
-                        <Insets left="15.0" right="10.0" />
-                     </HBox.margin>
                   </ToggleButton>
                   <Button fx:id="cropBtn" mnemonicParsing="false" onMouseClicked="#handleCrop" prefHeight="32.0">
                      <tooltip>
@@ -55,20 +50,10 @@
                      </tooltip>
                      <graphic>
                         <ImageView fx:id="cropBtnImage" fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true" x="0.0" />
-                     </graphic></Button>
-                  <Button mnemonicParsing="false" onMouseClicked="#handleReset" text="Reset">
-                     <HBox.margin>
-                        <Insets left="15.0" />
-                     </HBox.margin>
-                     <tooltip>
-                        <Tooltip text="Resets the view" />
-                     </tooltip>
+                     </graphic>
                   </Button>
-               </children>
-               <padding>
-                  <Insets left="10.0" />
-               </padding>
-            </HBox>
+               </items>
+            </ToolBar>
          </children>
          <BorderPane.margin>
             <Insets left="5.0" right="5.0" top="5.0" />
@@ -81,14 +66,25 @@
    <bottom>
       <AnchorPane prefHeight="40.0" prefWidth="590.0" BorderPane.alignment="CENTER">
          <children>
-            <HBox alignment="CENTER_LEFT" layoutX="24.0" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" prefHeight="41.0" prefWidth="270.0">
+            <HBox alignment="CENTER_LEFT" layoutX="24.0" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" prefHeight="41.0" prefWidth="177.0">
                <children>
                   <Button fx:id="returnBtn" mnemonicParsing="false" onMouseClicked="#previousScreen" text="Return" />
+                  <Button mnemonicParsing="false" onMouseClicked="#handleReset" text="Reset View">
+                     <tooltip>
+                        <Tooltip text="Resets the view" />
+                     </tooltip>
+                     <HBox.margin>
+                        <Insets left="10.0" />
+                     </HBox.margin>
+                  </Button>
                </children>
             </HBox>
-            <HBox alignment="CENTER_RIGHT" layoutX="16.0" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" prefHeight="41.0" prefWidth="297.0" AnchorPane.rightAnchor="0.0">
+            <HBox alignment="CENTER_RIGHT" layoutX="16.0" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" prefHeight="41.0" prefWidth="444.0" AnchorPane.rightAnchor="16.0">
                <children>
-                  <Button fx:id="saveAndContinueBtn" alignment="CENTER_RIGHT" mnemonicParsing="false" onMouseClicked="#nextScreen" text="Save and Continue" />
+                  <Button mnemonicParsing="false" onAction="#measureStartHandler" text="Measure - Change Start" />
+                  <Button mnemonicParsing="false" onAction="#measureEndHandler" text="Measure - Change End" />
+                  <Button mnemonicParsing="false" onAction="#measure" text="Measure - Edit unit and value" />
+                  <Button fx:id="saveAndContinueBtn" alignment="CENTER_RIGHT" mnemonicParsing="false" onMouseClicked="#nextScreen" text="Save all and Continue" />
                </children>
             </HBox>
          </children>
@@ -109,6 +105,7 @@
                      <viewport>
                         <Rectangle2D />
                      </viewport></ImageView>
+                  <ImageView fx:id="fullOriginalImage" pickOnBounds="true" preserveRatio="true" smooth="false" />
                </children>
                <padding>
                   <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />

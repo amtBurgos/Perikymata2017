@@ -22,18 +22,31 @@ import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.Locale;
+import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.logging.Level;
 import javax.imageio.ImageIO;
 import es.ubu.lsi.perikymata.MainApp;
+import es.ubu.lsi.perikymata.modelo.Measure;
+import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
 import javafx.scene.Cursor;
+import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextFormatter;
 import javafx.scene.control.ToggleButton;
+import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.PixelReader;
@@ -41,10 +54,13 @@ import javafx.scene.image.WritableImage;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.StrokeLineCap;
+import javafx.util.Pair;
 import javafx.event.EventHandler;
 import java.awt.geom.Point2D;
 
@@ -121,8 +137,8 @@ public class RotationCropLayoutController {
 	private BufferedImage img;
 
 	/**
-	 * Auxiliar image, used to reset the previewImage when reset button is
-	 * pressed.
+	 * Auxiliary image, used to reset the previewImage when reset button is
+	 * pressed. It is the original image and does not change.
 	 */
 	private BufferedImage imgAux;
 
@@ -157,6 +173,22 @@ public class RotationCropLayoutController {
 	private WritableImage imageCropped;
 
 	/**
+	 * Measure object with the coordinates and the value of the measure.
+	 */
+	private Measure measure;
+
+	/**
+	 * Drawn line from startMeasure to endMeasure.
+	 */
+	private Line measureLine;
+
+	/**
+	 * Imageview of the original image.
+	 */
+	@FXML
+	private ImageView fullOriginalImage;
+
+	/**
 	 * Initializes the controller class. This method is automatically called
 	 * after the fxml file has been loaded.
 	 */
@@ -167,6 +199,12 @@ public class RotationCropLayoutController {
 		cropBtnImage.setImage(new Image(this.getClass().getResource("/rsc/Crop-2-icon.png").toExternalForm()));
 		previewImage.fitHeightProperty().bind(((Pane) previewImage.getParent()).heightProperty());
 		previewImage.fitWidthProperty().bind(((Pane) previewImage.getParent()).widthProperty());
+
+		// the original preview not visible at initialization
+		fullOriginalImage.setVisible(false);
+		fullOriginalImage.fitHeightProperty().bind(((Pane) fullOriginalImage.getParent()).heightProperty());
+		fullOriginalImage.fitWidthProperty().bind(((Pane) fullOriginalImage.getParent()).widthProperty());
+
 		rotationRadians = 0.0;
 		croppingPoints = new Point2D.Double[2];
 		pane = (Pane) previewImage.getParent();
@@ -455,6 +493,188 @@ public class RotationCropLayoutController {
 			alert.showAndWait();
 		}
 
+	}
+
+	/**
+	 * Clears the handlers of the imageview.
+	 */
+	private void clearImageViewHandlers() {
+		// fullImage.setOnMouseClicked(null);
+		// fullImage.setOnMouseDragged(null);
+		// fullImage.setOnMousePressed(null);
+
+		// If previewImage has events, then we remove them
+		if (areaSelectorBtn.isSelected()) {
+			handleSelectorArea();
+		}
+	}
+
+	/**
+	 * Returns ratio between the original image and the imageview of the
+	 * original image.
+	 *
+	 * @return ratio
+	 */
+	private double getImageToImageViewRatio() {
+		return fullOriginalImage.getImage().getWidth() / fullOriginalImage.getFitWidth();
+	}
+
+	/**
+	 * Handler that puts an event on the image to mark the start of the measure,
+	 * if start and end measures are set, line is drawn and measure dialog is
+	 * called.
+	 */
+	@FXML
+	private void measureStartHandler() {
+		clearImageViewHandlers();
+		fullOriginalImage.setVisible(true);
+		EventHandler<MouseEvent> mouseHandler = new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent mouseEvent) {
+				if (mouseEvent.getEventType() == MouseEvent.MOUSE_CLICKED) {
+					if (measure != null && measure.getStartMeasure() == null) {
+						measure.setStartMeasure(new double[2]);
+					}
+					measure.getStartMeasure()[0] = mouseEvent.getX() * getImageToImageViewRatio();
+					measure.getStartMeasure()[1] = mouseEvent.getY() * getImageToImageViewRatio();
+					// fullImage.setOnMouseClicked(null);
+					// statusLabel.setText("Start measure point selected.");
+					fullOriginalImage.setVisible(false);
+					if (measure.getStartMeasure() != null && measure.getEndMeasure() != null) {
+						measure();
+					}
+				}
+			}
+		};
+		// statusLabel.setText("Selecting start point for the measure.");
+		// fullImage.setPickOnBounds(true);
+		fullOriginalImage.setOnMouseClicked(mouseHandler);
+	}
+
+	/**
+	 * Handler that puts an event on the image to mark the end of the measure,
+	 * if start and end measures are set, line is drawn and measure dialog is
+	 * called.
+	 */
+	@FXML
+	private void measureEndHandler() {
+		clearImageViewHandlers();
+		fullOriginalImage.setVisible(true);
+		EventHandler<MouseEvent> mouseHandler = new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent mouseEvent) {
+				if (mouseEvent.getEventType() == MouseEvent.MOUSE_CLICKED) {
+					if (measure.getEndMeasure() == null) {
+						measure.setEndMeasure(new double[2]);
+					}
+					measure.getEndMeasure()[0] = mouseEvent.getX() * getImageToImageViewRatio();
+					measure.getEndMeasure()[1] = mouseEvent.getY() * getImageToImageViewRatio();
+					// fullImage.setOnMouseClicked(null);
+					// statusLabel.setText("End measure point selected.");
+					fullOriginalImage.setVisible(false);
+					if (measure.getStartMeasure() != null && measure.getEndMeasure() != null) {
+						measure();
+					}
+				}
+			}
+		};
+		// statusLabel.setText("Selecting End point for the measure.");
+		// fullImage.setPickOnBounds(true);
+		fullOriginalImage.setOnMouseClicked(mouseHandler);
+	}
+
+	/**
+	 * Draws the line between startMeasure and EndMeasure and shows a dialog
+	 * asking for the units and value of the measure.
+	 */
+	@FXML
+	private void measure() {
+
+		measureLine.setStartX(measure.getStartMeasure()[0] / getImageToImageViewRatio());
+		measureLine.setStartY(measure.getStartMeasure()[1] / getImageToImageViewRatio());
+		measureLine.setEndX(measure.getEndMeasure()[0] / getImageToImageViewRatio());
+		measureLine.setEndY(measure.getEndMeasure()[1] / getImageToImageViewRatio());
+
+		mainApp.getProject().getMeasure().setStartMeasure(measure.getStartMeasure());
+		mainApp.getProject().getMeasure().setEndMeasure(measure.getEndMeasure());
+
+		// Create the custom dialog.
+		Dialog<Pair<String, String>> dialog = new Dialog<>();
+		dialog.setTitle("Input the image measure unit and measure value.");
+		dialog.setHeaderText("Input the image measure unit and measure value.");
+
+		// Set the button types.
+		ButtonType doneButtonType = new ButtonType("Done", ButtonData.OK_DONE);
+		dialog.getDialogPane().getButtonTypes().addAll(doneButtonType, ButtonType.CANCEL);
+
+		// Create the username and password labels and fields.
+		GridPane grid = new GridPane();
+		grid.setHgap(10);
+		grid.setVgap(10);
+		grid.setPadding(new Insets(20, 150, 10, 10));
+
+		// TextField measureUnit = new TextField();
+		// measureUnit.setPromptText("Measure unit");
+		ObservableList<String> options = FXCollections.observableArrayList("cm", "mm", "µm", "nm");
+		final ComboBox<String> measureUnit = new ComboBox<>(options);
+		if (measure == null || measure.getMeasureUnit() == null)
+			measureUnit.setValue("mm");
+		else
+			measureUnit.setValue(measure.getMeasureUnit());
+		TextField measureValue = new TextField();
+		measureValue.setPromptText("Measure value");
+		if (measure != null && measure.getMeasureValue() != 0) {
+			measureValue.setText(Double.toString(measure.getMeasureValue()));
+		}
+		measureValue.setTextFormatter(new TextFormatter<String>(change -> {
+			if (change.getText().matches("[0-9]*(\\.)?[0-9]*")) {
+				if (change.getText().endsWith("."))
+					change.setText(change.getText() + "0");
+				return change;
+			}
+			return null;
+		}));
+
+		grid.add(new Label("Measure unit:"), 0, 0);
+		grid.add(measureUnit, 1, 0);
+		grid.add(new Label("Measure value:"), 0, 1);
+		grid.add(measureValue, 1, 1);
+
+		// Enable/Disable login button depending on whether a username was
+		// entered.
+		Node acceptButton = dialog.getDialogPane().lookupButton(doneButtonType);
+		acceptButton.setDisable(true);
+
+		// Do some validation (using the Java 8 lambda syntax).
+		measureValue.textProperty().addListener((observable, oldValue, newValue) -> {
+			acceptButton.setDisable(newValue.trim().isEmpty());
+		});
+
+		dialog.getDialogPane().setContent(grid);
+
+		// Request focus on the username field by default.
+		Platform.runLater(() -> measureUnit.requestFocus());
+
+		// Convert the result to a username-password-pair when the login button
+		// is clicked.
+		dialog.setResultConverter(dialogButton -> {
+			if (dialogButton == doneButtonType) {
+
+				return new Pair<>(measureUnit.getValue().toString(), measureValue.getText());
+			}
+			// statusLabel.setText("Measure has not been changed.");
+			return null;
+		});
+
+		Optional<Pair<String, String>> result = dialog.showAndWait();
+
+		result.ifPresent(measureValues -> {
+			// statusLabel.setText("Measure changed correctly.");
+			measure.setMeasureUnit(measureValues.getKey());
+			measure.setMeasureValue(Double.parseDouble(measureValues.getValue()));
+			mainApp.getProject().setMeasure(measure);
+			mainApp.makeProjectXml();
+		});
 	}
 
 	/**
