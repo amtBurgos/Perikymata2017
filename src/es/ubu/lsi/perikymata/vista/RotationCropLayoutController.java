@@ -18,6 +18,7 @@ package es.ubu.lsi.perikymata.vista;
  */
 
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Point2D;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -25,19 +26,23 @@ import java.util.Locale;
 import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.logging.Level;
+
 import javax.imageio.ImageIO;
+
 import es.ubu.lsi.perikymata.MainApp;
 import es.ubu.lsi.perikymata.modelo.Measure;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingFXUtils;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Dialog;
@@ -46,7 +51,6 @@ import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
 import javafx.scene.control.ToggleButton;
-import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.PixelReader;
@@ -61,8 +65,6 @@ import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.StrokeLineCap;
 import javafx.util.Pair;
-import javafx.event.EventHandler;
-import java.awt.geom.Point2D;
 
 /**
  * Control for the rotation and crop view.
@@ -71,12 +73,6 @@ import java.awt.geom.Point2D;
  *
  */
 public class RotationCropLayoutController {
-
-	/**
-	 * Save and continue button.
-	 */
-	@FXML // fx:id="saveAndContinueBtn"
-	private Button saveAndContinueBtn; // Value injected by FXMLLoader
 
 	/**
 	 * Area selector button.
@@ -91,12 +87,6 @@ public class RotationCropLayoutController {
 	private ImageView areaSelectorBtnImage; // Value injected by FXMLLoader
 
 	/**
-	 * Slider for rotation.
-	 */
-	@FXML // fx:id="rotationSlider"
-	private Slider rotationSlider; // Value injected by FXMLLoader
-
-	/**
 	 * Crop button.
 	 */
 	@FXML // fx:id="cropBtn"
@@ -109,27 +99,14 @@ public class RotationCropLayoutController {
 	private ImageView cropBtnImage; // Value injected by FXMLLoader
 
 	/**
-	 * Preview image.
+	 * List with the points to create a rectangle.
 	 */
-	@FXML // fx:id="previewImage"
-	private ImageView previewImage; // Value injected by FXMLLoader
+	private Point2D.Double[] croppingPoints;
 
 	/**
-	 * Input for the degrees rotation.
+	 * image cropped.
 	 */
-	@FXML // fx:id="inputDegrees"
-	private TextField inputDegrees; // Value injected by FXMLLoader
-
-	/**
-	 * Return button.
-	 */
-	@FXML // fx:id="returnBtn"
-	private Button returnBtn; // Value injected by FXMLLoader
-
-	/**
-	 * Reference to the main application.
-	 */
-	private MainApp mainApp;
+	private WritableImage imageCropped;
 
 	/**
 	 * Full image.
@@ -143,34 +120,15 @@ public class RotationCropLayoutController {
 	private BufferedImage imgAux;
 
 	/**
-	 * Rotation in radians for the image.
+	 * Input for the degrees rotation.
 	 */
-	private Double rotationRadians;
+	@FXML // fx:id="inputDegrees"
+	private TextField inputDegrees; // Value injected by FXMLLoader
 
 	/**
-	 * List with the points to create a rectangle.
+	 * Reference to the main application.
 	 */
-	private Point2D.Double[] croppingPoints;
-
-	/**
-	 * Rectangle for crop.
-	 */
-	private Rectangle rect;
-
-	/**
-	 * Pane for the previewImage.
-	 */
-	private Pane pane;
-
-	/**
-	 * Customs mouse event handler.
-	 */
-	private EventHandler<MouseEvent> mousePressedHandler, mouseDraggedHandler, mouseReleasedHandler;
-
-	/**
-	 * image cropped.
-	 */
-	private WritableImage imageCropped;
+	private MainApp mainApp;
 
 	/**
 	 * Measure object with the coordinates and the value of the measure.
@@ -183,10 +141,66 @@ public class RotationCropLayoutController {
 	private Line measureLine;
 
 	/**
+	 * Toggle button for the measure line.
+	 */
+	@FXML
+	private ToggleButton measureLineBtn;
+
+	/**
+	 * Customs mouse event handler for previewImage.
+	 */
+	private EventHandler<MouseEvent> mousePressedHandler, mouseDraggedHandler, mouseReleasedHandler;
+
+	/**
 	 * Imageview of the original image.
 	 */
 	@FXML
-	private ImageView fullOriginalImage;
+	private ImageView originalImagePreview;
+
+	/**
+	 * Customs mouse event handler for original image view.
+	 */
+	private EventHandler<MouseEvent> originalMousePressedHandler, originalMouseDraggedHandler,
+			originalMouseReleasedHandler;
+
+	/**
+	 * Pane for the previewImage.
+	 */
+	private Pane pane;
+
+	/**
+	 * Preview image.
+	 */
+	@FXML // fx:id="previewImage"
+	private ImageView previewImage; // Value injected by FXMLLoader
+
+	/**
+	 * Rectangle for crop.
+	 */
+	private Rectangle rect;
+
+	/**
+	 * Return button.
+	 */
+	@FXML // fx:id="returnBtn"
+	private Button returnBtn; // Value injected by FXMLLoader
+
+	/**
+	 * Rotation in radians for the image.
+	 */
+	private Double rotationRadians;
+
+	/**
+	 * Slider for rotation.
+	 */
+	@FXML // fx:id="rotationSlider"
+	private Slider rotationSlider; // Value injected by FXMLLoader
+
+	/**
+	 * Save and continue button.
+	 */
+	@FXML // fx:id="saveAndContinueBtn"
+	private Button saveAndContinueBtn; // Value injected by FXMLLoader
 
 	/**
 	 * Initializes the controller class. This method is automatically called
@@ -200,10 +214,10 @@ public class RotationCropLayoutController {
 		previewImage.fitHeightProperty().bind(((Pane) previewImage.getParent()).heightProperty());
 		previewImage.fitWidthProperty().bind(((Pane) previewImage.getParent()).widthProperty());
 
-		// the original preview not visible at initialization
-		fullOriginalImage.setVisible(false);
-		fullOriginalImage.fitHeightProperty().bind(((Pane) fullOriginalImage.getParent()).heightProperty());
-		fullOriginalImage.fitWidthProperty().bind(((Pane) fullOriginalImage.getParent()).widthProperty());
+		// the original preview will not be visible at initialization
+		originalImagePreview.setVisible(false);
+		originalImagePreview.fitHeightProperty().bind(((Pane) originalImagePreview.getParent()).heightProperty());
+		originalImagePreview.fitWidthProperty().bind(((Pane) originalImagePreview.getParent()).widthProperty());
 
 		rotationRadians = 0.0;
 		croppingPoints = new Point2D.Double[2];
@@ -215,105 +229,51 @@ public class RotationCropLayoutController {
 	}
 
 	/**
-	 * Initializes the mouse event handler.
+	 * Returns ratio between the image and its image view container.
+	 *
+	 * @param imageView
+	 *            image view which contains the image
+	 * @return ratio
 	 */
-	private void initMouseEventHandler() {
-
-		// Handler for press event
-		mousePressedHandler = new EventHandler<MouseEvent>() {
-
-			@Override
-			public void handle(MouseEvent event) {
-				// The interaction will be with the left button of the mouse
-				if (!event.isSecondaryButtonDown()) {
-					// Discard previous rectangles in the pane
-					removeRectanglesFromView();
-					croppingPoints[0] = new Point2D.Double(event.getX(), event.getY());
-					rect = new Rectangle(croppingPoints[0].x, croppingPoints[0].y, 0, 0);
-					rect.setStroke(Color.WHITE);
-					rect.setStrokeWidth(0.6);
-					rect.setStrokeLineCap(StrokeLineCap.SQUARE);
-					rect.setFill(Color.WHITE.deriveColor(0, 0, 1, 0.4));
-					pane.getChildren().add(rect);
-				}
-			}
-		};
-
-		// Handler for drag event
-		mouseDraggedHandler = new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent event) {
-				rect.setWidth(Math.abs(event.getX() - croppingPoints[0].x));
-				rect.setHeight(Math.abs(event.getY() - croppingPoints[0].y));
-			}
-
-		};
-
-		// Handler triggered when the mouse button is released
-		mouseReleasedHandler = new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent event) {
-				// Save the final coordinates
-				croppingPoints[1] = new Point2D.Double(event.getX(), event.getY());
-			}
-		};
+	private double getImageToImageViewRatio(ImageView imageView) {
+		return imageView.getBoundsInParent().getWidth() / imageView.getImage().getWidth();
 	}
 
 	/**
-	 * Removes all rectangles from the image preview.
-	 */
-	private void removeRectanglesFromView() {
-		pane.getChildren().removeIf(new Predicate<Object>() {
-			@Override
-			public boolean test(Object o) {
-				boolean isInstance = false;
-				if (o instanceof Rectangle) {
-					isInstance = true;
-				}
-				return isInstance;
-			}
-		});
-	}
-
-	/**
-	 * Goes to the previous stage, image selection and stitching.
+	 * Handle the crop feature, load the image cropped and save a copy to disk.
 	 */
 	@FXML
-	private void previousScreen() {
+	private void handleCrop() {
 		try {
-			mainApp.showImageSelection();
+			// If the user has selected an area to crop
+			if (rect != null) {
+				// Only needed X or Y because of the 'preservate ratio' check-in
+				// in the fxml file
+				Double ratio = getImageToImageViewRatio(previewImage);
+
+				// Translate local coordinates of the area selector rectangle to
+				// image pixel
+				Point2D.Double start = new Point2D.Double(croppingPoints[0].x / ratio, croppingPoints[0].y / ratio);
+				Point2D.Double end = new Point2D.Double(croppingPoints[1].x / ratio, croppingPoints[1].y / ratio);
+
+				// Get image and apply crop area
+				PixelReader pReader = previewImage.getImage().getPixelReader();
+				WritableImage imageCropped = new WritableImage(pReader, (int) start.x, (int) start.y,
+						(int) (end.x - start.x), (int) (end.y - start.y));
+
+				previewImage.setImage(imageCropped);
+				img = SwingFXUtils.fromFXImage(previewImage.getImage(), null);
+				removeRectanglesFromView();
+			}
 		} catch (Exception e) {
-			mainApp.getLogger().log(Level.SEVERE, "Exception loading previous stage.", e);
+			mainApp.getLogger().log(Level.SEVERE, "Exception occur cropping image.", e);
 			Alert alert = new Alert(Alert.AlertType.ERROR);
-			alert.setTitle("Error loading previous stage.");
-			alert.setHeaderText("Can't load previous stage.\n");
-			alert.setContentText("Can't load previous stage");
+			alert.setTitle("Error cropping image");
+			alert.setHeaderText("Can't crop image.\n");
+			alert.setContentText("Can't crop image");
 			alert.showAndWait();
 		}
 
-	}
-
-	/**
-	 * Handles the rotation feature with the slider item.
-	 */
-	@FXML
-	private void handleRotation() {
-		try {
-			rotationRadians = Math.toRadians(rotationSlider.getValue());
-			AffineTransform transform = new AffineTransform();
-			transform.rotate(rotationRadians, img.getWidth() / 2, img.getHeight() / 2);
-			AffineTransformOp op = new AffineTransformOp(transform, AffineTransformOp.TYPE_BILINEAR);
-			Image i = SwingFXUtils.toFXImage(op.filter(img, null), null);
-			previewImage.setImage(i);
-			inputDegrees.setText(String.format(Locale.US, "%.2f%n", rotationSlider.getValue()));
-		} catch (Exception e) {
-			mainApp.getLogger().log(Level.SEVERE, "Exception occur rotating image.", e);
-			Alert alert = new Alert(Alert.AlertType.ERROR);
-			alert.setTitle("Error rotating image");
-			alert.setHeaderText("Can't rotate image.\n");
-			alert.setContentText("Can't rotate image");
-			alert.showAndWait();
-		}
 	}
 
 	/**
@@ -354,249 +314,34 @@ public class RotationCropLayoutController {
 	}
 
 	/**
-	 * Validate a input for rotation.
-	 *
-	 * @param input
-	 *            user input
-	 * @return true/false if its a valid degree
-	 */
-	@SuppressWarnings("finally")
-	private boolean validateInputDegrees(String input) {
-		boolean valid = false;
-		try {
-			Double value = Double.parseDouble(input);
-			if (value <= 40.0 && value >= -40.0) {
-				valid = true;
-			}
-		} catch (NumberFormatException e) {
-			mainApp.getLogger().log(Level.WARNING, "The input it´s not a number", e);
-		} finally {
-			return valid;
-		}
-	}
-
-	/**
-	 * Handle the crop feature, load the image cropped and save a copy to disk.
+	 * Handles the measure.
 	 */
 	@FXML
-	private void handleCrop() {
-		try {
-			// If the user has selected an area to crop
-			if (rect != null) {
-				// Only needed X or Y because of the 'preservate ratio' check-in
-				// in the fxml file
-				Double ratio = previewImage.getBoundsInParent().getWidth() / previewImage.getImage().getWidth();
-
-				// Translate local coordinates of the area selector rectangle to
-				// image pixel
-				Point2D.Double start = new Point2D.Double(croppingPoints[0].x / ratio, croppingPoints[0].y / ratio);
-				Point2D.Double end = new Point2D.Double(croppingPoints[1].x / ratio, croppingPoints[1].y / ratio);
-
-				// Get image and apply crop area
-				PixelReader pReader = previewImage.getImage().getPixelReader();
-				WritableImage imageCropped = new WritableImage(pReader, (int) start.x, (int) start.y,
-						(int) (end.x - start.x), (int) (end.y - start.y));
-
-				previewImage.setImage(imageCropped);
-				img = SwingFXUtils.fromFXImage(previewImage.getImage(), null);
-				removeRectanglesFromView();
-			}
-		} catch (Exception e) {
-			mainApp.getLogger().log(Level.SEVERE, "Exception occur cropping image.", e);
-			Alert alert = new Alert(Alert.AlertType.ERROR);
-			alert.setTitle("Error cropping image");
-			alert.setHeaderText("Can't crop image.\n");
-			alert.setContentText("Can't crop image");
-			alert.showAndWait();
-		}
-
-	}
-
-	/**
-	 * Handles the opening of the area selector, setting up event handlers for
-	 * the image preview node.
-	 */
-	@FXML
-	private void handleSelectorArea() {
-		try {
-			if (areaSelectorBtn.isSelected()) {
-				// Add listener to start a rectangle on the image
-				previewImage.addEventHandler(MouseEvent.MOUSE_PRESSED, mousePressedHandler);
-				previewImage.addEventHandler(MouseEvent.MOUSE_DRAGGED, mouseDraggedHandler);
-				previewImage.addEventHandler(MouseEvent.MOUSE_RELEASED, mouseReleasedHandler);
-
-				previewImage.setCursor(Cursor.CROSSHAIR);
-			} else {
-				// Remove listeners and possibles rectangles areas
-				previewImage.removeEventHandler(MouseEvent.MOUSE_PRESSED, mousePressedHandler);
-				previewImage.removeEventHandler(MouseEvent.MOUSE_DRAGGED, mouseDraggedHandler);
-				previewImage.removeEventHandler(MouseEvent.MOUSE_RELEASED, mouseReleasedHandler);
-
-				previewImage.setCursor(Cursor.DEFAULT);
-				removeRectanglesFromView();
-			}
-		} catch (Exception e) {
-			mainApp.getLogger().log(Level.SEVERE, "Exception occur opening area selectore.", e);
-			Alert alert = new Alert(Alert.AlertType.ERROR);
-			alert.setTitle("Error opening area selector.");
-			alert.setHeaderText("Can't open area selector.\n");
-			alert.setContentText("Can't open area selector.");
-			alert.showAndWait();
-		}
-	}
-
-	/**
-	 * Resets the view of the image to zero degrees rotation and original image.
-	 */
-	@FXML
-	private void handleReset() {
-		try {
+	private void handleMeasure() {
+		if (measureLineBtn.isSelected()) {
+			originalImagePreview.setCursor(Cursor.CROSSHAIR);
+			previewImage.setVisible(false);
+			originalImagePreview.setVisible(true);
 			removeRectanglesFromView();
-			previewImage.setImage(SwingFXUtils.toFXImage(imgAux, null));
-			img = SwingFXUtils.fromFXImage(previewImage.getImage(), null);
-			rotationSlider.setValue(0.0);
-			inputDegrees.setText("0.0");
-			if (areaSelectorBtn.isSelected()) {
-				previewImage.removeEventHandler(MouseEvent.MOUSE_PRESSED, mousePressedHandler);
-				previewImage.removeEventHandler(MouseEvent.MOUSE_DRAGGED, mouseDraggedHandler);
-				previewImage.removeEventHandler(MouseEvent.MOUSE_RELEASED, mouseReleasedHandler);
-				previewImage.setCursor(Cursor.DEFAULT);
-				areaSelectorBtn.setSelected(false);
-			}
-		} catch (Exception e) {
-			mainApp.getLogger().log(Level.SEVERE, "Exception occur resetting view", e);
+			originalImagePreview.addEventHandler(MouseEvent.MOUSE_PRESSED, originalMousePressedHandler);
+			originalImagePreview.addEventHandler(MouseEvent.MOUSE_DRAGGED, originalMouseDraggedHandler);
+			originalImagePreview.addEventHandler(MouseEvent.MOUSE_RELEASED, originalMouseReleasedHandler);
+		} else {
+			previewImage.setVisible(true);
+			originalImagePreview.setVisible(false);
+			originalImagePreview.setCursor(Cursor.DEFAULT);
+			removeLinesFromView();
+			originalImagePreview.removeEventHandler(MouseEvent.MOUSE_PRESSED, originalMousePressedHandler);
+			originalImagePreview.removeEventHandler(MouseEvent.MOUSE_DRAGGED, originalMouseDraggedHandler);
+			originalImagePreview.removeEventHandler(MouseEvent.MOUSE_RELEASED, originalMouseReleasedHandler);
 		}
 	}
 
 	/**
-	 * Goes to the next stage, perikymata counter.
+	 * Handles the units of the measure.
 	 */
 	@FXML
-	private void nextScreen() {
-		try {
-			if (imageCropped != null) {
-				// Save cropped image to disk, and load it in the image preview
-				BufferedImage bfImage = SwingFXUtils.fromFXImage(imageCropped, null);
-				File outputfile = new File(mainApp.getProjectPath() + File.separator + "Cropped_Image.png");
-				outputfile.setWritable(true, false);
-				ImageIO.write(bfImage, "png", outputfile);
-			}
-			mainApp.setFullImage(previewImage.getImage());
-			mainApp.setFilteredImage(previewImage.getImage());
-			mainApp.showPerikymataCount();
-		} catch (Exception e) {
-			mainApp.getLogger().log(Level.SEVERE, "Exception saving project and loading next stage.", e);
-			Alert alert = new Alert(Alert.AlertType.ERROR);
-			alert.setTitle("Error loading next stage.");
-			alert.setHeaderText("Can't load next stage.\n");
-			alert.setContentText("Can't load next stage");
-			alert.showAndWait();
-		}
-
-	}
-
-	/**
-	 * Clears the handlers of the imageview.
-	 */
-	private void clearImageViewHandlers() {
-		// fullImage.setOnMouseClicked(null);
-		// fullImage.setOnMouseDragged(null);
-		// fullImage.setOnMousePressed(null);
-
-		// If previewImage has events, then we remove them
-		if (areaSelectorBtn.isSelected()) {
-			handleSelectorArea();
-		}
-	}
-
-	/**
-	 * Returns ratio between the original image and the imageview of the
-	 * original image.
-	 *
-	 * @return ratio
-	 */
-	private double getImageToImageViewRatio() {
-		return fullOriginalImage.getImage().getWidth() / fullOriginalImage.getFitWidth();
-	}
-
-	/**
-	 * Handler that puts an event on the image to mark the start of the measure,
-	 * if start and end measures are set, line is drawn and measure dialog is
-	 * called.
-	 */
-	@FXML
-	private void measureStartHandler() {
-		clearImageViewHandlers();
-		fullOriginalImage.setVisible(true);
-		EventHandler<MouseEvent> mouseHandler = new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent mouseEvent) {
-				if (mouseEvent.getEventType() == MouseEvent.MOUSE_CLICKED) {
-					if (measure != null && measure.getStartMeasure() == null) {
-						measure.setStartMeasure(new double[2]);
-					}
-					measure.getStartMeasure()[0] = mouseEvent.getX() * getImageToImageViewRatio();
-					measure.getStartMeasure()[1] = mouseEvent.getY() * getImageToImageViewRatio();
-					// fullImage.setOnMouseClicked(null);
-					// statusLabel.setText("Start measure point selected.");
-					fullOriginalImage.setVisible(false);
-					if (measure.getStartMeasure() != null && measure.getEndMeasure() != null) {
-						measure();
-					}
-				}
-			}
-		};
-		// statusLabel.setText("Selecting start point for the measure.");
-		// fullImage.setPickOnBounds(true);
-		fullOriginalImage.setOnMouseClicked(mouseHandler);
-	}
-
-	/**
-	 * Handler that puts an event on the image to mark the end of the measure,
-	 * if start and end measures are set, line is drawn and measure dialog is
-	 * called.
-	 */
-	@FXML
-	private void measureEndHandler() {
-		clearImageViewHandlers();
-		fullOriginalImage.setVisible(true);
-		EventHandler<MouseEvent> mouseHandler = new EventHandler<MouseEvent>() {
-			@Override
-			public void handle(MouseEvent mouseEvent) {
-				if (mouseEvent.getEventType() == MouseEvent.MOUSE_CLICKED) {
-					if (measure.getEndMeasure() == null) {
-						measure.setEndMeasure(new double[2]);
-					}
-					measure.getEndMeasure()[0] = mouseEvent.getX() * getImageToImageViewRatio();
-					measure.getEndMeasure()[1] = mouseEvent.getY() * getImageToImageViewRatio();
-					// fullImage.setOnMouseClicked(null);
-					// statusLabel.setText("End measure point selected.");
-					fullOriginalImage.setVisible(false);
-					if (measure.getStartMeasure() != null && measure.getEndMeasure() != null) {
-						measure();
-					}
-				}
-			}
-		};
-		// statusLabel.setText("Selecting End point for the measure.");
-		// fullImage.setPickOnBounds(true);
-		fullOriginalImage.setOnMouseClicked(mouseHandler);
-	}
-
-	/**
-	 * Draws the line between startMeasure and EndMeasure and shows a dialog
-	 * asking for the units and value of the measure.
-	 */
-	@FXML
-	private void measure() {
-
-		measureLine.setStartX(measure.getStartMeasure()[0] / getImageToImageViewRatio());
-		measureLine.setStartY(measure.getStartMeasure()[1] / getImageToImageViewRatio());
-		measureLine.setEndX(measure.getEndMeasure()[0] / getImageToImageViewRatio());
-		measureLine.setEndY(measure.getEndMeasure()[1] / getImageToImageViewRatio());
-
-		mainApp.getProject().getMeasure().setStartMeasure(measure.getStartMeasure());
-		mainApp.getProject().getMeasure().setEndMeasure(measure.getEndMeasure());
+	private void handleMeasureUnits() {
 
 		// Create the custom dialog.
 		Dialog<Pair<String, String>> dialog = new Dialog<>();
@@ -678,6 +423,337 @@ public class RotationCropLayoutController {
 	}
 
 	/**
+	 * Resets the view of the image to zero degrees rotation and original image.
+	 */
+	@FXML
+	private void handleReset() {
+		try {
+			previewImage.setVisible(true);
+			originalImagePreview.setVisible(false);
+			removeRectanglesFromView();
+			removeLinesFromView();
+			previewImage.setImage(SwingFXUtils.toFXImage(imgAux, null));
+			img = SwingFXUtils.fromFXImage(previewImage.getImage(), null);
+			rotationSlider.setValue(0.0);
+			inputDegrees.setText("0.0");
+
+			if (areaSelectorBtn.isSelected()) {
+				previewImage.removeEventHandler(MouseEvent.MOUSE_PRESSED, mousePressedHandler);
+				previewImage.removeEventHandler(MouseEvent.MOUSE_DRAGGED, mouseDraggedHandler);
+				previewImage.removeEventHandler(MouseEvent.MOUSE_RELEASED, mouseReleasedHandler);
+				previewImage.setCursor(Cursor.DEFAULT);
+				areaSelectorBtn.setSelected(false);
+			}
+
+			if (measureLineBtn.isSelected()) {
+				originalImagePreview.removeEventHandler(MouseEvent.MOUSE_PRESSED, originalMousePressedHandler);
+				originalImagePreview.removeEventHandler(MouseEvent.MOUSE_DRAGGED, originalMouseDraggedHandler);
+				originalImagePreview.removeEventHandler(MouseEvent.MOUSE_RELEASED, originalMouseReleasedHandler);
+				measureLineBtn.setSelected(false);
+				originalImagePreview.setCursor(Cursor.DEFAULT);
+			}
+		} catch (Exception e) {
+			mainApp.getLogger().log(Level.SEVERE, "Exception occur resetting view", e);
+		}
+	}
+
+	/**
+	 * Handles the rotation feature with the slider item.
+	 */
+	@FXML
+	private void handleRotation() {
+		try {
+			rotationRadians = Math.toRadians(rotationSlider.getValue());
+			AffineTransform transform = new AffineTransform();
+			transform.rotate(rotationRadians, img.getWidth() / 2, img.getHeight() / 2);
+			AffineTransformOp op = new AffineTransformOp(transform, AffineTransformOp.TYPE_BILINEAR);
+			Image i = SwingFXUtils.toFXImage(op.filter(img, null), null);
+			previewImage.setImage(i);
+			inputDegrees.setText(String.format(Locale.US, "%.2f%n", rotationSlider.getValue()));
+		} catch (Exception e) {
+			mainApp.getLogger().log(Level.SEVERE, "Exception occur rotating image.", e);
+			Alert alert = new Alert(Alert.AlertType.ERROR);
+			alert.setTitle("Error rotating image");
+			alert.setHeaderText("Can't rotate image.\n");
+			alert.setContentText("Can't rotate image");
+			alert.showAndWait();
+		}
+	}
+
+	/**
+	 * Goes to the next stage, perikymata counter.
+	 */
+	@FXML
+	private void handleSaveAndContinue() {
+		try {
+			int measureValidation = validateMeasure();
+			if (measureValidation == 0) {
+
+				if (imageCropped != null) {
+					// Save cropped image to disk, and load it in the image
+					// preview
+					BufferedImage bfImage = SwingFXUtils.fromFXImage(imageCropped, null);
+					File outputfile = new File(mainApp.getProjectPath() + File.separator + "Cropped_Image.png");
+					outputfile.setWritable(true, false);
+					ImageIO.write(bfImage, "png", outputfile);
+				}
+				nextStage();
+			} else {
+				Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+				alert.setTitle("You have missed something");
+				alert.setContentText("Do you want to continue without saving it?");
+				ButtonType continueBtn = new ButtonType("Continue");
+				ButtonType cancelBtn = new ButtonType("Cancel");
+				alert.getButtonTypes().setAll(cancelBtn, continueBtn);
+				if (measureValidation == 1) {
+					alert.setHeaderText("Measure unit is not set.");
+				} else if (measureValidation == 2) {
+					alert.setHeaderText("Measure value is not set.");
+				} else if (measureValidation == 3) {
+					alert.setHeaderText("Measure line is not set.");
+				}
+
+				Optional<ButtonType> result = alert.showAndWait();
+				if (result.get() == continueBtn) {
+					nextStage();
+				} else {
+					alert.close();
+				}
+
+			}
+
+		} catch (Exception e) {
+			mainApp.getLogger().log(Level.SEVERE, "Exception saving project and loading next stage.", e);
+			Alert alert = new Alert(Alert.AlertType.ERROR);
+			alert.setTitle("Error loading next stage.");
+			alert.setHeaderText("Can't load next stage.\n");
+			alert.setContentText("Can't load next stage");
+			alert.showAndWait();
+		}
+	}
+
+	/**
+	 * Handles the opening of the area selector, setting up event handlers for
+	 * the image preview node.
+	 */
+	@FXML
+	private void handleSelectorArea() {
+		try {
+			if (areaSelectorBtn.isSelected()) {
+				// Add listener to start a rectangle on the image
+				previewImage.addEventHandler(MouseEvent.MOUSE_PRESSED, mousePressedHandler);
+				previewImage.addEventHandler(MouseEvent.MOUSE_DRAGGED, mouseDraggedHandler);
+				previewImage.addEventHandler(MouseEvent.MOUSE_RELEASED, mouseReleasedHandler);
+
+				previewImage.setCursor(Cursor.CROSSHAIR);
+			} else {
+				// Remove listeners and possibles rectangles areas
+				previewImage.removeEventHandler(MouseEvent.MOUSE_PRESSED, mousePressedHandler);
+				previewImage.removeEventHandler(MouseEvent.MOUSE_DRAGGED, mouseDraggedHandler);
+				previewImage.removeEventHandler(MouseEvent.MOUSE_RELEASED, mouseReleasedHandler);
+
+				previewImage.setCursor(Cursor.DEFAULT);
+				removeRectanglesFromView();
+			}
+		} catch (Exception e) {
+			mainApp.getLogger().log(Level.SEVERE, "Exception occur opening area selectore.", e);
+			Alert alert = new Alert(Alert.AlertType.ERROR);
+			alert.setTitle("Error opening area selector.");
+			alert.setHeaderText("Can't open area selector.\n");
+			alert.setContentText("Can't open area selector.");
+			alert.showAndWait();
+		}
+	}
+
+	/**
+	 * Initializes the mouse event handler.
+	 */
+	private void initMouseEventHandler() {
+
+		// Handler for press event
+		mousePressedHandler = new EventHandler<MouseEvent>() {
+
+			@Override
+			public void handle(MouseEvent event) {
+				// The interaction will be with the left button of the mouse
+				if (!event.isSecondaryButtonDown()) {
+					// Discard previous rectangles in the pane
+					removeRectanglesFromView();
+					croppingPoints[0] = new Point2D.Double(event.getX(), event.getY());
+					rect = new Rectangle(croppingPoints[0].x, croppingPoints[0].y, 0, 0);
+					rect.setStroke(Color.WHITE);
+					rect.setStrokeWidth(0.6);
+					rect.setStrokeLineCap(StrokeLineCap.SQUARE);
+					rect.setFill(Color.WHITE.deriveColor(0, 0, 1, 0.4));
+					pane.getChildren().add(rect);
+				}
+			}
+		};
+
+		// Handler for drag event
+		mouseDraggedHandler = new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent event) {
+				rect.setWidth(Math.abs(event.getX() - croppingPoints[0].x));
+				rect.setHeight(Math.abs(event.getY() - croppingPoints[0].y));
+			}
+
+		};
+
+		// Handler triggered when the mouse button is released
+		mouseReleasedHandler = new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent event) {
+				// Save the final coordinates
+				croppingPoints[1] = new Point2D.Double(event.getX(), event.getY());
+			}
+		};
+
+		// Handler for the original image view
+		originalMousePressedHandler = new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent event) {
+				removeLinesFromView();
+				double x = event.getX();
+				double y = event.getY();
+				Double ratio = getImageToImageViewRatio(originalImagePreview);
+				measure.setStartMeasure(new double[] { x / ratio, y / ratio });
+				measureLine = new Line(x, y, x, y);
+				measureLine.setStroke(Color.RED);
+				measureLine.setStrokeWidth(4);
+				pane.getChildren().add(measureLine);
+			}
+
+		};
+
+		originalMouseDraggedHandler = new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent event) {
+				measureLine.setEndX(event.getX());
+				measureLine.setEndY(event.getY());
+			}
+
+		};
+
+		originalMouseReleasedHandler = new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent event) {
+				Double ratio = getImageToImageViewRatio(originalImagePreview);
+				measure.setEndMeasure(new double[] { event.getX() / ratio, event.getY() / ratio });
+				mainApp.getProject().getMeasure().setStartMeasure(measure.getStartMeasure());
+				mainApp.getProject().getMeasure().setEndMeasure(measure.getEndMeasure());
+				Alert alert = new Alert(Alert.AlertType.INFORMATION);
+				alert.setHeaderText("Measure saved.\n");
+				alert.setContentText("Measure line length successfully saved.");
+				alert.showAndWait();
+				if (mainApp.getProject().getMeasure().getMeasureUnit() == null) {
+					handleMeasureUnits();
+				}
+			}
+		};
+	}
+
+	/**
+	 * Goes to the next stage.
+	 */
+	private void nextStage(){
+		mainApp.setFullImage(previewImage.getImage());
+		mainApp.setFilteredImage(previewImage.getImage());
+		mainApp.showPerikymataCount();
+	}
+
+	/**
+	 * Goes to the previous stage, image selection and stitching.
+	 */
+	@FXML
+	private void handleReturn() {
+		try {
+			handleReset();
+			mainApp.showImageSelection();
+		} catch (Exception e) {
+			mainApp.getLogger().log(Level.SEVERE, "Exception loading previous stage.", e);
+			Alert alert = new Alert(Alert.AlertType.ERROR);
+			alert.setTitle("Error loading previous stage.");
+			alert.setHeaderText("Can't load previous stage.\n");
+			alert.setContentText("Can't load previous stage");
+			alert.showAndWait();
+		}
+
+	}
+
+	/**
+	 * Removes red lines from the origal image view.
+	 */
+	private void removeLinesFromView() {
+		pane.getChildren().removeIf(new Predicate<Object>() {
+			@Override
+			public boolean test(Object o) {
+				boolean isInstance = false;
+				if (o instanceof Line) {
+					isInstance = true;
+				}
+				return isInstance;
+			}
+		});
+	}
+
+	/**
+	 * Removes all rectangles from the image preview.
+	 */
+	private void removeRectanglesFromView() {
+		pane.getChildren().removeIf(new Predicate<Object>() {
+			@Override
+			public boolean test(Object o) {
+				boolean isInstance = false;
+				if (o instanceof Rectangle) {
+					isInstance = true;
+				}
+				return isInstance;
+			}
+		});
+	}
+
+	/**
+	 * Validate a input for rotation.
+	 *
+	 * @param input
+	 *            user input
+	 * @return true/false if its a valid degree
+	 */
+	@SuppressWarnings("finally")
+	private boolean validateInputDegrees(String input) {
+		boolean valid = false;
+		try {
+			Double value = Double.parseDouble(input);
+			if (value <= 40.0 && value >= -40.0) {
+				valid = true;
+			}
+		} catch (NumberFormatException e) {
+			mainApp.getLogger().log(Level.WARNING, "The input it´s not a number", e);
+		} finally {
+			return valid;
+		}
+	}
+
+	/**
+	 * Validates whether the measure if correctly saved or not.
+	 *
+	 * @return error code: 1 - no units, 2 - no value, 3 - no line
+	 */
+	private int validateMeasure() {
+		int code = 0;
+		Measure m = mainApp.getProject().getMeasure();
+		if (m.getMeasureUnit().equals(null) || m.getMeasureUnit().isEmpty()) {
+			code = 1;
+		} else if (m.getMeasureValue() == 0.0f) {
+			code = 2;
+		} else if (m.getStartMeasure().equals(null) || m.getEndMeasure().equals(null)) {
+			code = 3;
+		}
+		return code;
+	}
+
+	/**
 	 * Is called by the main application to give a reference back to itself.
 	 * Also, sets the Images. This is done here because when the method
 	 * initialize is called, there is no reference to the mainapp.
@@ -689,10 +765,12 @@ public class RotationCropLayoutController {
 		mainApp.getPrimaryStage().setMaximized(true);
 		if (mainApp.getFullImage() != null) {
 			previewImage.setImage(mainApp.getFullImage());
+			originalImagePreview.setImage(mainApp.getFullImage());
 			// Full image from the previous screen
 			img = SwingFXUtils.fromFXImage(previewImage.getImage(), null);
 			imgAux = SwingFXUtils.fromFXImage(previewImage.getImage(), null);
 			inputDegrees.setText("0.0");
+			measure = mainApp.getProject().getMeasure();
 		}
 	}
 }
