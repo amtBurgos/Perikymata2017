@@ -22,6 +22,8 @@ import java.awt.geom.Point2D;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
+import java.util.LinkedList;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.function.Predicate;
@@ -106,7 +108,12 @@ public class RotationCropLayoutController {
 	/**
 	 * image cropped.
 	 */
-	private WritableImage imageCropped;
+	// private WritableImage imageCropped;
+
+	/**
+	 * Flag true if the image has been cropped.
+	 */
+	private boolean isCropped;
 
 	/**
 	 * Full image.
@@ -115,7 +122,7 @@ public class RotationCropLayoutController {
 
 	/**
 	 * Auxiliary image, used to reset the previewImage when reset button is
-	 * pressed. It is the original image and does not change.
+	 * pressed. It is the original full image and does not change.
 	 */
 	private BufferedImage imgAux;
 
@@ -224,7 +231,7 @@ public class RotationCropLayoutController {
 		pane = (Pane) previewImage.getParent();
 		pane.setStyle("-fx-background-color: #000000;");
 		rect = null;
-		imageCropped = null;
+		isCropped = false;
 		initMouseEventHandler();
 	}
 
@@ -263,6 +270,7 @@ public class RotationCropLayoutController {
 
 				previewImage.setImage(imageCropped);
 				img = SwingFXUtils.fromFXImage(previewImage.getImage(), null);
+				isCropped = true;
 				removeRectanglesFromView();
 			}
 		} catch (Exception e) {
@@ -358,8 +366,6 @@ public class RotationCropLayoutController {
 		grid.setVgap(10);
 		grid.setPadding(new Insets(20, 150, 10, 10));
 
-		// TextField measureUnit = new TextField();
-		// measureUnit.setPromptText("Measure unit");
 		ObservableList<String> options = FXCollections.observableArrayList("cm", "mm", "µm", "nm");
 		final ComboBox<String> measureUnit = new ComboBox<>(options);
 		if (measure == null || measure.getMeasureUnit() == null)
@@ -407,14 +413,12 @@ public class RotationCropLayoutController {
 
 				return new Pair<>(measureUnit.getValue().toString(), measureValue.getText());
 			}
-			// statusLabel.setText("Measure has not been changed.");
 			return null;
 		});
 
 		Optional<Pair<String, String>> result = dialog.showAndWait();
 
 		result.ifPresent(measureValues -> {
-			// statusLabel.setText("Measure changed correctly.");
 			measure.setMeasureUnit(measureValues.getKey());
 			measure.setMeasureValue(Double.parseDouble(measureValues.getValue()));
 			mainApp.getProject().setMeasure(measure);
@@ -434,6 +438,7 @@ public class RotationCropLayoutController {
 			removeLinesFromView();
 			previewImage.setImage(SwingFXUtils.toFXImage(imgAux, null));
 			img = SwingFXUtils.fromFXImage(previewImage.getImage(), null);
+			isCropped = false;
 			rotationSlider.setValue(0.0);
 			inputDegrees.setText("0.0");
 
@@ -486,42 +491,40 @@ public class RotationCropLayoutController {
 	@FXML
 	private void handleSaveAndContinue() {
 		try {
-			int measureValidation = validateMeasure();
-			if (measureValidation == 0) {
-
-				if (imageCropped != null) {
-					// Save cropped image to disk, and load it in the image
-					// preview
-					BufferedImage bfImage = SwingFXUtils.fromFXImage(imageCropped, null);
-					File outputfile = new File(mainApp.getProjectPath() + File.separator + "Cropped_Image.png");
-					outputfile.setWritable(true, false);
-					ImageIO.write(bfImage, "png", outputfile);
-				}
+			LinkedList<Integer> validateOperations = validateOperations();
+			if (validateOperations == null) {
+				saveAll();
 				nextStage();
 			} else {
 				Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-				alert.setTitle("You have missed something");
-				alert.setContentText("Do you want to continue without saving it?");
+				alert.setTitle("Incompleted Operations");
+				alert.setContentText("Continue without saving?");
 				ButtonType continueBtn = new ButtonType("Continue");
 				ButtonType cancelBtn = new ButtonType("Cancel");
 				alert.getButtonTypes().setAll(cancelBtn, continueBtn);
-				if (measureValidation == 1) {
-					alert.setHeaderText("Measure unit is not set.");
-				} else if (measureValidation == 2) {
-					alert.setHeaderText("Measure value is not set.");
-				} else if (measureValidation == 3) {
-					alert.setHeaderText("Measure line is not set.");
+				String header = "";
+				if (validateOperations.contains(4)) {
+					header += "- Dental crown is not cropped.\n";
 				}
+				if (validateOperations.contains(3)) {
+					header += "- Measure line is not set.\n";
+				}
+				if (validateOperations.contains(2)) {
+					header += "- Measure value is not set.\n";
+				}
+				if (validateOperations.contains(1)) {
+					header += "- Measure unit is not set.\n";
+				}
+				alert.setHeaderText(header);
 
 				Optional<ButtonType> result = alert.showAndWait();
 				if (result.get() == continueBtn) {
+					saveAll();
 					nextStage();
 				} else {
 					alert.close();
 				}
-
 			}
-
 		} catch (Exception e) {
 			mainApp.getLogger().log(Level.SEVERE, "Exception saving project and loading next stage.", e);
 			Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -656,10 +659,26 @@ public class RotationCropLayoutController {
 	/**
 	 * Goes to the next stage.
 	 */
-	private void nextStage(){
-		mainApp.setFullImage(previewImage.getImage());
-		mainApp.setFilteredImage(previewImage.getImage());
+	private void nextStage() {
 		mainApp.showPerikymataCount();
+	}
+
+	/**
+	 * Saves the cropped image.
+	 *
+	 * @throws IOException
+	 *             IOException
+	 */
+	private void saveAll() throws IOException {
+		removeLinesFromView();
+		removeRectanglesFromView();
+		// Save cropped image to disk, and load it in the image
+		// preview
+		File outputfile = new File(
+				mainApp.getProjectPath() + File.separator + "Cropped_Image" + File.separator + "Cropped_image.png");
+		outputfile.setWritable(true, false);
+		ImageIO.write(img, "png", outputfile);
+		mainApp.setCroppedImage(previewImage.getImage());
 	}
 
 	/**
@@ -713,6 +732,16 @@ public class RotationCropLayoutController {
 		});
 	}
 
+	// private <T extends Node> void removeRectanglesFromView(T object) {
+	// pane.getChildren().removeIf(new Predicate<T>() {
+	// @Override
+	// public boolean test(T o) {
+	//
+	// return true;
+	// }
+	// });
+	// }
+
 	/**
 	 * Validate a input for rotation.
 	 *
@@ -736,19 +765,28 @@ public class RotationCropLayoutController {
 	}
 
 	/**
-	 * Validates whether the measure if correctly saved or not.
+	 * Validates whether all operations are correctly done or not.
 	 *
-	 * @return error code: 1 - no units, 2 - no value, 3 - no line
+	 * @return code List with errors or null if no errors: code: 1 - no units, 2
+	 *         - no value, 3 - no line, 4 - Not cropped
 	 */
-	private int validateMeasure() {
-		int code = 0;
+	private LinkedList<Integer> validateOperations() {
+		LinkedList<Integer> code = new LinkedList<>();
 		Measure m = mainApp.getProject().getMeasure();
-		if (m.getMeasureUnit().equals(null) || m.getMeasureUnit().isEmpty()) {
-			code = 1;
-		} else if (m.getMeasureValue() == 0.0f) {
-			code = 2;
-		} else if (m.getStartMeasure().equals(null) || m.getEndMeasure().equals(null)) {
-			code = 3;
+		if (m.getMeasureUnit() == null || m.getMeasureUnit().isEmpty()) {
+			code.add(1);
+		}
+		if (m.getMeasureValue() == 0.0f) {
+			code.add(2);
+		}
+		if (m.getStartMeasure() == null || m.getEndMeasure() == null) {
+			code.add(3);
+		}
+		if (!isCropped) {
+			code.add(4);
+		}
+		if (code.isEmpty()) {
+			code = null;
 		}
 		return code;
 	}
@@ -764,11 +802,19 @@ public class RotationCropLayoutController {
 		this.mainApp = mainApp;
 		mainApp.getPrimaryStage().setMaximized(true);
 		if (mainApp.getFullImage() != null) {
-			previewImage.setImage(mainApp.getFullImage());
+			if (mainApp.getCroppedImage() != null) {
+				previewImage.setImage(mainApp.getCroppedImage());
+				isCropped = true;
+			} else {
+				// Full image from the previous screen if there wasn't a cropped
+				// image yet
+				previewImage.setImage(mainApp.getFullImage());
+			}
+
 			originalImagePreview.setImage(mainApp.getFullImage());
-			// Full image from the previous screen
+
 			img = SwingFXUtils.fromFXImage(previewImage.getImage(), null);
-			imgAux = SwingFXUtils.fromFXImage(previewImage.getImage(), null);
+			imgAux = SwingFXUtils.fromFXImage(originalImagePreview.getImage(), null);
 			inputDegrees.setText("0.0");
 			measure = mainApp.getProject().getMeasure();
 		}
