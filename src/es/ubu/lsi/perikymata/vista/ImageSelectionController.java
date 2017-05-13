@@ -158,23 +158,27 @@ public class ImageSelectionController {
 
 		// Show open file dialog
 		List<File> list = fileChooser.showOpenMultipleDialog(mainApp.getPrimaryStage());
-		for (File file : list) {
-			if (file != null) {
-				mainApp.getFilesList().add(file.getName());
 
-				try (FileOutputStream fileStream = new FileOutputStream(
-						new File(Paths.get(mainApp.getProjectPath(), "Fragments").toString(), file.getName()))) {
+		// If the user has selected something
+		if (list != null) {
+			for (File file : list) {
+				if (file != null) {
+					mainApp.getFilesList().add(file.getName());
 
-					Files.copy(file.toPath(), fileStream);
-				} catch (IOException e) {
-					mainApp.getLogger().log(Level.SEVERE, "Exception occur opening fragment files.", e);
-					Alert alert = new Alert(Alert.AlertType.INFORMATION);
-					alert.setTitle("Error opening or coping fragments.");
-					alert.setHeaderText("Can't open or copy fragment file.\n");
-					alert.setContentText("Cant open or copy the image to stitch with path:\n" + file.toString());
-					alert.showAndWait();
+					try (FileOutputStream fileStream = new FileOutputStream(
+							new File(Paths.get(mainApp.getProjectPath(), "Fragments").toString(), file.getName()))) {
+
+						Files.copy(file.toPath(), fileStream);
+					} catch (IOException e) {
+						mainApp.getLogger().log(Level.SEVERE, "Exception occur opening fragment files.", e);
+						Alert alert = new Alert(Alert.AlertType.INFORMATION);
+						alert.setTitle("Error opening or coping fragments.");
+						alert.setHeaderText("Can't open or copy fragment file.\n");
+						alert.setContentText("Cant open or copy the image to stitch with path:\n" + file.toString());
+						alert.showAndWait();
+					}
+
 				}
-
 			}
 		}
 	}
@@ -222,7 +226,8 @@ public class ImageSelectionController {
 	 */
 	@FXML
 	private void nextScreen() {
-		mainApp.showImageFilters();
+		// mainApp.showImageFilters();
+		mainApp.showRotationCrop();
 	}
 
 	/**

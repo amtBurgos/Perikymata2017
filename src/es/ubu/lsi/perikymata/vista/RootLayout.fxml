@@ -21,6 +21,7 @@
             <items>
               <MenuItem mnemonicParsing="false" onAction="#windowImageSelection" text="Select images" />
                   <MenuItem mnemonicParsing="false" onAction="#windowImageFilters" text="Apply filters" />
+                  <MenuItem mnemonicParsing="false" onAction="#windowRotationCrop" text="Rotate and crop" />
                   <MenuItem mnemonicParsing="false" onAction="#windowPerikymataCount" text="Count perikymata" />
             </items>
           </Menu>

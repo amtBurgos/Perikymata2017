@@ -1,0 +1,16 @@
+White Square icon: https://commons.wikimedia.org/wiki/File:U%2B25A1.svg
+
+Description:
+
+English: White square □, U+25A1 out of Unicode-Block Geometric Shapes (25A0–25FF)
+Deutsch: Weißes Quadrat □, U+25A1 aus dem Unicode-Block Geometrische Formen (25A0–25FF)
+Date:	22 February 2010
+Source:	Own work by uploader   This image is valid SVG
+Author:	Sarang (https://commons.wikimedia.org/wiki/User_talk:Sarang)
+Permission (Reusing this file): PD-self
+Other versions: File:U25A1.gif
+
+License:
+I, the copyright holder of this work, release this work into the public domain. This applies worldwide.
+In some countries this may not be legally possible; if so:
+I grant anyone the right to use this work for any purpose, without any conditions, unless such conditions are required by law.

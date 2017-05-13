@@ -45,6 +45,7 @@ import es.ubu.lsi.perikymata.vista.ImageFiltersController;
 import es.ubu.lsi.perikymata.vista.ImageSelectionController;
 import es.ubu.lsi.perikymata.vista.PerikymataCountController;
 import es.ubu.lsi.perikymata.vista.RootLayoutController;
+import es.ubu.lsi.perikymata.vista.RotationCropLayoutController;
 import es.ubu.lsi.perikymata.vista.TemporaryFolderSelectionController;
 import ij.io.Opener;
 import javafx.application.Application;
@@ -70,6 +71,7 @@ import javafx.stage.Stage;
  * navigation between windows or data access.
  *
  * @author Sergio Chico Carrancio
+ * @author Andres Miguel Teran
  */
 public class MainApp extends Application {
 
@@ -106,10 +108,16 @@ public class MainApp extends Application {
 	 * Full image of a tooth, used to count perikyma.
 	 */
 	private Image fullImage;
+
 	/**
-	 * Full image of a tooth with some applied filters
+	 * Full image of a tooth with some applied filters.
 	 */
 	private Image filteredImage;
+
+	/**
+	 * Cropped image with the dental crown.
+	 */
+	private Image croppedImage;
 
 	/**
 	 * List of files to stitch.
@@ -282,18 +290,30 @@ public class MainApp extends Application {
 			}
 
 			// Adds the Full image to the project (if exists)
-			File fullImageFile = Paths.get(file.getParent(), "Full_image", "Full_image.png").toFile();
+			//File fullImageFile = Paths.get(file.getParent(), "Full_image", "Full_image.png").toFile();
+			File fullImageFile = Paths.get(file.getParent(), "Full_Image", "Full_image.png").toFile();
 			if (fullImageFile.exists()) {
 				java.awt.Image full = new Opener().openImage(fullImageFile.getPath()).getImage();
 				setFullImage(SwingFXUtils.toFXImage((BufferedImage) full, null));
 
 				// Adds the filtered image to the project (if exists)
-				File filteredImageFile = Paths.get(file.getParent(), "Full_image", "Filtered_image.png").toFile();
+				//File filteredImageFile = Paths.get(file.getParent(), "Full_image", "Filtered_image.png").toFile();
+				File filteredImageFile = Paths.get(file.getParent(), "Full_Image", "Filtered_image.png").toFile();
 				if (filteredImageFile.exists()) {
 					java.awt.Image filtered = new Opener().openImage(filteredImageFile.getAbsolutePath()).getImage();
 					setFilteredImage(SwingFXUtils.toFXImage((BufferedImage) filtered, null));
 				} else {
 					setFilteredImage(getFullImage());
+				}
+
+				// Adds the cropped image to the project (if exists)
+				File croppedImageFile = Paths.get(file.getParent(), "Cropped_Image", "Cropped_image.png").toFile();
+				if (croppedImageFile.exists()) {
+					java.awt.Image cropped = new Opener().openImage(croppedImageFile.getAbsolutePath()).getImage();
+					setCroppedImage(SwingFXUtils.toFXImage((BufferedImage) cropped, null));
+				} else {
+					// If doesn't exists we set it to null
+					setCroppedImage(null);
 				}
 			}
 
@@ -380,6 +400,34 @@ public class MainApp extends Application {
 	}
 
 	/**
+	 * Shows the Rotation Window.
+	 */
+	public void showRotationCrop() {
+		try {
+			// Loads the FXML view.
+			FXMLLoader loader = new FXMLLoader();
+			loader.setLocation(MainApp.class.getResource("vista/RotationCropLayout.fxml"));
+			BorderPane window = (BorderPane) loader.load();
+
+			// Shows this layout in the center of the rootLayout.
+			rootLayout.setCenter(window);
+
+			// Gives a mainapp's reference to the controller of the layout.
+			RotationCropLayoutController controller = loader.getController();
+			controller.setMainApp(this);
+
+		} catch (IOException e) {
+			this.getLogger().log(Level.SEVERE, "Exception occur loading rotation and crop Stage.", e);
+			Alert alert = new Alert(Alert.AlertType.ERROR);
+			alert.setTitle("Internal error.");
+			alert.setHeaderText("Error loading rotation stage.\n");
+			alert.setContentText("This application will close now, please try again.\n");
+			alert.showAndWait();
+			System.exit(-1);
+		}
+	}
+
+	/**
 	 * Shows the Perikymata counting window.
 	 */
 	public void showPerikymataCount() {
@@ -426,7 +474,6 @@ public class MainApp extends Application {
 			controller.setMainApp(this);
 			controller.disableCancel(showCancel);
 			controller.initializeComponents();
-
 
 		} catch (Exception e) {
 			this.getLogger().log(Level.SEVERE, "Exception occur loading temporary folder selection window.", e);
@@ -483,7 +530,7 @@ public class MainApp extends Application {
 	}
 
 	/**
-	 * Gets the full image of the tooth.
+	 * Gets the filtered image of the tooth.
 	 *
 	 * @return Image of the tooth.
 	 */
@@ -492,13 +539,32 @@ public class MainApp extends Application {
 	}
 
 	/**
-	 * Sets the full image of the tooth.
+	 * Sets the filtered image of the tooth.
 	 *
-	 * @param fullImage
-	 *            Full image of the tooth.
+	 * @param filteredImage
+	 *            Filtered image of the tooth.
 	 */
 	public void setFilteredImage(Image filteredImage) {
 		this.filteredImage = filteredImage;
+	}
+
+	/**
+	 * Gets the cropped image of the tooth.
+	 *
+	 * @return Image of the tooth.
+	 */
+	public Image getCroppedImage() {
+		return croppedImage;
+	}
+
+	/**
+	 * Sets the cropped image of the tooth.
+	 *
+	 * @param croppedImage
+	 *            Cropped image of the tooth.
+	 */
+	public void setCroppedImage(Image croppedImage) {
+		this.croppedImage = croppedImage;
 	}
 
 	/**
@@ -620,6 +686,7 @@ public class MainApp extends Application {
 			new File(file.toString() + File.separator + "Fragments").mkdir();
 			new File(file.toString() + File.separator + "Full_Image").mkdir();
 			new File(file.toString() + File.separator + "Perikymata_Outputs").mkdir();
+			new File(file.toString() + File.separator + "Cropped_Image").mkdir();
 			setProjectPath(file.getPath());
 			// Creates the XML project file.
 
@@ -692,6 +759,7 @@ public class MainApp extends Application {
 		this.filesList.clear();
 		this.filteredImage = null;
 		this.fullImage = null;
+		this.croppedImage = null;
 		this.project = null;
 		this.projectPath = null;
 	}

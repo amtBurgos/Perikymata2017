@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.BorderPane?>
+
+<BorderPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="400.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="es.ubu.lsi.perikymata.vista.RotationCropLayoutController">
+   <left>
+      <HBox prefHeight="291.0" prefWidth="25.0" BorderPane.alignment="CENTER" />
+   </left>
+   <right>
+      <HBox prefHeight="291.0" prefWidth="25.0" BorderPane.alignment="CENTER" />
+   </right>
+   <top>
+      <AnchorPane maxWidth="1.7976931348623157E308" prefHeight="42.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+         <children>
+            <ToolBar prefHeight="40.0" prefWidth="200.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+               <items>
+                  <Label prefHeight="17.0" prefWidth="53.0" text="Rotation" />
+                  <Slider fx:id="rotationSlider" blockIncrement="1.0" max="40.0" min="-40.0" onMouseReleased="#handleRotation" prefHeight="14.0" prefWidth="216.0">
+                     <tooltip>
+                        <Tooltip text="Slide to rotate the image" />
+                     </tooltip>
+                  </Slider>
+                  <TextField fx:id="inputDegrees" onKeyReleased="#handleInputDegrees" prefHeight="25.0" prefWidth="50.0">
+                     <tooltip>
+                        <Tooltip text="Enter a degree between -40 and 40, then press enter" />
+                     </tooltip>
+                  </TextField>
+                  <Label text="Degrees">
+                     <padding>
+                        <Insets left="5.0" right="5.0" />
+                     </padding>
+                  </Label>
+                  <HBox prefWidth="107.0">
+                     <padding>
+                        <Insets left="10.0" />
+                     </padding>
+                     <children>
+                        <ToggleButton fx:id="areaSelectorBtn" mnemonicParsing="false" onMouseClicked="#handleSelectorArea">
+                           <graphic>
+                              <ImageView fx:id="areaSelectorBtnImage" fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true" x="0.0" />
+                           </graphic>
+                           <tooltip>
+                              <Tooltip text="Select area to crop" />
+                           </tooltip>
+                        </ToggleButton>
+                        <Button fx:id="cropBtn" mnemonicParsing="false" onMouseClicked="#handleCrop" prefHeight="32.0">
+                           <tooltip>
+                              <Tooltip text="Crop selected area" />
+                           </tooltip>
+                           <graphic>
+                              <ImageView fx:id="cropBtnImage" fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true" x="0.0" />
+                           </graphic>
+                           <HBox.margin>
+                              <Insets left="7.0" />
+                           </HBox.margin>
+                        </Button>
+                     </children>
+                  </HBox>
+                  <ToggleButton fx:id="measureLineBtn" mnemonicParsing="false" onAction="#handleMeasure" text="Measure Line">
+                     <tooltip>
+                        <Tooltip text="Press and drap into the image to set the line of the measure" />
+                     </tooltip>
+                  </ToggleButton>
+                  <Button mnemonicParsing="false" onAction="#handleMeasureUnits" text="Measure Unit and Value">
+                     <tooltip>
+                        <Tooltip text="Sets the units and value of the measure" />
+                     </tooltip>
+                  </Button>
+               </items>
+            </ToolBar>
+         </children>
+         <BorderPane.margin>
+            <Insets left="5.0" right="5.0" top="5.0" />
+         </BorderPane.margin>
+         <padding>
+            <Insets left="8.0" right="8.0" top="8.0" />
+         </padding>
+      </AnchorPane>
+   </top>
+   <bottom>
+      <AnchorPane prefHeight="40.0" prefWidth="590.0" BorderPane.alignment="CENTER">
+         <children>
+            <HBox alignment="CENTER_LEFT" layoutX="24.0" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" prefHeight="41.0" prefWidth="150.0">
+               <children>
+                  <Button fx:id="returnBtn" mnemonicParsing="false" onMouseClicked="#handleReturn" text="Return" />
+                  <Button mnemonicParsing="false" onMouseClicked="#handleReset" text="Reset View">
+                     <tooltip>
+                        <Tooltip text="Resets the view" />
+                     </tooltip>
+                     <HBox.margin>
+                        <Insets left="10.0" />
+                     </HBox.margin>
+                  </Button>
+               </children>
+            </HBox>
+            <HBox alignment="CENTER_RIGHT" layoutX="16.0" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" prefHeight="41.0" prefWidth="444.0" AnchorPane.rightAnchor="16.0">
+               <children>
+                  <Button fx:id="saveAndContinueBtn" alignment="CENTER_RIGHT" mnemonicParsing="false" onMouseClicked="#handleSaveAndContinue" text="Save all and Continue" />
+               </children>
+            </HBox>
+         </children>
+         <BorderPane.margin>
+            <Insets left="5.0" right="5.0" top="5.0" />
+         </BorderPane.margin>
+         <padding>
+            <Insets bottom="2.0" left="8.0" right="8.0" top="8.0" />
+         </padding>
+      </AnchorPane>
+   </bottom>
+   <center>
+      <AnchorPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+         <children>
+            <Pane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <children>
+                  <ImageView fx:id="previewImage" pickOnBounds="true" preserveRatio="true" smooth="false">
+                     <viewport>
+                        <Rectangle2D />
+                     </viewport></ImageView>
+                  <ImageView fx:id="originalImagePreview" pickOnBounds="true" preserveRatio="true" smooth="false" />
+               </children>
+               <padding>
+                  <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+               </padding>
+            </Pane>
+         </children>
+      </AnchorPane>
+   </center>
+</BorderPane>
