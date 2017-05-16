@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
 <!-- 
 /**
  * License: GPL
@@ -17,6 +18,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
  -->
+
 <?import javafx.scene.control.*?>
 <?import javafx.scene.canvas.*?>
 <?import javafx.scene.image.*?>
@@ -35,9 +37,6 @@
                   <Button mnemonicParsing="false" onAction="#clearLine" text="Line - Clear Line" />
                   <Button mnemonicParsing="false" onAction="#selectStart" text="Deciles - Change Start" />
                   <Button layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#selectEnd" text="Deciles - Change End" />
-                  <Button mnemonicParsing="false" onAction="#measureStartHandler" text="Measure - Change Start" />
-                  <Button mnemonicParsing="false" onAction="#measureEndHandler" text="Measure - Change End" />
-                  <Button mnemonicParsing="false" onAction="#measure" text="Measure - Edit unit and value" />
               </items>
             </ToolBar>
             <Button layoutX="161.0" layoutY="8.0" mnemonicParsing="false" onAction="#calculatePerikymata" prefHeight="25.0" prefWidth="137.0" text="Auto-mark perikymata" AnchorPane.rightAnchor="165.0" AnchorPane.topAnchor="8.0" />
@@ -67,8 +66,7 @@
         <content>
           <AnchorPane fx:id="imageAnchorPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0">
                <children>
-                  <ImageView fx:id="fullImage" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="-6.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="23.0" AnchorPane.topAnchor="0.0" />
-                  <ImageView fx:id="fullOriginalImage" layoutX="10.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                  <ImageView fx:id="croppedImageView" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="-6.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="23.0" AnchorPane.topAnchor="0.0" />
                </children>
             </AnchorPane>
         </content>

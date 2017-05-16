@@ -678,6 +678,10 @@ public class RotationCropLayoutController {
 				mainApp.getProjectPath() + File.separator + "Cropped_Image" + File.separator + "Cropped_image.png");
 		outputfile.setWritable(true, false);
 		ImageIO.write(img, "png", outputfile);
+
+		// Save where the deciles start and end in the image
+		mainApp.getProject().setxDecileStart(0d);
+		mainApp.getProject().setxDecileEnd(previewImage.getImage().getWidth());
 		mainApp.setCroppedImage(previewImage.getImage());
 	}
 
