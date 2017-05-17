@@ -1,6 +1,3 @@
-/**
- *
- */
 package es.ubu.lsi.perikymata.util.sockets;
 /**
  * License: GPL
@@ -71,14 +68,24 @@ public class ThreadPrototype implements Runnable {
 			out = new PrintWriter(client.getOutputStream(), true);
 			String message = null;
 			System.out.println("Waiting message...");
-			while ((message = in.readLine()) != null) {
-				System.out.println("Received: " + message);
-				if (message.equals("HELLO FROM PYTHON")) {
-					out.print("HELLO FROM JAVA");
-					out.flush();
-					System.out.println("Message sent, communication completed");
-				}
+			// while ((message = in.readLine()) != null) {
+			message = in.readLine();
+			System.out.println("Received: " + message);
+			// Doing handshake
+			if (message.equals("HELLO FROM PYTHON")) {
+				out.print("HELLO FROM JAVA");
+				out.flush();
+				System.out.println("Message sent, communication completed");
 			}
+			// }
+
+			// Calling an operations
+			System.out.println("Sending 2");
+			out.println("0,imagePath,imageSave");
+			out.flush();
+			message = in.readLine();
+			System.out.println("Received 2: " + message);
+			System.out.println("2º: " + message);
 		} catch (SocketException e) {
 			System.out.println("Client disconnected.");
 		} catch (IOException e) {
