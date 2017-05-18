@@ -107,10 +107,10 @@ public class PerikymataCountController {
 	 */
 	private List<Circle> circles = FXCollections.observableArrayList();
 
-//	/**
-//	 * Drawn line from startMeasure to endMeasure.
-//	 */
-//	private Line measureLine;
+	// /**
+	// * Drawn line from startMeasure to endMeasure.
+	// */
+	// private Line measureLine;
 
 	/**
 	 * Buttons used to draw and erase perikymata.
@@ -126,11 +126,11 @@ public class PerikymataCountController {
 	@FXML
 	private ImageView croppedImageView;
 
-//	/**
-//	 * Imageview of the original image.
-//	 */
-//	@FXML
-//	private ImageView fullOriginalImage;
+	// /**
+	// * Imageview of the original image.
+	// */
+	// @FXML
+	// private ImageView fullOriginalImage;
 
 	/**
 	 * Label that shows the current action status.
@@ -162,10 +162,10 @@ public class PerikymataCountController {
 	@FXML
 	private void initialize() {
 		// Original image to be shown when marking the measures.
-//		fullOriginalImage.setVisible(false);
-//		fullOriginalImage.fitHeightProperty().bind(croppedImageView.fitHeightProperty());
-//		fullOriginalImage.fitWidthProperty().bind(croppedImageView.fitWidthProperty());
-//		fullOriginalImage.eventDispatcherProperty().bind(croppedImageView.eventDispatcherProperty());
+		// fullOriginalImage.setVisible(false);
+		// fullOriginalImage.fitHeightProperty().bind(croppedImageView.fitHeightProperty());
+		// fullOriginalImage.fitWidthProperty().bind(croppedImageView.fitWidthProperty());
+		// fullOriginalImage.eventDispatcherProperty().bind(croppedImageView.eventDispatcherProperty());
 
 		// Loads loading gif.
 		loading.setImage(new Image(this.getClass().getResource("/rsc/482.gif").toExternalForm()));
@@ -176,10 +176,10 @@ public class PerikymataCountController {
 				.bind(((StringFormatter) Bindings.format("%.0f", thresholdSlider.valueProperty()).concat("%")));
 
 		// Sets the parameters of the measure line.
-//		measureLine = new Line();
-//		measureLine.setStrokeWidth(2);
-//		measureLine.setStroke(Color.RED);
-//		((AnchorPane) fullImage.getParent()).getChildren().add(measureLine);
+		// measureLine = new Line();
+		// measureLine.setStrokeWidth(2);
+		// measureLine.setStroke(Color.RED);
+		// ((AnchorPane) fullImage.getParent()).getChildren().add(measureLine);
 
 		// Sets the parameters of the decile lines.
 		lineDecileStart = new Line();
@@ -229,83 +229,84 @@ public class PerikymataCountController {
 
 	}
 
-//	/**
-//	 * Handles the selection of the starting bound of the tooth.
-//	 */
-//	@FXML
-//	private void selectStart() {
-//		clearImageViewHandlers();
-//		fullOriginalImage.setVisible(true);
-//
-//		EventHandler<MouseEvent> mouseHandler = new EventHandler<MouseEvent>() {
-//			@Override
-//			public void handle(MouseEvent mouseEvent) {
-//				if (mouseEvent.getEventType() == MouseEvent.MOUSE_CLICKED) {
-//					xDecileStart = modifyBoundsLine(mouseEvent, lineDecileStart);
-//					fullImage.setOnMouseClicked(null);
-//					statusLabel.setText("Start point selected.");
-//					fullOriginalImage.setVisible(false);
-//					mainApp.getProject().setxDecileStart(xDecileStart);
-//					mainApp.makeProjectXml();
-//					if (xDecileStart != null && xDecileEnd != null) {
-//						calculateDeciles();
-//					}
-//				}
-//			}
-//		};
-//		statusLabel.setText("Selecting Start point.");
-//		fullImage.setPickOnBounds(true);
-//		fullImage.setOnMouseClicked(mouseHandler);
-//
-//	}
-//
-//	/**
-//	 * Handles the selection of the Ending bound of the tooth.
-//	 */
-//	@FXML
-//	private void selectEnd() {
-//		clearImageViewHandlers();
-//		fullOriginalImage.setVisible(true);
-//		EventHandler<MouseEvent> mouseHandler = new EventHandler<MouseEvent>() {
-//			@Override
-//			public void handle(MouseEvent mouseEvent) {
-//				if (mouseEvent.getEventType() == MouseEvent.MOUSE_CLICKED) {
-//					xDecileEnd = modifyBoundsLine(mouseEvent, lineDecileEnd);
-//					fullImage.setOnMouseClicked(null);
-//					statusLabel.setText("End point selected.");
-//					fullOriginalImage.setVisible(false);
-//					mainApp.getProject().setxDecileStart(xDecileEnd);
-//					mainApp.makeProjectXml();
-//					if (xDecileStart != null && xDecileEnd != null) {
-//						calculateDeciles();
-//					}
-//				}
-//			}
-//		};
-//		statusLabel.setText("Selecting End point.");
-//		fullImage.setPickOnBounds(true);
-//		fullImage.setOnMouseClicked(mouseHandler);
-//
-//	}
+	// /**
+	// * Handles the selection of the starting bound of the tooth.
+	// */
+	// @FXML
+	// private void selectStart() {
+	// clearImageViewHandlers();
+	// fullOriginalImage.setVisible(true);
+	//
+	// EventHandler<MouseEvent> mouseHandler = new EventHandler<MouseEvent>() {
+	// @Override
+	// public void handle(MouseEvent mouseEvent) {
+	// if (mouseEvent.getEventType() == MouseEvent.MOUSE_CLICKED) {
+	// xDecileStart = modifyBoundsLine(mouseEvent, lineDecileStart);
+	// fullImage.setOnMouseClicked(null);
+	// statusLabel.setText("Start point selected.");
+	// fullOriginalImage.setVisible(false);
+	// mainApp.getProject().setxDecileStart(xDecileStart);
+	// mainApp.makeProjectXml();
+	// if (xDecileStart != null && xDecileEnd != null) {
+	// calculateDeciles();
+	// }
+	// }
+	// }
+	// };
+	// statusLabel.setText("Selecting Start point.");
+	// fullImage.setPickOnBounds(true);
+	// fullImage.setOnMouseClicked(mouseHandler);
+	//
+	// }
+	//
+	// /**
+	// * Handles the selection of the Ending bound of the tooth.
+	// */
+	// @FXML
+	// private void selectEnd() {
+	// clearImageViewHandlers();
+	// fullOriginalImage.setVisible(true);
+	// EventHandler<MouseEvent> mouseHandler = new EventHandler<MouseEvent>() {
+	// @Override
+	// public void handle(MouseEvent mouseEvent) {
+	// if (mouseEvent.getEventType() == MouseEvent.MOUSE_CLICKED) {
+	// xDecileEnd = modifyBoundsLine(mouseEvent, lineDecileEnd);
+	// fullImage.setOnMouseClicked(null);
+	// statusLabel.setText("End point selected.");
+	// fullOriginalImage.setVisible(false);
+	// mainApp.getProject().setxDecileStart(xDecileEnd);
+	// mainApp.makeProjectXml();
+	// if (xDecileStart != null && xDecileEnd != null) {
+	// calculateDeciles();
+	// }
+	// }
+	// }
+	// };
+	// statusLabel.setText("Selecting End point.");
+	// fullImage.setPickOnBounds(true);
+	// fullImage.setOnMouseClicked(mouseHandler);
+	//
+	// }
 
-//	/**
-//	 * Modifies the line to a new position defined by the coordinates of the
-//	 * mouseEvent and returns the X coordinate on the real image.
-//	 *
-//	 * @param me
-//	 *            Mouse event that shows the new position of the line.
-//	 * @param line
-//	 *            Line to draw or redraw.
-//	 * @return x position relative to the real image.
-//	 */
-//	private double modifyBoundsLine(MouseEvent me, Line line) {
-//		line.setStartX(new Double(me.getX()));
-//		line.setEndX(new Double(me.getX()));
-//		line.setStartY(0);
-//		line.setEndY(new Double(fullImage.getFitHeight()));
-//		double ratio = (fullImage.getImage().getWidth() / fullImage.getFitWidth());
-//		return Double.valueOf(me.getX() * ratio);
-//	}
+	// /**
+	// * Modifies the line to a new position defined by the coordinates of the
+	// * mouseEvent and returns the X coordinate on the real image.
+	// *
+	// * @param me
+	// * Mouse event that shows the new position of the line.
+	// * @param line
+	// * Line to draw or redraw.
+	// * @return x position relative to the real image.
+	// */
+	// private double modifyBoundsLine(MouseEvent me, Line line) {
+	// line.setStartX(new Double(me.getX()));
+	// line.setEndX(new Double(me.getX()));
+	// line.setStartY(0);
+	// line.setEndY(new Double(fullImage.getFitHeight()));
+	// double ratio = (fullImage.getImage().getWidth() /
+	// fullImage.getFitWidth());
+	// return Double.valueOf(me.getX() * ratio);
+	// }
 
 	/**
 	 * Clears the line that has been drawn to detect perikymata and clears the
@@ -391,13 +392,14 @@ public class PerikymataCountController {
 		}
 
 		// Draws the measure line
-//		if (measure != null && measure.getStartMeasure() != null && measure.getEndMeasure() != null) {
-//			measureLine.setStartX(measure.getStartMeasure()[0] / ratio);
-//			measureLine.setStartY(measure.getStartMeasure()[1] / ratio);
-//			measureLine.setEndX(measure.getEndMeasure()[0] / ratio);
-//			measureLine.setEndY(measure.getEndMeasure()[1] / ratio);
-//
-//		}
+		// if (measure != null && measure.getStartMeasure() != null &&
+		// measure.getEndMeasure() != null) {
+		// measureLine.setStartX(measure.getStartMeasure()[0] / ratio);
+		// measureLine.setStartY(measure.getStartMeasure()[1] / ratio);
+		// measureLine.setEndX(measure.getEndMeasure()[0] / ratio);
+		// measureLine.setEndY(measure.getEndMeasure()[1] / ratio);
+		//
+		// }
 
 		// Draws the deciles.
 		if (xDecileStart != null) {
@@ -525,13 +527,17 @@ public class PerikymataCountController {
 	 */
 	public void setMainApp(MainApp mainApp) {
 		this.mainApp = mainApp;
+
+		// Manage breadcrumbs
+		mainApp.disableBreadcrumbs(false, false, false);
+
 		if (mainApp.getFullImage() != null) {
-			//croppedImageView.setImage(mainApp.getFilteredImage());
+			// croppedImageView.setImage(mainApp.getFilteredImage());
 			croppedImageView.setImage(mainApp.getCroppedImage());
 			croppedImageView.setFitHeight(croppedImageView.getImage().getHeight());
 			croppedImageView.setFitWidth(croppedImageView.getImage().getWidth());
 			croppedImageView.setPreserveRatio(true);
-//			fullOriginalImage.setImage(mainApp.getFullImage());
+			// fullOriginalImage.setImage(mainApp.getFullImage());
 			freeDrawPathList.clear();
 			if (mainApp.getProject().getLinePath() != null)
 				freeDrawPathList.addAll(mainApp.getProject().getLinePath());
@@ -550,164 +556,179 @@ public class PerikymataCountController {
 		}
 	}
 
-//	/**
-//	 * Handler that puts an event on the image to mark the start of the measure,
-//	 * if start and end measures are set, line is drawn and measure dialog is
-//	 * called.
-//	 */
-//	@FXML
-//	private void measureStartHandler() {
-//
-//		clearImageViewHandlers();
-//		fullOriginalImage.setVisible(true);
-//		EventHandler<MouseEvent> mouseHandler = new EventHandler<MouseEvent>() {
-//			@Override
-//			public void handle(MouseEvent mouseEvent) {
-//				if (mouseEvent.getEventType() == MouseEvent.MOUSE_CLICKED) {
-//					if (measure != null && measure.getStartMeasure() == null) {
-//						measure.setStartMeasure(new double[2]);
-//					}
-//					measure.getStartMeasure()[0] = mouseEvent.getX() * getImageToImageViewRatio();
-//					measure.getStartMeasure()[1] = mouseEvent.getY() * getImageToImageViewRatio();
-//					fullImage.setOnMouseClicked(null);
-//					statusLabel.setText("Start measure point selected.");
-//					fullOriginalImage.setVisible(false);
-//					if (measure.getStartMeasure() != null && measure.getEndMeasure() != null) {
-//						measure();
-//					}
-//				}
-//			}
-//		};
-//		statusLabel.setText("Selecting start point for the measure.");
-//		fullImage.setPickOnBounds(true);
-//		fullImage.setOnMouseClicked(mouseHandler);
-//	}
+	// /**
+	// * Handler that puts an event on the image to mark the start of the
+	// measure,
+	// * if start and end measures are set, line is drawn and measure dialog is
+	// * called.
+	// */
+	// @FXML
+	// private void measureStartHandler() {
+	//
+	// clearImageViewHandlers();
+	// fullOriginalImage.setVisible(true);
+	// EventHandler<MouseEvent> mouseHandler = new EventHandler<MouseEvent>() {
+	// @Override
+	// public void handle(MouseEvent mouseEvent) {
+	// if (mouseEvent.getEventType() == MouseEvent.MOUSE_CLICKED) {
+	// if (measure != null && measure.getStartMeasure() == null) {
+	// measure.setStartMeasure(new double[2]);
+	// }
+	// measure.getStartMeasure()[0] = mouseEvent.getX() *
+	// getImageToImageViewRatio();
+	// measure.getStartMeasure()[1] = mouseEvent.getY() *
+	// getImageToImageViewRatio();
+	// fullImage.setOnMouseClicked(null);
+	// statusLabel.setText("Start measure point selected.");
+	// fullOriginalImage.setVisible(false);
+	// if (measure.getStartMeasure() != null && measure.getEndMeasure() != null)
+	// {
+	// measure();
+	// }
+	// }
+	// }
+	// };
+	// statusLabel.setText("Selecting start point for the measure.");
+	// fullImage.setPickOnBounds(true);
+	// fullImage.setOnMouseClicked(mouseHandler);
+	// }
 
-//	/**
-//	 * Handler that puts an event on the image to mark the end of the measure,
-//	 * if start and end measures are set, line is drawn and measure dialog is
-//	 * called.
-//	 */
-//	@FXML
-//	private void measureEndHandler() {
-//		clearImageViewHandlers();
-//		fullOriginalImage.setVisible(true);
-//		EventHandler<MouseEvent> mouseHandler = new EventHandler<MouseEvent>() {
-//			@Override
-//			public void handle(MouseEvent mouseEvent) {
-//				if (mouseEvent.getEventType() == MouseEvent.MOUSE_CLICKED) {
-//					if (measure.getEndMeasure() == null) {
-//						measure.setEndMeasure(new double[2]);
-//					}
-//					measure.getEndMeasure()[0] = mouseEvent.getX() * getImageToImageViewRatio();
-//					measure.getEndMeasure()[1] = mouseEvent.getY() * getImageToImageViewRatio();
-//					fullImage.setOnMouseClicked(null);
-//					statusLabel.setText("End measure point selected.");
-//					fullOriginalImage.setVisible(false);
-//					if (measure.getStartMeasure() != null && measure.getEndMeasure() != null) {
-//						measure();
-//					}
-//				}
-//			}
-//		};
-//		statusLabel.setText("Selecting End point for the measure.");
-//		fullImage.setPickOnBounds(true);
-//		fullImage.setOnMouseClicked(mouseHandler);
-//	}
+	// /**
+	// * Handler that puts an event on the image to mark the end of the measure,
+	// * if start and end measures are set, line is drawn and measure dialog is
+	// * called.
+	// */
+	// @FXML
+	// private void measureEndHandler() {
+	// clearImageViewHandlers();
+	// fullOriginalImage.setVisible(true);
+	// EventHandler<MouseEvent> mouseHandler = new EventHandler<MouseEvent>() {
+	// @Override
+	// public void handle(MouseEvent mouseEvent) {
+	// if (mouseEvent.getEventType() == MouseEvent.MOUSE_CLICKED) {
+	// if (measure.getEndMeasure() == null) {
+	// measure.setEndMeasure(new double[2]);
+	// }
+	// measure.getEndMeasure()[0] = mouseEvent.getX() *
+	// getImageToImageViewRatio();
+	// measure.getEndMeasure()[1] = mouseEvent.getY() *
+	// getImageToImageViewRatio();
+	// fullImage.setOnMouseClicked(null);
+	// statusLabel.setText("End measure point selected.");
+	// fullOriginalImage.setVisible(false);
+	// if (measure.getStartMeasure() != null && measure.getEndMeasure() != null)
+	// {
+	// measure();
+	// }
+	// }
+	// }
+	// };
+	// statusLabel.setText("Selecting End point for the measure.");
+	// fullImage.setPickOnBounds(true);
+	// fullImage.setOnMouseClicked(mouseHandler);
+	// }
 
-//	/**
-//	 * Draws the line between startMeasure and EndMeasure and shows a dialog
-//	 * asking for the units and value of the measure.
-//	 */
-//	@FXML
-//	private void measure() {
-//
-//		measureLine.setStartX(measure.getStartMeasure()[0] / getImageToImageViewRatio());
-//		measureLine.setStartY(measure.getStartMeasure()[1] / getImageToImageViewRatio());
-//		measureLine.setEndX(measure.getEndMeasure()[0] / getImageToImageViewRatio());
-//		measureLine.setEndY(measure.getEndMeasure()[1] / getImageToImageViewRatio());
-//
-//		mainApp.getProject().getMeasure().setStartMeasure(measure.getStartMeasure());
-//		mainApp.getProject().getMeasure().setEndMeasure(measure.getEndMeasure());
-//
-//		// Create the custom dialog.
-//		Dialog<Pair<String, String>> dialog = new Dialog<>();
-//		dialog.setTitle("Input the image measure unit and measure value.");
-//		dialog.setHeaderText("Input the image measure unit and measure value.");
-//
-//		// Set the button types.
-//		ButtonType doneButtonType = new ButtonType("Done", ButtonData.OK_DONE);
-//		dialog.getDialogPane().getButtonTypes().addAll(doneButtonType, ButtonType.CANCEL);
-//
-//		// Create the username and password labels and fields.
-//		GridPane grid = new GridPane();
-//		grid.setHgap(10);
-//		grid.setVgap(10);
-//		grid.setPadding(new Insets(20, 150, 10, 10));
-//
-//		// TextField measureUnit = new TextField();
-//		// measureUnit.setPromptText("Measure unit");
-//		ObservableList<String> options = FXCollections.observableArrayList("cm", "mm", "µm", "nm");
-//		final ComboBox<String> measureUnit = new ComboBox<>(options);
-//		if (measure == null || measure.getMeasureUnit() == null)
-//			measureUnit.setValue("mm");
-//		else
-//			measureUnit.setValue(measure.getMeasureUnit());
-//		TextField measureValue = new TextField();
-//		measureValue.setPromptText("Measure value");
-//		if (measure != null && measure.getMeasureValue() != 0) {
-//			measureValue.setText(Double.toString(measure.getMeasureValue()));
-//		}
-//		measureValue.setTextFormatter(new TextFormatter<String>(change -> {
-//			if (change.getText().matches("[0-9]*(\\.)?[0-9]*")) {
-//				if (change.getText().endsWith("."))
-//					change.setText(change.getText() + "0");
-//				return change;
-//			}
-//			return null;
-//		}));
-//
-//		grid.add(new Label("Measure unit:"), 0, 0);
-//		grid.add(measureUnit, 1, 0);
-//		grid.add(new Label("Measure value:"), 0, 1);
-//		grid.add(measureValue, 1, 1);
-//
-//		// Enable/Disable login button depending on whether a username was
-//		// entered.
-//		Node acceptButton = dialog.getDialogPane().lookupButton(doneButtonType);
-//		acceptButton.setDisable(true);
-//
-//		// Do some validation (using the Java 8 lambda syntax).
-//		measureValue.textProperty().addListener((observable, oldValue, newValue) -> {
-//			acceptButton.setDisable(newValue.trim().isEmpty());
-//		});
-//
-//		dialog.getDialogPane().setContent(grid);
-//
-//		// Request focus on the username field by default.
-//		Platform.runLater(() -> measureUnit.requestFocus());
-//
-//		// Convert the result to a username-password-pair when the login button
-//		// is clicked.
-//		dialog.setResultConverter(dialogButton -> {
-//			if (dialogButton == doneButtonType) {
-//
-//				return new Pair<>(measureUnit.getValue().toString(), measureValue.getText());
-//			}
-//			statusLabel.setText("Measure has not been changed.");
-//			return null;
-//		});
-//
-//		Optional<Pair<String, String>> result = dialog.showAndWait();
-//
-//		result.ifPresent(measureValues -> {
-//			statusLabel.setText("Measure changed correctly.");
-//			measure.setMeasureUnit(measureValues.getKey());
-//			measure.setMeasureValue(Double.parseDouble(measureValues.getValue()));
-//			mainApp.getProject().setMeasure(measure);
-//			mainApp.makeProjectXml();
-//		});
-//	}
+	// /**
+	// * Draws the line between startMeasure and EndMeasure and shows a dialog
+	// * asking for the units and value of the measure.
+	// */
+	// @FXML
+	// private void measure() {
+	//
+	// measureLine.setStartX(measure.getStartMeasure()[0] /
+	// getImageToImageViewRatio());
+	// measureLine.setStartY(measure.getStartMeasure()[1] /
+	// getImageToImageViewRatio());
+	// measureLine.setEndX(measure.getEndMeasure()[0] /
+	// getImageToImageViewRatio());
+	// measureLine.setEndY(measure.getEndMeasure()[1] /
+	// getImageToImageViewRatio());
+	//
+	// mainApp.getProject().getMeasure().setStartMeasure(measure.getStartMeasure());
+	// mainApp.getProject().getMeasure().setEndMeasure(measure.getEndMeasure());
+	//
+	// // Create the custom dialog.
+	// Dialog<Pair<String, String>> dialog = new Dialog<>();
+	// dialog.setTitle("Input the image measure unit and measure value.");
+	// dialog.setHeaderText("Input the image measure unit and measure value.");
+	//
+	// // Set the button types.
+	// ButtonType doneButtonType = new ButtonType("Done", ButtonData.OK_DONE);
+	// dialog.getDialogPane().getButtonTypes().addAll(doneButtonType,
+	// ButtonType.CANCEL);
+	//
+	// // Create the username and password labels and fields.
+	// GridPane grid = new GridPane();
+	// grid.setHgap(10);
+	// grid.setVgap(10);
+	// grid.setPadding(new Insets(20, 150, 10, 10));
+	//
+	// // TextField measureUnit = new TextField();
+	// // measureUnit.setPromptText("Measure unit");
+	// ObservableList<String> options = FXCollections.observableArrayList("cm",
+	// "mm", "µm", "nm");
+	// final ComboBox<String> measureUnit = new ComboBox<>(options);
+	// if (measure == null || measure.getMeasureUnit() == null)
+	// measureUnit.setValue("mm");
+	// else
+	// measureUnit.setValue(measure.getMeasureUnit());
+	// TextField measureValue = new TextField();
+	// measureValue.setPromptText("Measure value");
+	// if (measure != null && measure.getMeasureValue() != 0) {
+	// measureValue.setText(Double.toString(measure.getMeasureValue()));
+	// }
+	// measureValue.setTextFormatter(new TextFormatter<String>(change -> {
+	// if (change.getText().matches("[0-9]*(\\.)?[0-9]*")) {
+	// if (change.getText().endsWith("."))
+	// change.setText(change.getText() + "0");
+	// return change;
+	// }
+	// return null;
+	// }));
+	//
+	// grid.add(new Label("Measure unit:"), 0, 0);
+	// grid.add(measureUnit, 1, 0);
+	// grid.add(new Label("Measure value:"), 0, 1);
+	// grid.add(measureValue, 1, 1);
+	//
+	// // Enable/Disable login button depending on whether a username was
+	// // entered.
+	// Node acceptButton = dialog.getDialogPane().lookupButton(doneButtonType);
+	// acceptButton.setDisable(true);
+	//
+	// // Do some validation (using the Java 8 lambda syntax).
+	// measureValue.textProperty().addListener((observable, oldValue, newValue)
+	// -> {
+	// acceptButton.setDisable(newValue.trim().isEmpty());
+	// });
+	//
+	// dialog.getDialogPane().setContent(grid);
+	//
+	// // Request focus on the username field by default.
+	// Platform.runLater(() -> measureUnit.requestFocus());
+	//
+	// // Convert the result to a username-password-pair when the login button
+	// // is clicked.
+	// dialog.setResultConverter(dialogButton -> {
+	// if (dialogButton == doneButtonType) {
+	//
+	// return new Pair<>(measureUnit.getValue().toString(),
+	// measureValue.getText());
+	// }
+	// statusLabel.setText("Measure has not been changed.");
+	// return null;
+	// });
+	//
+	// Optional<Pair<String, String>> result = dialog.showAndWait();
+	//
+	// result.ifPresent(measureValues -> {
+	// statusLabel.setText("Measure changed correctly.");
+	// measure.setMeasureUnit(measureValues.getKey());
+	// measure.setMeasureValue(Double.parseDouble(measureValues.getValue()));
+	// mainApp.getProject().setMeasure(measure);
+	// mainApp.makeProjectXml();
+	// });
+	// }
 
 	/**
 	 *

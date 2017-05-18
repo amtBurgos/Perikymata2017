@@ -52,32 +52,33 @@ public class JavaServerPrototype {
 	/**
 	 * Socket
 	 */
-	ServerSocket serverSocket;
+	static ServerSocket serverSocket;
 
-//	/**
-//	 * Starts the serves.
-//	 *
-//	 * @throws IOException
-//	 *             IOException
-//	 */
-//	public void startServer() throws IOException {
-//		ServerSocket server = new ServerSocket(port);
-//		Socket clientPython = null;
-//		alive = true;
-//		System.out.println("Servidor iniciado");
-//		clientPython = serverSocket.accept();
-//
-//		PrintWriter out = new PrintWriter(clientPython.getOutputStream(), true);
-//		BufferedReader in = new BufferedReader(new InputStreamReader(clientPython.getInputStream()));
-//
-//		String msgReceived = null;
-//		while ((msgReceived = in.readLine()) != null) {
-//			System.out.println(msgReceived);
-//		}
-//
-//		// Thread thread = new Thread(new ThreadPrototype(clientPython));
-//		// thread.start();
-//	}
+	// /**
+	// * Starts the serves.
+	// *
+	// * @throws IOException
+	// * IOException
+	// */
+	// public void startServer() throws IOException {
+	// ServerSocket server = new ServerSocket(port);
+	// Socket clientPython = null;
+	// alive = true;
+	// System.out.println("Servidor iniciado");
+	// clientPython = serverSocket.accept();
+	//
+	// PrintWriter out = new PrintWriter(clientPython.getOutputStream(), true);
+	// BufferedReader in = new BufferedReader(new
+	// InputStreamReader(clientPython.getInputStream()));
+	//
+	// String msgReceived = null;
+	// while ((msgReceived = in.readLine()) != null) {
+	// System.out.println(msgReceived);
+	// }
+	//
+	// // Thread thread = new Thread(new ThreadPrototype(clientPython));
+	// // thread.start();
+	// }
 
 	/**
 	 * Returns whether the server is running or not.s
@@ -103,17 +104,11 @@ public class JavaServerPrototype {
 	 */
 	public static void main(String[] args) throws UnknownHostException, IOException {
 		JavaServerPrototype server = new JavaServerPrototype();
-		//server.startServer();
+		// server.startServer();
 		Scanner scan = new Scanner(System.in);
 		Socket clientSocket = serverSocket.accept();
 		while (true) {
-			try {
-				ServerThreadForClient clientThread = new ServerThreadForClient(clientSocket, clientId++);
-				usersList.add(clientThread);
-				clientThread.start();
-			} catch (IOException e) {
-				System.err.println("# Cliente no aceptado.");
-			}
+			// TODO
 		}
 	}
 

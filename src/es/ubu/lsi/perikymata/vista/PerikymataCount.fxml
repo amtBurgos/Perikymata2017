@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!-- 
+<!--
 /**
  * License: GPL
  *
@@ -35,8 +35,8 @@
                   <Button fx:id="zoomMinusButton" mnemonicParsing="false" onAction="#zoomMinus" text="Zoom -" />
                   <Button mnemonicParsing="false" onAction="#drawPath" text="Line - Free Draw" />
                   <Button mnemonicParsing="false" onAction="#clearLine" text="Line - Clear Line" />
-                  <Button mnemonicParsing="false" onAction="#selectStart" text="Deciles - Change Start" />
-                  <Button layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#selectEnd" text="Deciles - Change End" />
+                  <!-- <Button mnemonicParsing="false" onAction="#selectStart" text="Deciles - Change Start" />
+                  <Button layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#selectEnd" text="Deciles - Change End" /> -->
               </items>
             </ToolBar>
             <Button layoutX="161.0" layoutY="8.0" mnemonicParsing="false" onAction="#calculatePerikymata" prefHeight="25.0" prefWidth="137.0" text="Auto-mark perikymata" AnchorPane.rightAnchor="165.0" AnchorPane.topAnchor="8.0" />

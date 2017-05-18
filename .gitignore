@@ -46,3 +46,4 @@ ImageProcessingPython/dist/*
 *.spec
 !src/rsc/Square-icon.png
 src/es/ubu/lsi/perikymata/vista/Auxiliar.java
+errorLog_2017-05-18_02-16-13.log.1

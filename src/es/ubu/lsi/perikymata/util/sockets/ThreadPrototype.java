@@ -79,7 +79,7 @@ public class ThreadPrototype implements Runnable {
 			}
 			// }
 
-			// Calling an operations
+			// Calling different operations
 			System.out.println("Sending 2");
 			out.println("0,imagePath,imageSave");
 			out.flush();

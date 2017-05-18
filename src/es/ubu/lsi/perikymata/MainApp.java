@@ -53,12 +53,14 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Cursor;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
@@ -145,6 +147,21 @@ public class MainApp extends Application {
 	private StitchingUtil tempUtil = new StitchingUtil();
 
 	/**
+	 * Image selection breadcrumb.
+	 */
+	private Label imageSelectionBreadcrumb;
+
+	/**
+	 * Perikymata count breadcrumb.
+	 */
+	private Label perikymataCountBreadcrumb;
+
+	/**
+	 * Rotation and image crop breadcrumb.
+	 */
+	private Label rotationAndCropBreadcrumb;
+
+	/**
 	 * Launches the applications, no args needed.
 	 *
 	 * @param args
@@ -198,6 +215,17 @@ public class MainApp extends Application {
 			Scene scene = new Scene(rootLayout);
 			primaryStage.setScene(scene);
 
+			// Save breadcrumbs
+			imageSelectionBreadcrumb = (Label) scene.lookup("#ImageSelectionBreadcrumb");
+			rotationAndCropBreadcrumb = (Label) scene.lookup("#RotationAndCropBreadcrumb");
+			perikymataCountBreadcrumb = (Label) scene.lookup("#PerikymataCountBreadcrumb");
+
+			// Initialize breadcrumbs state
+			imageSelectionBreadcrumb.setCursor(Cursor.HAND);
+			rotationAndCropBreadcrumb.setCursor(Cursor.HAND);
+			perikymataCountBreadcrumb.setCursor(Cursor.HAND);
+			disableBreadcrumbs(false, true, true);
+
 			// Gives a mainapp's reference to the controller.
 			RootLayoutController controller = loader.getController();
 			controller.setMainApp(this);
@@ -238,6 +266,23 @@ public class MainApp extends Application {
 			}
 		}
 
+	}
+
+	/**
+	 * Disable and enable each breadcrumb of the application.
+	 *
+	 * @param disableImageSelection
+	 *            true/false for disable image selection breadcrumb
+	 * @param disableRotationAndCropImage
+	 *            true/false for disable rotation and crop image breadcrumb
+	 * @param disablePerikymataCount
+	 *            true/false for disable perikymata count breadcrumb
+	 */
+	public void disableBreadcrumbs(boolean disableImageSelection, boolean disableRotationAndCropImage,
+			boolean disablePerikymataCount) {
+		imageSelectionBreadcrumb.setDisable(disableImageSelection);
+		rotationAndCropBreadcrumb.setDisable(disableRotationAndCropImage);
+		perikymataCountBreadcrumb.setDisable(disablePerikymataCount);
 	}
 
 	/**
@@ -290,14 +335,16 @@ public class MainApp extends Application {
 			}
 
 			// Adds the Full image to the project (if exists)
-			//File fullImageFile = Paths.get(file.getParent(), "Full_image", "Full_image.png").toFile();
+			// File fullImageFile = Paths.get(file.getParent(), "Full_image",
+			// "Full_image.png").toFile();
 			File fullImageFile = Paths.get(file.getParent(), "Full_Image", "Full_image.png").toFile();
 			if (fullImageFile.exists()) {
 				java.awt.Image full = new Opener().openImage(fullImageFile.getPath()).getImage();
 				setFullImage(SwingFXUtils.toFXImage((BufferedImage) full, null));
 
 				// Adds the filtered image to the project (if exists)
-				//File filteredImageFile = Paths.get(file.getParent(), "Full_image", "Filtered_image.png").toFile();
+				// File filteredImageFile = Paths.get(file.getParent(),
+				// "Full_image", "Filtered_image.png").toFile();
 				File filteredImageFile = Paths.get(file.getParent(), "Full_Image", "Filtered_image.png").toFile();
 				if (filteredImageFile.exists()) {
 					java.awt.Image filtered = new Opener().openImage(filteredImageFile.getAbsolutePath()).getImage();
