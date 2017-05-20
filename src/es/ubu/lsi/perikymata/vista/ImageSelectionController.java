@@ -50,6 +50,7 @@ import javafx.stage.FileChooser;
  * Controller for the layout that is used to the image fragments.
  *
  * @author Sergio Chico Carrancio
+ * @author Andres Miguel Teran
  *
  */
 public class ImageSelectionController {
@@ -113,8 +114,10 @@ public class ImageSelectionController {
 	private void handleOpen() {
 		FileChooser fileChooser = new FileChooser();
 
-		// Set extension filter
-		FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("All files (*.*)", "*.*");
+		// Set extension filter for image files
+		FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter(
+				"Image files (*.png, *.jpg, *.jpeg, *.tif, *.tiff, *.bmp)", "*.png", "*.jpg", "*.jpeg", "*.tif",
+				"*.tiff", "*.bmp");
 		fileChooser.getExtensionFilters().add(extFilter);
 
 		// Show open file dialog
@@ -152,8 +155,10 @@ public class ImageSelectionController {
 	private void handleOpenMultiple() {
 		FileChooser fileChooser = new FileChooser();
 
-		// Set extension filter
-		FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("All files (*.*)", "*.*");
+		// Set extension filter for image files
+		FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter(
+				"Image files (*.png, *.jpg, *.jpeg, *.tif, *.tiff, *.bmp)", "*.png", "*.jpg", "*.jpeg", "*.tif",
+				"*.tiff", "*.bmp");
 		fileChooser.getExtensionFilters().add(extFilter);
 
 		// Show open file dialog

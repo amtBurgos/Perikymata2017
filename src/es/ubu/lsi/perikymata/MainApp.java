@@ -390,9 +390,9 @@ public class MainApp extends Application {
 			// list of
 			// images to stitch.
 			File fragmentsFolder = Paths.get(file.getParent(), "Fragments").toFile();
-			for (File fragments : fragmentsFolder.listFiles()) {
-				if (fragments != null) {
-					getFilesList().add(fragments.getName());
+			for (File fragment : fragmentsFolder.listFiles()) {
+				if (fragment != null && isImageFile(fragment)) {
+					getFilesList().add(fragment.getName());
 				}
 			}
 
@@ -410,6 +410,25 @@ public class MainApp extends Application {
 			alert.showAndWait();
 			this.clearData();
 		}
+	}
+
+	/**
+	 * Checks if the file is a valid image.
+	 *
+	 * @param image
+	 *            image file
+	 * @return true/false is the file is a valid image
+	 */
+	private boolean isImageFile(File image) {
+		boolean valid = false;
+		int last = image.getAbsolutePath().lastIndexOf('.');
+		String extension = image.getAbsolutePath().substring(last + 1);
+		if (extension.equalsIgnoreCase("png") || extension.equalsIgnoreCase("jpg") || extension.equalsIgnoreCase("jpeg")
+				|| extension.equalsIgnoreCase("tif") || extension.equalsIgnoreCase("tiff")
+				|| extension.equalsIgnoreCase("bmp")) {
+			valid = true;
+		}
+		return valid;
 	}
 
 	/**

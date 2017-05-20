@@ -117,13 +117,13 @@ public class RootLayoutController {
 		Alert alert = new Alert(Alert.AlertType.INFORMATION);
 		alert.setTitle("Paleontological analysis of dental images - Perikymata");
 		alert.setHeaderText("About");
-		alert.setContentText("Author: Andrés Miguel Terán\n" + "Tutor: Dr. Jose Francisco Diez Pastor\n"
+		alert.setContentText("v2.0\n" + "Author: Andrés Miguel Terán\n" + "Tutor: Dr. Jose Francisco Diez Pastor\n"
 				+ "Tutor: Dr Raul Marticorena Sanchez  \n" + "Universidad de Burgos, July 2017\n"
 				+ "Perikymata v2.0 (Analisis Paleontologico de piezas dentales)\n"
 				+ "Perikymata v2.0 comes with ABSOLUTELY NO WARRANTY;\n"
 				+ "for details view the file PERIKYMATA_LICENSE.txt\n"
 				+ "This is free software, and you are welcome to redistribute it under "
-				+ "the conditions found in the license." + "\n\n" + "Author: Sergio Chico Carrancio\n"
+				+ "the conditions found in the license." + "\n\n" + "v1.0\n" + "Author: Sergio Chico Carrancio\n"
 				+ "Tutor: Dr. Jose Francisco Diez Pastor\n" + "Tutor: Dr Raul Marticorena Sanchez  \n"
 				+ "Universidad de Burgos, July 2016\n"
 				+ "Perikymata v1.0 (Analisis Paleontologico de piezas dentales)\n"
