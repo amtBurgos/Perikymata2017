@@ -821,10 +821,6 @@ public class RotationCropLayoutController {
 			imgAux = SwingFXUtils.fromFXImage(originalImagePreview.getImage(), null);
 			inputDegrees.setText("0.0");
 			measure = mainApp.getProject().getMeasure();
-
-			// Manage breadcrumbs
-			mainApp.disableBreadcrumbs(false, false, true);
-
 		}
 	}
 }

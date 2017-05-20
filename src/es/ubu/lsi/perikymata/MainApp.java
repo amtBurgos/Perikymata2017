@@ -64,6 +64,8 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -170,6 +172,9 @@ public class MainApp extends Application {
 		launch(args);
 	}
 
+	/**
+	 * Initializes the primary stage.
+	 */
 	@Override
 	public void start(Stage primaryStage) {
 		configureLogger();
@@ -269,7 +274,8 @@ public class MainApp extends Application {
 	}
 
 	/**
-	 * Disable and enable each breadcrumb of the application.
+	 * Disable and enable each breadcrumb of the application, also handle their
+	 * font wheight.
 	 *
 	 * @param disableImageSelection
 	 *            true/false for disable image selection breadcrumb
@@ -280,6 +286,22 @@ public class MainApp extends Application {
 	 */
 	public void disableBreadcrumbs(boolean disableImageSelection, boolean disableRotationAndCropImage,
 			boolean disablePerikymataCount) {
+
+		if (!disableImageSelection && !disableRotationAndCropImage && !disablePerikymataCount) {
+			imageSelectionBreadcrumb.setFont(Font.font(null, FontWeight.NORMAL, -1));
+			rotationAndCropBreadcrumb.setFont(Font.font(null, FontWeight.NORMAL, -1));
+			perikymataCountBreadcrumb.setFont(Font.font(null, FontWeight.BOLD, -1));
+		} else if (!disableImageSelection && !disableRotationAndCropImage && disablePerikymataCount) {
+			imageSelectionBreadcrumb.setFont(Font.font(null, FontWeight.NORMAL, -1));
+			rotationAndCropBreadcrumb.setFont(Font.font(null, FontWeight.BOLD, -1));
+			perikymataCountBreadcrumb.setFont(Font.font(null, FontWeight.NORMAL, -1));
+		} else {
+			imageSelectionBreadcrumb.setFont(Font.font(null, FontWeight.BOLD, -1));
+			rotationAndCropBreadcrumb.setFont(Font.font(null, FontWeight.NORMAL, -1));
+			perikymataCountBreadcrumb.setFont(Font.font(null, FontWeight.NORMAL, -1));
+		}
+
+		// Disable or enable labels
 		imageSelectionBreadcrumb.setDisable(disableImageSelection);
 		rotationAndCropBreadcrumb.setDisable(disableRotationAndCropImage);
 		perikymataCountBreadcrumb.setDisable(disablePerikymataCount);
@@ -403,6 +425,9 @@ public class MainApp extends Application {
 			// Shows this layout in the center of the rootLayout.
 			rootLayout.setCenter(imageSelection);
 
+			// Manage breadcrumbs
+			disableBreadcrumbs(false, true, true);
+
 			// Gives a mainapp's reference to the controller of the layout.
 			ImageSelectionController controller = loader.getController();
 			controller.setMainApp(this);
@@ -459,6 +484,9 @@ public class MainApp extends Application {
 			// Shows this layout in the center of the rootLayout.
 			rootLayout.setCenter(window);
 
+			// Manage breadcrumbs
+			disableBreadcrumbs(false, false, true);
+
 			// Gives a mainapp's reference to the controller of the layout.
 			RotationCropLayoutController controller = loader.getController();
 			controller.setMainApp(this);
@@ -486,6 +514,9 @@ public class MainApp extends Application {
 
 			// Shows this layout in the center of the rootLayout.
 			rootLayout.setCenter(perikymataCount);
+
+			// Manage breadcrumbs
+			disableBreadcrumbs(false, false, false);
 
 			// Gives a mainapp's reference to the controller of the layout.
 			PerikymataCountController controller = loader.getController();

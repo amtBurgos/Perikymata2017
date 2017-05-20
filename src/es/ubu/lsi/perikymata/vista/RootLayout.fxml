@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.text.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.web.*?>
 <?import javafx.scene.control.*?>
@@ -43,7 +44,7 @@
    <bottom>
       <AnchorPane prefHeight="30.0" BorderPane.alignment="CENTER">
          <children>
-            <HBox prefHeight="25.0" AnchorPane.leftAnchor="1.0" AnchorPane.rightAnchor="0.0">
+            <HBox prefHeight="30.0" AnchorPane.leftAnchor="1.0" AnchorPane.rightAnchor="0.0">
                <children>
                   <Label fx:id="ImageSelectionBreadcrumb" onMouseClicked="#windowImageSelection" text="Image Selection &gt; ">
                      <HBox.margin>
@@ -52,16 +53,25 @@
                      <tooltip>
                         <Tooltip text="Go to image selection window" />
                      </tooltip>
+                     <font>
+                        <Font size="13.0" />
+                     </font>
                   </Label>
                   <Label fx:id="RotationAndCropBreadcrumb" layoutX="25.0" layoutY="10.0" onMouseClicked="#windowRotationCrop" text="Rotation &amp; Crop &gt; ">
                      <tooltip>
                         <Tooltip text="Go to image rotation and crop window" />
                      </tooltip>
+                     <font>
+                        <Font size="13.0" />
+                     </font>
                   </Label>
                   <Label fx:id="PerikymataCountBreadcrumb" layoutX="125.0" layoutY="10.0" onMouseClicked="#windowPerikymataCount" text="Perikymata Count ">
                      <tooltip>
                         <Tooltip text="Go to perikymata count window" />
                      </tooltip>
+                     <font>
+                        <Font size="13.0" />
+                     </font>
                   </Label>
                </children>
             </HBox>

@@ -527,10 +527,6 @@ public class PerikymataCountController {
 	 */
 	public void setMainApp(MainApp mainApp) {
 		this.mainApp = mainApp;
-
-		// Manage breadcrumbs
-		mainApp.disableBreadcrumbs(false, false, false);
-
 		if (mainApp.getFullImage() != null) {
 			// croppedImageView.setImage(mainApp.getFilteredImage());
 			croppedImageView.setImage(mainApp.getCroppedImage());
