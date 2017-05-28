@@ -1,6 +1,3 @@
-/**
- *
- */
 package es.ubu.lsi.perikymata.util.sockets;
 /**
  * License: GPL
@@ -52,7 +49,7 @@ public class TestServer {
 			e.printStackTrace();
 		}
 
-		Thread thread = new Thread(new ThreadPrototype(client));
+		Thread thread = new Thread(new TestThreadSocketPrototype(client));
 		thread.start();
 
 	}
