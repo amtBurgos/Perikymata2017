@@ -26,12 +26,14 @@ from skimage.restoration import denoise_tv_chambolle
 from skimage.filters import threshold_adaptive
 from skimage.color import rgb2gray
 from skimage.morphology import skeletonize_3d, remove_small_objects, skeletonize
-from scipy.misc import toimage
 from scipy.ndimage import convolve
 from skimage.transform import probabilistic_hough_line
-
+import warnings as war
 import matplotlib.pyplot as plt
 import numpy as np
+from skimage.draw import line
+from skimage.color import grey2rgb
+from skimage.io import imsave
 
 
 class KirschImageProcessing():
@@ -80,12 +82,19 @@ class KirschImageProcessing():
                         self.SW, self.S, self.SE,
                         self.E, self.NE]
 
-    def saveImage(self, img, savePath):
-        # Guarda en blanco y negro
-        toimage(img, cmin=False, cmax=True).save(savePath)
-
-    def saveFigure(self, fig, path):
-        fig.savefig(path, dpi=300, frameon=False, bbox_inches='tight', pad_inches=0.0)
+    def saveImage(self, imgSk, lines, savePath):
+        """
+        Saves the image to the specified folder.
+        :param imgSk: image skeletonized
+        :param lines: lines detedted
+        :param savePath: save path
+        :return: None
+        """
+        img = grey2rgb(imgSk)
+        for coord in lines:
+            rr, cc = line(coord[0][1], coord[0][0], coord[1][1], coord[1][0])
+            img[rr, cc] = [255, 0, 0]
+        imsave(savePath, img)
 
     def loadImage(self, path):
         return io.imread(path)
@@ -103,16 +112,18 @@ class KirschImageProcessing():
                     data[name] = io.imread(path.join(root, name))
         return data
 
-    def showImage(self, img, returnImg = False):
+    def showImage(self, img, returnImg=False):
         fig = plt.figure(figsize=(20, 20))
         plt.imshow(img, cmap=plt.cm.gray)
         if returnImg == True:
             return fig
 
     def prepareImage(self, img, clip=0.0, nb=100, w=0.5):
-        imgGray = rgb2gray(img)
-        imgAdapted = exposure.equalize_adapthist(imgGray, clip_limit=clip, nbins=nb)
-        imgDenoise = denoise_tv_chambolle(imgAdapted, weight=w)
+        with war.catch_warnings():
+            war.simplefilter("ignore")
+            imgGray = rgb2gray(img)
+            imgAdapted = exposure.equalize_adapthist(imgGray, clip_limit=clip, nbins=nb)
+            imgDenoise = denoise_tv_chambolle(imgAdapted, weight=w)
         return imgDenoise
 
     def deleteSmallObjects(self, img, minLength=30, conn=50):
@@ -125,55 +136,32 @@ class KirschImageProcessing():
         t = threshold_adaptive(img, 1)
         return img >= t
 
-    def kirschProcessing(self, img, showResult=True, kernelId=3, angles=np.linspace(0.1, 0.4, num=300),
-                         lineLength=30, lineGap=16,minLength=30, conn=50, saveFigure=False, savePath=False):
-        # Aqui aplicamos el kernel de kirsch
-        imgConvolve = convolve(img, self.kernels[kernelId])
-        imgBin = self.binarizeImage(imgConvolve)
-        imgRemoveSmall = self.deleteSmallObjects(imgBin, minLength, conn)
-        imgSkeletonize3D = skeletonize_3d(imgRemoveSmall)
+    def kirschProcessing(self, img, kernelId=1, angles=np.linspace(0.1, 0.4, num=300), lineLength=30, lineGap=16,
+                         minLength=30, conn=50):
+        with war.catch_warnings():
+            war.simplefilter("ignore")
+            # Aqui aplicamos el kernel de kirsch
+            imgConvolve = convolve(img, self.kernels[kernelId])
+            imgBin = self.binarizeImage(imgConvolve)
+            imgRemoveSmall = self.deleteSmallObjects(imgBin, minLength, conn)
+            imgSkeletonize3D = skeletonize_3d(imgRemoveSmall)
 
-        # Detectar lineas
-        lines = probabilistic_hough_line(imgSkeletonize3D, threshold=0, line_length=lineLength, line_gap=lineGap, theta=angles)
-
-        if showResult == True:
-            fig = plt.figure(figsize=(25, 25))
-            plt.imshow(imgSkeletonize3D, cmap=plt.cm.gray)
-
-            plt.title('Probabilistic Hough')
-            for line in lines:
-                p0, p1 = line
-                plt.plot((p0[0], p1[0]), (p0[1], p1[1]),'r',linewidth=1)
-            plt.show()
-        if saveFigure == True:
-            if savePath != None:
-                self.saveFigure(fig, savePath)
-
+            # Detectar lineas
+            lines = probabilistic_hough_line(imgSkeletonize3D, threshold=0, line_length=lineLength, line_gap=lineGap,
+                                             theta=angles)
         return [imgSkeletonize3D, lines]
 
+    def kirschProcessing1D(self, img, kernelId=3, angles=np.linspace(0.1, 0.4, num=300), lineLength=30, lineGap=16,
+                           minLength=30, conn=50):
+        with war.catch_warnings():
+            war.simplefilter("ignore")
+            # Aqui aplicamos el kernel de kirsch
+            imgConvolve = convolve(img, self.kernels[kernelId])
+            imgBin = self.binarizeImage(imgConvolve)
+            imgRemoveSmall = self.deleteSmallObjects(imgBin, minLength, conn)
+            imgSkeletonize = skeletonize(imgRemoveSmall)
 
-    def kirschProcessing1D(self, img, showResult=True, kernelId=3, angles=np.linspace(0.1, 0.4, num=300),
-                         lineLength=30, lineGap=16,minLength=30, conn=50, saveFigure=False, savePath=False):
-        # Aqui aplicamos el kernel de kirsch
-        imgConvolve = convolve(img, self.kernels[kernelId])
-        imgBin = self.binarizeImage(imgConvolve)
-        imgRemoveSmall = self.deleteSmallObjects(imgBin, minLength, conn)
-        imgSkeletonize = skeletonize(imgRemoveSmall)
-
-        # Detectar lineas
-        lines = probabilistic_hough_line(imgSkeletonize, threshold=0, line_length=lineLength, line_gap=lineGap, theta=angles)
-
-        if showResult == True:
-            fig = plt.figure(figsize=(25, 25))
-            plt.imshow(imgSkeletonize, cmap=plt.cm.gray)
-
-            plt.title('Probabilistic Hough')
-            for line in lines:
-                p0, p1 = line
-                plt.plot((p0[0], p1[0]), (p0[1], p1[1]),'r',linewidth=1)
-            plt.show()
-        if saveFigure == True:
-            if savePath != None:
-                self.saveFigure(fig, savePath)
-
+            # Detectar lineas
+            lines = probabilistic_hough_line(imgSkeletonize, threshold=0, line_length=lineLength, line_gap=lineGap,
+                                             theta=angles)
         return [imgSkeletonize, lines]

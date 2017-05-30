@@ -357,33 +357,33 @@ public class MainApp extends Application {
 			}
 
 			// Adds the Full image to the project (if exists)
-			// File fullImageFile = Paths.get(file.getParent(), "Full_image",
-			// "Full_image.png").toFile();
-			File fullImageFile = Paths.get(file.getParent(), "Full_Image", "Full_image.png").toFile();
+			File fullImageFile = Paths.get(file.getParent(), "Full_Image", "Full_Image.png").toFile();
 			if (fullImageFile.exists()) {
 				java.awt.Image full = new Opener().openImage(fullImageFile.getPath()).getImage();
 				setFullImage(SwingFXUtils.toFXImage((BufferedImage) full, null));
 
-				// Adds the filtered image to the project (if exists)
-				// File filteredImageFile = Paths.get(file.getParent(),
-				// "Full_image", "Filtered_image.png").toFile();
-				File filteredImageFile = Paths.get(file.getParent(), "Full_Image", "Filtered_image.png").toFile();
-				if (filteredImageFile.exists()) {
-					java.awt.Image filtered = new Opener().openImage(filteredImageFile.getAbsolutePath()).getImage();
-					setFilteredImage(SwingFXUtils.toFXImage((BufferedImage) filtered, null));
-				} else {
-					setFilteredImage(getFullImage());
-				}
-
 				// Adds the cropped image to the project (if exists)
-				File croppedImageFile = Paths.get(file.getParent(), "Cropped_Image", "Cropped_image.png").toFile();
+				File croppedImageFile = Paths.get(file.getParent(), "Cropped_Image", "Cropped_Image.png").toFile();
 				if (croppedImageFile.exists()) {
 					java.awt.Image cropped = new Opener().openImage(croppedImageFile.getAbsolutePath()).getImage();
 					setCroppedImage(SwingFXUtils.toFXImage((BufferedImage) cropped, null));
+
+					// Adds the filtered image to the project (if exists)
+					File filteredImageFile = Paths.get(file.getParent(), "Cropped_Image", "Filtered_Image.png").toFile();
+					if (filteredImageFile.exists()) {
+						java.awt.Image filtered = new Opener().openImage(filteredImageFile.getAbsolutePath()).getImage();
+						setFilteredImage(SwingFXUtils.toFXImage((BufferedImage) filtered, null));
+					} else {
+						setFilteredImage(null);
+					}
+
 				} else {
 					// If doesn't exists we set it to null
 					setCroppedImage(null);
+					setFilteredImage(null);
 				}
+
+
 			}
 
 			// Adds the names of the files under the folder "fragments" to the

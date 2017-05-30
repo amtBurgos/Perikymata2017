@@ -25,7 +25,7 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="350.0" prefWidth="475.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="es.ubu.lsi.perikymata.vista.PerikymataCountController">
+<AnchorPane fx:id="perikymataCountPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="350.0" prefWidth="475.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="es.ubu.lsi.perikymata.vista.PerikymataCountController">
    <children>
       <AnchorPane layoutX="15.0" layoutY="2.0" prefHeight="41.0" prefWidth="597.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0">
          <children>
@@ -33,6 +33,7 @@
               <items>
                   <Button fx:id="zoomPlusButton" mnemonicParsing="false" onAction="#zoomPlus" text="Zoom +" />
                   <Button fx:id="zoomMinusButton" mnemonicParsing="false" onAction="#zoomMinus" text="Zoom -" />
+                  <Button mnemonicParsing="false" onMouseClicked="#handleFilter" text="Filter" />
                   <Button mnemonicParsing="false" onAction="#drawPath" text="Line - Free Draw" />
                   <Button mnemonicParsing="false" onAction="#clearLine" text="Line - Clear Line" />
                   <!-- <Button mnemonicParsing="false" onAction="#selectStart" text="Deciles - Change Start" />
@@ -66,7 +67,7 @@
         <content>
           <AnchorPane fx:id="imageAnchorPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0">
                <children>
-                  <ImageView fx:id="croppedImageView" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="-6.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="23.0" AnchorPane.topAnchor="0.0" />
+                  <ImageView fx:id="croppedImageView" pickOnBounds="true" preserveRatio="true" smooth="false" AnchorPane.bottomAnchor="-6.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="23.0" AnchorPane.topAnchor="0.0" />
                </children>
             </AnchorPane>
         </content>

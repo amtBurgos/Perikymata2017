@@ -16,8 +16,9 @@
 """
 
 from socket import *
-import threading
+from threading import *
 from KirschImageProcessing import *
+
 
 class ServerSocket:
     """
@@ -37,11 +38,11 @@ class ServerSocket:
             self.server.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1)
             self.server.bind((host, port))
             self.server.listen(5)
+            self.serverWorking = True
             print('Server started, waiting clients...')
-            while True:
+            while self.serverWorking:
                 client, addr = self.server.accept()
-                threading.Thread(target=self.clientThread, args=(client, addr)).start()
-
+                Thread(target=self.clientThread, args=(client, addr)).start()
 
     def clientThread(self, client, address):
         """
@@ -62,17 +63,22 @@ class ServerSocket:
                 try:
                     # Wait for responses
                     request = client.recv(1024).decode("utf-8")
-                    operation = request.split(",")
-                    response = self.doOperations(operation)
-                    self.sendMessage(client, response)
-                    if (response == "CLOSE_SERVER"):
-                        #self.closeServer()
+                    if request == '':
+                        # Disconnected
+                        print(address, ": disconnected")
                         working = False
+                    else:
+                        operation = request.split(",")
+                        response = self.doOperations(operation)
+                        self.sendMessage(client, response)
+                        if (response == "CLOSE_SERVER"):
+                            # self.closeServer()
+                            self.serverWorking = False
+                            working = False
+                        print(address, ": work finished")
                 except Exception as e:
-                    print(address,": disconnected")
+                    print(address, ": disconnected")
                     working = False
-            print(address, ": work finished")
-
 
     def sendMessage(self, client, msg):
         """
@@ -88,7 +94,7 @@ class ServerSocket:
 
     def doOperations(self, operation):
         """
-        Do the operations the server wants. Contains the communication protocol with the serve.
+        Do the operations the client wants. Contains the communication protocol with the serve.
         The first item of the list will be the operation to do.
         :param operation: list with the server message which contains the operations to do
         :return: OK / ERROR if the operation has been done or not.
@@ -96,21 +102,32 @@ class ServerSocket:
 
         done = "ERROR"
         # Code of the operation
-        print("Operations: ",operation)
+        print("Operations: ", operation)
         code = int(operation[0])
         if code == 0:
-            print(0)
+            done = self.defaultFilter(operation[1], operation[2])
         elif code == 1:
             print(1)
         elif code == 2:
             print(2)
-        elif code == 3:
-            print(3)
-        elif code == 4:
-            print(4)
         elif code == -1:
             return "CLOSE_SERVER"
-        done = "OK\n"
+        return done
+
+    def defaultFilter(self, imagePath, savePath):
+        """
+        Filter with default parameters
+        :param imagePath: image to filter
+        :param savePath: path to save the filtered image
+        :return: OK / ERROR
+        """
+        done = "ERROR"
+        kirsch = KirschImageProcessing()
+        img = kirsch.loadImage(imagePath)
+        imgPrepared = kirsch.prepareImage(img)
+        imgSk, lines = kirsch.kirschProcessing(imgPrepared, kernelId=2, angles=np.linspace(-0.3, 0.3, num=600))
+        kirsch.saveImage(imgSk, lines, savePath)
+        done = "OK"
         return done
 
     def handShake(self, client):
@@ -142,4 +159,3 @@ class ServerSocket:
 if __name__ == "__main__":
     DEFAULT_PORT = 8885
     ServerSocket('localhost', DEFAULT_PORT)
-

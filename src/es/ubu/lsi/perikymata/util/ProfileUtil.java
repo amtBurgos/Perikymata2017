@@ -29,12 +29,18 @@ import javafx.scene.shape.LineTo;
 import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.PathElement;
 
+/**
+ * Util class for processing image and find perikymata.
+ *
+ * @author Sergio Chico Carrancio
+ *
+ */
 public class ProfileUtil {
 
 	/**
 	 * Gets the orthogonal line of a point based on the previous and next
 	 * points, ordered from side to side.
-	 * 
+	 *
 	 * @param pointsVector
 	 *            List of all the points used to get the profile.
 	 * @param index
@@ -96,7 +102,7 @@ public class ProfileUtil {
 	/**
 	 * Gets the intensity matrix of the line drawn by the user and its
 	 * surrounding region using the orthogonal vector.
-	 * 
+	 *
 	 * @param image
 	 *            Image to get the Intensity matrix of.
 	 * @param pointsVector
@@ -121,7 +127,7 @@ public class ProfileUtil {
 	/**
 	 * Gets a matrix with the coordinates surrounding the pointsVector line
 	 * using the orthogonal vector of each side.
-	 * 
+	 *
 	 * @param pointsVector
 	 *            List of points of the image that are going to be used to
 	 *            calculate the orthogonal matrix.
@@ -141,7 +147,7 @@ public class ProfileUtil {
 
 	/**
 	 * Gets the intensity of each point of the orthogonal vector.
-	 * 
+	 *
 	 * @param image
 	 *            Filtered image to calculate the profile of.
 	 * @param orthogonalLine
@@ -164,10 +170,11 @@ public class ProfileUtil {
 
 	}
 
+	///////// DONT DELETE AMT /////////////
 	/**
 	 * Calculates the Bresenham distance between two points. That is, a straight
 	 * line using Cartesian coordinates.
-	 * 
+	 *
 	 * @param x0
 	 *            X coordinate of Starting point.
 	 * @param y0
@@ -235,10 +242,11 @@ public class ProfileUtil {
 		return llist;
 	}
 
+	///////// DONT DELETE AMT /////////////
 	/**
 	 * Uses the pathList of drawn line to get all the pixels that are under the
 	 * line.
-	 * 
+	 *
 	 * @return List of coordinates of the pixels under the line.
 	 */
 	public static List<int[]> getProfilePixels(List<PathElement> freeDrawPathList) {
@@ -262,7 +270,7 @@ public class ProfileUtil {
 	 * Returns the mean of the intensity profile with a width of two pixels at
 	 * each side by using the orthogonal vectors of the given the coordinates of
 	 * a line.
-	 * 
+	 *
 	 * @param profileCoords
 	 *            Coordinates of a single-pixeled line.
 	 * @param mainapp
@@ -271,9 +279,19 @@ public class ProfileUtil {
 	 */
 	public static List<Integer> getIntensityProfile(List<int[]> profileCoords, MainApp mainapp) {
 
+		// DONT NEEDED
 		BufferedImage original = SwingFXUtils.fromFXImage(mainapp.getFullImage(), null);
+		// DONT NEEDED
 		BufferedImage prewitt = SwingFXUtils.fromFXImage(mainapp.getFilteredImage(), null);
+
+		// WILL NEED
+		// BufferedImage filtered =
+		// SwingFXUtils.fromFXImage(mainapp.getFilteredImage(), null);
+
 		int[] roi = getRoi(profileCoords);
+
+		// APLICAR ROI A LA IMAGEN FILTRADA PARA DELIMITAR BIEN LA IMAGEN POR SI
+		// ACASO NOS PASAMOS CON LA LINEA
 		BufferedImage clahe = executeClahe(roi[0], roi[1], roi[2], roi[3], original);
 		return getPrewittCLAHEProfile(prewitt, clahe, profileCoords);
 	}
@@ -282,7 +300,7 @@ public class ProfileUtil {
 	 * Finds the list of maximum local intensities in the profile. If there are
 	 * two or more points next to each other with the same intensity, the middle
 	 * point is taken.
-	 * 
+	 *
 	 * @param profile
 	 *            Intensity profile.
 	 * @param threshold
@@ -332,7 +350,6 @@ public class ProfileUtil {
 
 	private static BufferedImage executeClahe(int x1, int y1, int x2, int y2, BufferedImage im) {
 		ImagePlus ip = new ImagePlus();
-		;
 		ip.setImage(im);
 		int width = Math.max(x2, x1) - Math.min(x2, x1);
 		int height = Math.max(y2, y1) - Math.min(y2, y1);
@@ -342,10 +359,11 @@ public class ProfileUtil {
 		// fullImage.setImage(SwingFXUtils.toFXImage(res, null));
 	}
 
+	///////// DONT DELETE AMT/////////////
 	/**
 	 * Gets the minimum square that where it can fit the free drawn line, used
 	 * to apply CLAHE on the minimum possible region.
-	 * 
+	 *
 	 * @param pointsVector
 	 *            Coordinates of the drawn line.
 	 * @return Coordinates Of the top left point of the square(1) and the bottom
@@ -374,7 +392,7 @@ public class ProfileUtil {
 	 * Substracts Prewitt - CLAHE, gets the profile of the line drawn over the
 	 * subtracted zone and returns it smoothening it with a 1D Gaussian
 	 * convolution. It can be used to get the profile of any X-Y images.
-	 * 
+	 *
 	 * @param prewitt
 	 *            Prewitt image.
 	 * @param clahe
@@ -392,7 +410,7 @@ public class ProfileUtil {
 
 	/**
 	 * Substracts MatrixA - MatrixB element by element.
-	 * 
+	 *
 	 * @param a
 	 *            Matrix A
 	 * @param b
@@ -415,7 +433,7 @@ public class ProfileUtil {
 
 	/**
 	 * Reduces every column of a intensity Matrix to a single point.
-	 * 
+	 *
 	 * @param intensityMatrix
 	 *            Matrix of intensity.
 	 * @return Intensity profile of the matrix.

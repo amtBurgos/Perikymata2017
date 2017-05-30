@@ -125,7 +125,7 @@ class KirschImageProcessing():
         t = threshold_adaptive(img, 1)
         return img < t
 
-    def kirschProcessing(self, img, showResult=True, kernelId=2, angles=np.linspace(0.1, 0.4, num=300),
+    def kirschProcessing(self, img, showResult=True, kernelId=2, angles=np.linspace(-0.2, 0.2, num=300),
                          lineLength=30, lineGap=16,minLength=30, conn=50, saveFigure=False, savePath=False):
         # Aqui aplicamos el kernel de kirsch
         imgConvolve = convolve(img, self.kernels[kernelId])

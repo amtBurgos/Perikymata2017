@@ -143,8 +143,8 @@ public class ImageSelectionController {
 
 			mainApp.setFullImage(SwingFXUtils.toFXImage((BufferedImage) full, null));
 			previewImage.setImage(mainApp.getFullImage());
-			mainApp.setFilteredImage(mainApp.getFullImage());
-
+			//AMT
+			//mainApp.setFilteredImage(mainApp.getFullImage());
 		}
 	}
 
@@ -202,8 +202,8 @@ public class ImageSelectionController {
 		Image i = SwingFXUtils.toFXImage(op.filter(im, null), null);
 		previewImage.setImage(i);
 		mainApp.setFullImage(i);
-		mainApp.setFilteredImage(i);
-
+		//AMT
+		//mainApp.setFilteredImage(i);
 	}
 
 	/**
@@ -285,7 +285,8 @@ public class ImageSelectionController {
 						Platform.runLater(() -> {
 							mainApp.setFullImage(SwingFXUtils.toFXImage((BufferedImage) full, null));
 							this.previewImage.setImage(SwingFXUtils.toFXImage((BufferedImage) full, null));
-							mainApp.setFilteredImage(SwingFXUtils.toFXImage((BufferedImage) full, null));
+							//AMT
+							//mainApp.setFilteredImage(SwingFXUtils.toFXImage((BufferedImage) full, null));
 						});
 					} else {
 						changeStatus("Failed to load full image");

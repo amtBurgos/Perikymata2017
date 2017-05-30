@@ -675,7 +675,7 @@ public class RotationCropLayoutController {
 		// Save cropped image to disk, and load it in the image
 		// preview
 		File outputfile = new File(
-				mainApp.getProjectPath() + File.separator + "Cropped_Image" + File.separator + "Cropped_image.png");
+				mainApp.getProjectPath() + File.separator + "Cropped_Image" + File.separator + "Cropped_Image.png");
 		outputfile.setWritable(true, false);
 		ImageIO.write(img, "png", outputfile);
 
