@@ -44,8 +44,9 @@ ImageProcessingPython/build/*
 ImageProcessingPython/cmd.exe
 ImageProcessingPython/dist/*
 *.spec
-!src/rsc/Square-icon.png
+!src/rsc/*
 src/es/ubu/lsi/perikymata/vista/Auxiliar.java
 errorLog_2017-05-18_02-16-13.log.1
 PythonApp/build/*
 PythonApp/dist/*
+src/rsc/Thumbs.db
