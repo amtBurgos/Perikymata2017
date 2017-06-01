@@ -19,7 +19,6 @@ from socket import *
 from threading import *
 from KirschImageProcessing import *
 
-
 class ServerSocket:
     """
     Server Socket class. Communicates with the java application and do the operations
@@ -33,6 +32,11 @@ class ServerSocket:
         :param host: host name
         :param port:  port number
         """
+        # Communication Protocol
+        self.DEFAULT_FILTER = 0
+        self.ADVANCED_FILTER = 1
+        self.CLOSE_SERVER = -1
+
         self.clients = dict()
         with socket(AF_INET, SOCK_STREAM) as self.server:
             self.server.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1)
@@ -104,14 +108,12 @@ class ServerSocket:
         # Code of the operation
         print("Operations: ", operation)
         code = int(operation[0])
-        if code == 0:
+        if code == self.DEFAULT_FILTER:
             done = self.defaultFilter(operation[1], operation[2])
-        elif code == 1:
+        elif code == self.ADVANCED_FILTER:
             print(1)
-        elif code == 2:
-            print(2)
-        elif code == -1:
-            return "CLOSE_SERVER"
+        elif code == self.CLOSE_SERVER:
+            done = "CLOSE_SERVER"
         return done
 
     def defaultFilter(self, imagePath, savePath):

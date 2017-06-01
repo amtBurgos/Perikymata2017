@@ -16,9 +16,13 @@ package es.ubu.lsi.perikymata.util;
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 import java.util.List;
+
+import com.sun.org.apache.xerces.internal.dom.DeepNodeListImpl;
+
 import javafx.scene.shape.LineTo;
 import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.PathElement;
@@ -27,16 +31,138 @@ import javafx.scene.shape.PathElement;
  * Util class for get an image profile and find perikymata. There are reused
  * methods from previous version.
  *
- * @author Andres Miguel Teran *
+ * @author Andres Miguel Teran
  */
 public class ProfileUtilV2 {
+
+	/**
+	 * Maximum degree in the HSB (HSV) model for considering a color as valid
+	 * red. This value is next to the orange color.
+	 */
+	public static double MAX_RED_HUE_DEGREE = 10.0;
+
+	/**
+	 * Minimum degree in the HSB (HSV) model for considering a color as valid
+	 * red. This value is next to the pink color.
+	 */
+	public static double MIN_RED_HUE_DEGREE = 350.0;
+
+	/**
+	 * Minimum value of saturation in the HSB (HSV) model for considering a
+	 * color as valid red.
+	 */
+	public static float MIN_SATURATION_PERMITTED = 0.8f;
+
+	/**
+	 * Minimum value of brightness in the HSB (HSV) model for considering a
+	 * color as valid red.
+	 */
+	public static float MIN_BRIGHTNESS_PERMITTED = 0.9f;
+
+	/**
+	 * Default minimum distance between detected coordinates to skip one.
+	 */
+	public static int DEFAULT_MIN_COORD_DISTANCE = 5;
+
+	/**
+	 * Finds the red pixel which are supposed to be the perikymata detected by
+	 * the python server.
+	 *
+	 * @param profileCoords
+	 *            coordinates list with the user line
+	 * @param image
+	 *            filtered image to find perikymata
+	 * @return coordinates list which contains red pixels
+	 */
+	public static List<int[]> findRedPixels(List<int[]> profileCoords, BufferedImage image) {
+		List<int[]> redPixels = new LinkedList<int[]>();
+		int r, g, b = 0;
+		Color color = null;
+		for (int[] coord : profileCoords) {
+			int rgb = image.getRGB(coord[0], coord[1]);
+
+			// Convert rgb int value to color and get data.
+			color = new Color(rgb);
+			r = color.getRed();
+			g = color.getGreen();
+			b = color.getBlue();
+
+			// Calculate H from HSB color (Also named HSV).
+			float[] hsb = Color.RGBtoHSB(r, g, b, null);
+
+			// Hue of the color, we only need red color or next to him.
+			float hue = hsb[0];
+
+			// Saturation of the color.
+			float saturation = hsb[1];
+
+			// Brightness of the color.
+			float brightness = hsb[2];
+			double hueDegrees = Math.toRadians(hue);
+
+			if ((hueDegrees >= 0.0 && hueDegrees <= MAX_RED_HUE_DEGREE)
+					|| (hueDegrees >= MIN_RED_HUE_DEGREE && hueDegrees <= 360.0)) {
+				if (saturation >= MIN_SATURATION_PERMITTED && brightness >= MIN_BRIGHTNESS_PERMITTED) {
+					// If is a valid red, save the coordinate
+					redPixels.add(coord);
+				}
+			}
+		}
+		return redPixels;
+	}
+
+	/**
+	 * Deletes coordinates that are very close. They are usually duplicated.
+	 *
+	 * @param redPixels
+	 *            coordinates of the red pixels detected
+	 * @param minDistance
+	 *            minimum pixel distance between red pixels detected
+	 * @return coordinates list without duplicates
+	 */
+	public static List<int[]> deleteClosePixels(List<int[]> redPixels, int minDistance) {
+		List<int[]> redPixelsCleaned = new LinkedList<int[]>();
+
+		// Auxiliary list deep copied
+		// LinkedList<int[]> auxList = deepCopy(redPixels);
+
+		// Check very close coordinates
+		for (int i = 0; i < redPixels.size(); i++) {
+
+			// Save current coordinate
+			redPixelsCleaned.add(redPixels.get(i));
+
+			if (i + 5 < redPixels.size()) {
+				// Get next four x coordinates to compare pixels distance
+				int[] currentCoord = redPixels.get(i);
+
+				// Next coordinates
+				int[] neighborsCoordsX = new int[5];
+				for (int j = 1; j <= 5; j++) {
+					// Save next 5 coordinates
+					neighborsCoordsX[j - 1] = redPixels.get(i + j)[0];
+				}
+
+				// Check if there is a valid distance between x coordinates
+				for (int k = 0; k < neighborsCoordsX.length - 1; k++) {
+					if (neighborsCoordsX[k] - currentCoord[0] < minDistance) {
+						// If next coordinate is to close from the current
+						// coordinate then skip it
+						i += 1;
+					}
+				}
+			}
+		}
+		return redPixelsCleaned;
+	}
 
 	/**
 	 * Uses the pathList of drawn line to get all the pixels that are under the
 	 * line.
 	 *
-	 * @return List of coordinates of the pixels under the line.
 	 * @author Sergio Chico Carrancio
+	 * @return List of coordinates of the pixels under the line.
+	 *
 	 */
 	public static List<int[]> getProfilePixels(List<PathElement> freeDrawPathList) {
 		LinkedList<int[]> profile = new LinkedList<>();
@@ -56,31 +182,10 @@ public class ProfileUtilV2 {
 	}
 
 	/**
-	 * Finds the red pixel which are supposed to be the perikymata detected by
-	 * the python server.
-	 *
-	 * @param profileCoords
-	 *            coords list with the user line
-	 * @param image
-	 *            filtered image to find perikymata
-	 * @return coords list which contains red pixels
-	 */
-	public static List<int[]> findRedPixels(List<int[]> profileCoords, BufferedImage image) {
-		List<int[]> redPixels = new LinkedList<int[]>();
-		for (int[] coord : profileCoords) {
-			int rgb = image.getRGB(coord[0], coord[1]);
-			// Red color in RGB int format
-			if (rgb <= -65530 && rgb >= -65550) {
-				redPixels.add(coord);
-			}
-		}
-		return redPixels;
-	}
-
-	/**
 	 * Calculates the Bresenham distance between two points. That is, a straight
 	 * line using Cartesian coordinates.
 	 *
+	 * @author Sergio Chico Carrancio
 	 * @param x0
 	 *            X coordinate of Starting point.
 	 * @param y0
@@ -91,7 +196,7 @@ public class ProfileUtilV2 {
 	 *            Y coordinate of Ending point.
 	 * @return A list of the coordinates between the starting point and The
 	 *         ending point.
-	 * @author Sergio Chico Carrancio
+	 *
 	 */
 	private static List<int[]> Bresenham(int x0, int y0, int x1, int y1) {
 		int x, y, dx, dy, p, incE, incNE, stepx, stepy;
