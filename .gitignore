@@ -50,3 +50,4 @@ errorLog_2017-05-18_02-16-13.log.1
 PythonApp/build/*
 PythonApp/dist/*
 src/rsc/Thumbs.db
+build/build.xml

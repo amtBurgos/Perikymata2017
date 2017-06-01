@@ -62,7 +62,7 @@ import javafx.util.Pair;
  * Controller for the layout that is used to count perikyma.
  *
  * @author Sergio Chico Carrancio
- *
+ * @author Andres Miguel Teran
  */
 public class PerikymataCountController {
 	/**
@@ -465,13 +465,14 @@ public class PerikymataCountController {
 	 */
 	@FXML
 	private void resetView() {
-		try{
-		clearLine();
-		clearImageViewHandlers();
-		croppedImageView.setCursor(Cursor.DEFAULT);
-		drawLineBtn.setSelected(false);
-		croppedImageView.setImage(mainApp.getCroppedImage());
-		mainApp.setFilteredImage(null);}catch(Exception e){
+		try {
+			clearLine();
+			clearImageViewHandlers();
+			croppedImageView.setCursor(Cursor.DEFAULT);
+			drawLineBtn.setSelected(false);
+			croppedImageView.setImage(mainApp.getCroppedImage());
+			mainApp.setFilteredImage(null);
+		} catch (Exception e) {
 			Alert alert = new Alert(Alert.AlertType.ERROR);
 			alert.setTitle("Error");
 			alert.setHeaderText("Error resetting view.\n");
@@ -1044,6 +1045,28 @@ public class PerikymataCountController {
 		alert.setHeaderText("Filter not applied");
 		alert.setContentText("Filter not applied to the image.");
 		alert.showAndWait();
+	}
+
+	/**
+	 * Alternates the image view between the filtered image and the original
+	 * cropped image with the filtered overlapped.
+	 */
+	@FXML
+	private void alternateView() {
+		System.out.println("Alternating");
+		if (mainApp.getFilteredOverlappedImage() != null && mainApp.getFilteredImage() != null) {
+			if (croppedImageView.getImage().equals(mainApp.getFilteredImage())) {
+				croppedImageView.setImage(mainApp.getFilteredOverlappedImage());
+			} else {
+				croppedImageView.setImage(mainApp.getFilteredImage());
+			}
+		} else {
+			Alert alert = new Alert(AlertType.ERROR);
+			alert.setTitle("Error");
+			alert.setHeaderText("Can not alternate filtered images");
+			alert.setContentText("Filtered images unavailable.");
+			alert.showAndWait();
+		}
 	}
 
 	/**

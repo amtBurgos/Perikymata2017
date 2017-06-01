@@ -114,9 +114,15 @@ public class MainApp extends Application {
 	private Image fullImage;
 
 	/**
-	 * Full image of a tooth with some applied filters.
+	 * Cropped image of a tooth with the python filter applied.
 	 */
 	private Image filteredImage;
+
+	/**
+	 * Cropped image of a tooth with the python filter applied and overlapped
+	 * with the cropped image.
+	 */
+	private Image filteredOverlappedImage;
 
 	/**
 	 * Cropped image with the dental crown.
@@ -369,20 +375,34 @@ public class MainApp extends Application {
 					setCroppedImage(SwingFXUtils.toFXImage((BufferedImage) cropped, null));
 
 					// Adds the filtered image to the project (if exists)
-					File filteredImageFile = Paths.get(file.getParent(), "Cropped_Image", "Filtered_Image.png").toFile();
+					File filteredImageFile = Paths.get(file.getParent(), "Cropped_Image", "Filtered_Image.png")
+							.toFile();
 					if (filteredImageFile.exists()) {
-						java.awt.Image filtered = new Opener().openImage(filteredImageFile.getAbsolutePath()).getImage();
+						java.awt.Image filtered = new Opener().openImage(filteredImageFile.getAbsolutePath())
+								.getImage();
 						setFilteredImage(SwingFXUtils.toFXImage((BufferedImage) filtered, null));
 					} else {
 						setFilteredImage(null);
+					}
+
+					// Adds the filtered overlapped image to the project (if
+					// exists)
+					File filteredOverlappedImageFile = Paths
+							.get(file.getParent(), "Cropped_Image", "FilteredOverlapped_Image.png").toFile();
+					if (filteredOverlappedImageFile.exists()) {
+						java.awt.Image filteredOverlapped = new Opener()
+								.openImage(filteredOverlappedImageFile.getAbsolutePath()).getImage();
+						setFilteredOverlappedImage(SwingFXUtils.toFXImage((BufferedImage) filteredOverlapped, null));
+					} else {
+						setFilteredOverlappedImage(null);
 					}
 
 				} else {
 					// If doesn't exists we set it to null
 					setCroppedImage(null);
 					setFilteredImage(null);
+					setFilteredOverlappedImage(null);
 				}
-
 
 			}
 
@@ -643,6 +663,25 @@ public class MainApp extends Application {
 	 */
 	public void setFilteredImage(Image filteredImage) {
 		this.filteredImage = filteredImage;
+	}
+
+	/**
+	 * Gets the filtered overlapped image of the tooth.
+	 *
+	 * @return Filtered overlapped image of the tooth.
+	 */
+	public Image getFilteredOverlappedImage() {
+		return filteredOverlappedImage;
+	}
+
+	/**
+	 * Sets the filtered overlapped image of the tooth.
+	 *
+	 * @param filteredOverlappedImage
+	 *            filtered overlapped image of the tooth
+	 */
+	public void setFilteredOverlappedImage(Image filteredOverlappedImage) {
+		this.filteredOverlappedImage = filteredOverlappedImage;
 	}
 
 	/**

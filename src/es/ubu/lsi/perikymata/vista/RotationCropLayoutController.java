@@ -684,8 +684,9 @@ public class RotationCropLayoutController {
 		mainApp.getProject().setxDecileEnd(previewImage.getImage().getWidth());
 		mainApp.setCroppedImage(previewImage.getImage());
 
-		//Remove previous filtered image if there was any
+		// Remove previous filtered image if there was any
 		mainApp.setFilteredImage(null);
+		mainApp.setFilteredOverlappedImage(null);
 	}
 
 	/**
