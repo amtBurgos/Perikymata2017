@@ -82,7 +82,7 @@ class KirschImageProcessing():
                         self.SW, self.S, self.SE,
                         self.E, self.NE]
 
-    def saveImage(self, imgSk, lines, savePath):
+    def saveFilteredImage(self, imgSk, lines, savePath):
         """
         Saves the image to the specified folder.
         :param imgSk: image skeletonized
@@ -95,6 +95,28 @@ class KirschImageProcessing():
             rr, cc = line(coord[0][1], coord[0][0], coord[1][1], coord[1][0])
             img[rr, cc] = [255, 0, 0]
         imsave(savePath, img)
+
+    def saveOverlappedImage(self, img, lines, savePathOverlap):
+        """
+        Overlap the lines detected into the original image
+        :param img: original image
+        :param lines: lines detected
+        :param savePathOverlap:
+        """
+        imgOverlapped = np.copy(img)
+        if len(img[0][0]) == 4:
+            # PNG image with RGBA Channel
+            for coord in lines:
+                rr, cc = line(coord[0][1], coord[0][0], coord[1][1], coord[1][0])
+                imgOverlapped[rr, cc] = [255, 0, 0, 255]
+                imgOverlapped[rr - 1, cc + 1] = [255, 0, 0, 255]
+        elif len(img[0][0]) == 3:
+            # NORMAL IMAGE with RGB Channel
+            for coord in lines:
+                rr, cc = line(coord[0][1], coord[0][0], coord[1][1], coord[1][0])
+                imgOverlapped[rr, cc] = [255, 0, 0]
+                imgOverlapped[rr - 1, cc + 1] = [255, 0, 0]
+        imsave(savePathOverlap, imgOverlapped)
 
     def loadImage(self, path):
         return io.imread(path)
@@ -150,6 +172,8 @@ class KirschImageProcessing():
             lines = probabilistic_hough_line(imgSkeletonize3D, threshold=0, line_length=lineLength, line_gap=lineGap,
                                              theta=angles)
         return [imgSkeletonize3D, lines]
+
+
 
     def kirschProcessing1D(self, img, kernelId=3, angles=np.linspace(0.1, 0.4, num=300), lineLength=30, lineGap=16,
                            minLength=30, conn=50):

@@ -109,14 +109,14 @@ class ServerSocket:
         print("Operations: ", operation)
         code = int(operation[0])
         if code == self.DEFAULT_FILTER:
-            done = self.defaultFilter(operation[1], operation[2])
+            done = self.defaultFilter(operation[1], operation[2], operation[3])
         elif code == self.ADVANCED_FILTER:
             print(1)
         elif code == self.CLOSE_SERVER:
             done = "CLOSE_SERVER"
         return done
 
-    def defaultFilter(self, imagePath, savePath):
+    def defaultFilter(self, imagePath, savePath, savePathOverlap):
         """
         Filter with default parameters
         :param imagePath: image to filter
@@ -128,7 +128,9 @@ class ServerSocket:
         img = kirsch.loadImage(imagePath)
         imgPrepared = kirsch.prepareImage(img)
         imgSk, lines = kirsch.kirschProcessing(imgPrepared, kernelId=2, angles=np.linspace(-0.3, 0.3, num=600))
-        kirsch.saveImage(imgSk, lines, savePath)
+        kirsch.saveFilteredImage(imgSk, lines, savePath)
+        #Save overlapped image too
+        kirsch.saveOverlappedImage(img, lines, savePathOverlap)
         done = "OK"
         return done
 

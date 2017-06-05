@@ -695,16 +695,16 @@ public class PerikymataCountController {
 		Thread thread = new Thread(new Runnable() {
 			@Override
 			public void run() {
-
 				try {
-					// loading.setVisible(true);
-					// perikymataCountPane.setDisable(true);
 					ClientSocket client = new ClientSocket();
 					String croppedImagePath = mainApp.getProjectPath() + File.separator + "Cropped_Image"
 							+ File.separator + "Cropped_Image.png";
 					String savePath = mainApp.getProjectPath() + File.separator + "Cropped_Image" + File.separator
-							+ "Filtered_image.png";
-					Request request = new Request(Request.DEFAULT_FILTER, croppedImagePath, savePath);
+							+ "Filtered_Image.png";
+					String savePathOverlapped = mainApp.getProjectPath() + File.separator + "Cropped_Image"
+							+ File.separator + "FilteredOverlapped_Image.png";
+					Request request = new Request(Request.DEFAULT_FILTER, croppedImagePath, savePath,
+							savePathOverlapped);
 					client.send(request);
 					String response = client.receive();
 					if (response.equals("OK")) {
@@ -713,6 +713,11 @@ public class PerikymataCountController {
 								+ "Cropped_Image" + File.separator + "Filtered_Image.png").getImage();
 						mainApp.setFilteredImage(SwingFXUtils.toFXImage((BufferedImage) filtered, null));
 						croppedImageView.setImage(mainApp.getFilteredImage());
+
+						// Save filteredOverlapped image too
+						java.awt.Image overlapped = new Opener().openImage(mainApp.getProjectPath() + File.separator
+								+ "Cropped_Image" + File.separator + "FilteredOverlapped_Image.png").getImage();
+						mainApp.setFilteredOverlappedImage(SwingFXUtils.toFXImage((BufferedImage) overlapped, null));
 					}
 					client.close();
 				} catch (ConnectException e) {
@@ -1052,8 +1057,7 @@ public class PerikymataCountController {
 	 * cropped image with the filtered overlapped.
 	 */
 	@FXML
-	private void alternateView() {
-		System.out.println("Alternating");
+	private void alternateFilteredImages() {
 		if (mainApp.getFilteredOverlappedImage() != null && mainApp.getFilteredImage() != null) {
 			if (croppedImageView.getImage().equals(mainApp.getFilteredImage())) {
 				croppedImageView.setImage(mainApp.getFilteredOverlappedImage());

@@ -50,6 +50,11 @@ public class Request {
 	private String savePath;
 
 	/**
+	 * Location for saving the filtered image.
+	 */
+	private String savePathOverlapped;
+
+	/**
 	 * Action code for python server.
 	 */
 	private int code;
@@ -63,11 +68,14 @@ public class Request {
 	 *            image to filter
 	 * @param savePath
 	 *            save path
+	 * @param savePathOverlaped
+	 *            save path for the overlapped image
 	 */
-	public Request(int code, String imagePath, String savePath) {
+	public Request(int code, String imagePath, String savePath, String savePathOverlapped) {
 		this.code = code;
 		this.imagePath = imagePath;
 		this.savePath = savePath;
+		this.savePathOverlapped = savePathOverlapped;
 	}
 
 	/**
@@ -77,7 +85,7 @@ public class Request {
 	public String toString() {
 		String command = "";
 		if (code == DEFAULT_FILTER) {
-			command = "" + code + "," + imagePath + "," + savePath;
+			command = "" + code + "," + imagePath + "," + savePath + "," + savePathOverlapped;
 		} else if (code == CLOSE_SERVER) {
 			command = "" + code + "," + "NULL";
 		} else if (code == ADVANCED_FILTER) {

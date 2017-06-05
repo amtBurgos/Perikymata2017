@@ -25,7 +25,7 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane fx:id="perikymataCountPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="350.0" prefWidth="475.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="es.ubu.lsi.perikymata.vista.PerikymataCountController">
+<AnchorPane fx:id="perikymataCountPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="es.ubu.lsi.perikymata.vista.PerikymataCountController">
    <children>
       <AnchorPane layoutX="15.0" layoutY="2.0" prefHeight="41.0" prefWidth="597.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0">
          <children>
@@ -57,14 +57,26 @@
                         <Tooltip text="Draw a line along the image to detect perikymata" />
                      </tooltip>
                   </ToggleButton>
-                  <Button mnemonicParsing="false" onAction="#clearLine" text="Clear Line" />
-                  <Button mnemonicParsing="false" onAction="#alternateView" text="Alternate View" />
-                  <Button mnemonicParsing="false" onAction="#resetView" text="Reset view" />
+                  <Button mnemonicParsing="false" onAction="#clearLine" text="Clear Line">
+                     <tooltip>
+                        <Tooltip text="Delete the line and counted perikymata" />
+                     </tooltip></Button>
+                  <Button mnemonicParsing="false" onAction="#alternateFilteredImages" text="Alternate Filters">
+                     <tooltip>
+                        <Tooltip text="Change to overlapped filter view" />
+                     </tooltip></Button>
+                  <Button mnemonicParsing="false" onAction="#resetView" text="Reset view">
+                     <tooltip>
+                        <Tooltip text="Discard all changes and start again" />
+                     </tooltip></Button>
                   <!-- <Button mnemonicParsing="false" onAction="#selectStart" text="Deciles - Change Start" />
                   <Button layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#selectEnd" text="Deciles - Change End" /> -->
               </items>
             </ToolBar>
-            <Button layoutX="161.0" layoutY="8.0" mnemonicParsing="false" onAction="#calculatePerikymata" prefHeight="25.0" prefWidth="137.0" text="Auto-mark perikymata" AnchorPane.rightAnchor="165.0" AnchorPane.topAnchor="8.0" />
+            <Button layoutX="161.0" layoutY="8.0" mnemonicParsing="false" onAction="#calculatePerikymata" prefHeight="25.0" prefWidth="137.0" text="Auto-mark perikymata" AnchorPane.rightAnchor="165.0" AnchorPane.topAnchor="8.0">
+               <tooltip>
+                  <Tooltip text="Auto-mark perikymata" />
+               </tooltip></Button>
             <Slider fx:id="thresholdSlider" blockIncrement="1.0" layoutX="144.0" layoutY="41.0" minorTickCount="24" prefHeight="14.0" prefWidth="78.0" showTickMarks="true" snapToTicks="true" AnchorPane.rightAnchor="223.0" AnchorPane.topAnchor="41.0" />
             <Button layoutX="280.0" layoutY="9.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleDrawPerikymata" prefHeight="24.0" prefWidth="32.0" AnchorPane.rightAnchor="125.0" AnchorPane.topAnchor="8.0">
                <graphic>
