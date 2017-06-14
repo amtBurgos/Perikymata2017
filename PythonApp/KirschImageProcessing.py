@@ -109,7 +109,6 @@ class KirschImageProcessing():
             for coord in lines:
                 rr, cc = line(coord[0][1], coord[0][0], coord[1][1], coord[1][0])
                 imgOverlapped[rr, cc] = [255, 0, 0, 255]
-            print('fin')
         elif len(img[0][0]) == 3:
             # NORMAL IMAGE with RGB Channel
             for coord in lines:

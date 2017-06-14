@@ -48,7 +48,7 @@ public class Request {
 	private List<Object> parameters;
 
 	/**
-	 * Build a default request.
+	 * Builds a default request.
 	 *
 	 * @param code
 	 *            default code
@@ -69,10 +69,10 @@ public class Request {
 	}
 
 	/**
-	 * Build an advance request for python server.
+	 * Builds an advance request for python server.
 	 *
 	 * @param code
-	 *            advance code
+	 *            advanced code
 	 * @param imagePath
 	 *            image to filter
 	 * @param savePath
@@ -112,6 +112,20 @@ public class Request {
 		parameters.add(minLineLength);
 		parameters.add(lineGap);
 		parameters.add(smallObjectLenght);
+	}
+
+	/**
+	 * Builds a request for closing the python server.
+	 *
+	 * @param code
+	 *            close server code
+	 * @param closeString
+	 *            close server string
+	 */
+	public Request(int code, String closeString) {
+		parameters = new LinkedList<Object>();
+		parameters.add(code);
+		parameters.add(closeString);
 	}
 
 	/**

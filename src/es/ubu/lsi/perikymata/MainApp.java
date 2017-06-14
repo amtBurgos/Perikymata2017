@@ -89,6 +89,7 @@ public class MainApp extends Application {
 	private BorderPane rootLayout;
 
 	/**
+	 * Gets the root layout
 	 * @return the rootLayout
 	 */
 	public BorderPane getRootLayout() {
@@ -96,6 +97,7 @@ public class MainApp extends Application {
 	}
 
 	/**
+	 * Sets the root layout.
 	 * @param rootLayout
 	 *            the rootLayout to set
 	 */

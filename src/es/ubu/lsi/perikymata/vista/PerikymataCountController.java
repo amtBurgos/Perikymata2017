@@ -937,7 +937,6 @@ public class PerikymataCountController {
 		croppedImageView.setImage(null);
 		this.mainApp = mainApp;
 		if (mainApp.getFullImage() != null) {
-			// croppedImageView.setImage(mainApp.getFilteredImage());
 
 			if (mainApp.getFilteredImage() != null) {
 				croppedImageView.setImage(mainApp.getFilteredImage());
@@ -947,8 +946,6 @@ public class PerikymataCountController {
 			croppedImageView.setFitHeight(croppedImageView.getImage().getHeight());
 			croppedImageView.setFitWidth(croppedImageView.getImage().getWidth());
 			croppedImageView.setPreserveRatio(true);
-
-			///////////
 
 			for (int i = 0; i < decilesLinesBetween.length; i++) {
 				decilesLinesBetween[i] = new Line();
@@ -962,9 +959,6 @@ public class PerikymataCountController {
 			freeDrawPath.setStroke(Color.RED);
 			((AnchorPane) croppedImageView.getParent()).getChildren().add(freeDrawPath);
 
-			/////////////
-
-			// fullOriginalImage.setImage(mainApp.getFullImage());
 			freeDrawPathList.clear();
 			if (mainApp.getProject().getLinePath() != null)
 				freeDrawPathList.addAll(mainApp.getProject().getLinePath());
@@ -1005,11 +999,9 @@ public class PerikymataCountController {
 	 */
 	@FXML
 	private void handleDrawPerikymata() {
-		// statusLabel.setText("Drawing Perikymata, right click to end.");
 		clearImageViewHandlers();
 		EventHandler<Event> h = evt -> {
 			if (((MouseEvent) evt).getButton().compareTo(MouseButton.SECONDARY) == 0) {
-				// statusLabel.setText("Perikymata Hand-Marking ended.");
 				clearImageViewHandlers();
 			} else {
 				peaksCoords.add(new int[] { (int) (((MouseEvent) evt).getX() * this.getImageToImageViewRatio()),
@@ -1090,13 +1082,11 @@ public class PerikymataCountController {
 			if (mainApp.getFilteredImage() == null) {
 				filterNotAppliedAlert();
 			} else if (measure == null || measure.getMeasureValue() == 0.0) {
-				// statusLabel.setText("Measure missing, cannot make CSV.");
 				alert.setContentText("Measure missing.\nBack to Rotation & Crop.");
 			} else if (peaksCoords.isEmpty()) {
 				alert.setContentText("Perikymata not detected, cannot make CSV.");
 			} else {
 				CSVUtil.createCSV(mainApp, measure, peaksCoords, xDecileStart, xDecileEnd, decilesBetween);
-				// statusLabel.setText("CSV exported successfully");
 				alert.setAlertType(AlertType.INFORMATION);
 				alert.setTitle("CVS exported successfully");
 				alert.setHeaderText("CSV exported succesfully");

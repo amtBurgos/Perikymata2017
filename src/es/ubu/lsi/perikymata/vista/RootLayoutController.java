@@ -16,9 +16,17 @@ package es.ubu.lsi.perikymata.vista;
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
+
+import java.net.ConnectException;
+import java.util.Optional;
+import java.util.logging.Level;
 import es.ubu.lsi.perikymata.MainApp;
+import es.ubu.lsi.perikymata.util.sockets.ClientSocket;
+import es.ubu.lsi.perikymata.util.sockets.Request;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 
 /**
  * Controller for the rootLayout. The BorderLayout contains a common menu bar
@@ -119,7 +127,7 @@ public class RootLayoutController {
 		alert.setHeaderText("About");
 		alert.setContentText("v2.0\n" + "Author: Andrés Miguel Terán\n" + "Tutor: Dr. Jose Francisco Diez Pastor\n"
 				+ "Tutor: Dr Raul Marticorena Sanchez  \n" + "Universidad de Burgos, July 2017\n"
-				+ "Perikymata v2.0 (Analisis Paleontologico de piezas dentales)\n"
+				+ "Perikymata v2.0 (Analisis Paleontologico de piezas dentales 2.0)\n"
 				+ "Perikymata v2.0 comes with ABSOLUTELY NO WARRANTY;\n"
 				+ "for details view the file PERIKYMATA_LICENSE.txt\n"
 				+ "This is free software, and you are welcome to redistribute it under "
@@ -144,10 +152,52 @@ public class RootLayoutController {
 	}
 
 	/**
-	 * Closes the application.
+	 * Closes the application and the python server.
 	 */
 	@FXML
 	private void handleExit() {
-		System.exit(0);
+		Thread thread = new Thread(new Runnable() {
+			@Override
+			public void run() {
+
+				try {
+					ClientSocket client = new ClientSocket();
+					// Close server request
+					Request request = new Request(Request.CLOSE_SERVER, "CLOSE_SERVER");
+					client.send(request);
+					String response = client.receive();
+					client.close();
+					if (!response.equals("OK")) {
+						throw new Exception("Error closing server. Response not OK");
+					}
+					System.exit(0);
+				} catch (ConnectException e) {
+					mainApp.getLogger().log(Level.SEVERE, "Exception occur closing server.", e);
+					Platform.runLater(() -> {
+						Alert alert = new Alert(Alert.AlertType.ERROR);
+						alert.setTitle("Error closing server");
+						alert.setHeaderText("Can't close server\n");
+						alert.setContentText("Server not running. This application will close.");
+						alert.showAndWait();
+					});
+				} catch (Exception e) {
+					mainApp.getLogger().log(Level.SEVERE, "Exception occur closing server.", e);
+					Platform.runLater(() -> {
+						Alert alert = new Alert(Alert.AlertType.ERROR);
+						alert.setTitle("Error closing server");
+						alert.setHeaderText("Can't close server.\n");
+						alert.setContentText("Can't close server. This application will close.");
+						Optional<ButtonType> option = alert.showAndWait();
+
+						if (option.get().equals(ButtonType.OK)) {
+							System.exit(0);
+						}
+
+					});
+				}
+			}
+		});
+		thread.start();
 	}
+
 }

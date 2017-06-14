@@ -38,53 +38,60 @@ class ServerSocket:
         self.ADVANCED_FILTER = 1
         self.CLOSE_SERVER = -1
 
-        self.clients = dict()
         with socket(AF_INET, SOCK_STREAM) as self.server:
             self.server.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1)
             self.server.bind((host, port))
             self.server.listen(5)
             self.serverWorking = True
             print('Server started, waiting clients...')
-            while self.serverWorking:
-                client, addr = self.server.accept()
-                Thread(target=self.clientThread, args=(client, addr)).start()
+            try:
+                while self.serverWorking:
+                    client, addr = self.server.accept()
+                    # Test connection
+                    if (self.handShake(client) == False):
+                        client.close()
+                    else:
+                        request = client.recv(4096).decode("utf-8")
+                        if (self.getOperation(request) == self.CLOSE_SERVER):
+                            self.sendMessage(client, "OK")
+                            self.serverWorking = False
+                        else:
+                            # If its a filter request, throw a thread
+                            Thread(target=self.clientThread, args=(client, addr, request)).start()
+            except:
+                print("Server will close")
+            print("Closing server...")
 
-    def clientThread(self, client, address):
+    def getOperation(self, request):
+        """
+        Returns the type of operation of the server
+        :param request: filter request
+        :return: request code
+        """
+        operations = request.split(",")
+        return int(operations[0])
+
+    def clientThread(self, client, address, request):
         """
         Thread for client management.
         :param client: client connection
         :param address: client address
+        :param request: request from Java application
         :return: None
         """
-        if (self.handShake(client) == False):
-            # If handshake is not successful
-            client.close()
-        else:
-            # If handshake is correct
-            self.clients[address] = client
-            print('Client connected: ' + str(address))
-            working = True
-            while working:
-                try:
-                    # Wait for responses
-                    request = client.recv(4096).decode("utf-8")
-                    if request == '':
-                        # Disconnected
-                        print(address, ": disconnected")
-                        working = False
-                    else:
-                        operations = request.split(",")
-                        response = self.filter(operations)
-                        self.sendMessage(client, response)
-                        if (response == "CLOSE_SERVER"):
-                            # self.closeServer()
-                            self.serverWorking = False
-                            working = False
-                        print(address, ": work finished")
-                except Exception as e:
-                    print(address, ": Error filtering, closing connection...")
-                    self.sendMessage(client, "ERROR")
-                    working = False
+        print('Client connected: ' + str(address))
+        try:
+            if request == '':
+                # Disconnected
+                print(address, ": disconnected")
+            else:
+                operations = request.split(",")
+                response = self.filter(operations)
+                self.sendMessage(client, response)
+                print(address, ": work finished")
+        except Exception as e:
+            print(address, ": Error filtering, closing connection...")
+            self.sendMessage(client, "ERROR")
 
     def sendMessage(self, client, msg):
         """
@@ -114,7 +121,7 @@ class ServerSocket:
             smallObjectLength = 30
             detectLines = True
 
-            #If request is an advanced option request
+            # If request is an advanced option request
             if (operations[0] == self.ADVANCED_FILTER):
                 # Codes for solving the advanced request
                 detectLines = bool(operations[4])
@@ -127,14 +134,13 @@ class ServerSocket:
                 smallObjectLength = int(operations[11])
                 angleDetection = np.linspace(minAngle, maxAngle, num=800)
 
-
             img = kirsch.loadImage(imagePath)
             imgPrepared = kirsch.prepareImage(img, w=denoiseWeigh)
             imgSk, lines = kirsch.kirschProcessing(imgPrepared, kernelId=kernel, angles=angleDetection,
                                                    lineLength=minLineLength, lineGap=lineGapLength,
                                                    minLengthSmallObjects=smallObjectLength, lineDetection=detectLines)
 
-            #Save images depending if the detect lines option is active
+            # Save images depending if the detect lines option is active
             if (detectLines == True):
                 kirsch.saveFilteredImage(imgSk, lines, savePath)
                 # Save overlapped image too
@@ -158,15 +164,6 @@ class ServerSocket:
             print("Handshake successful")
             done = True
         return done
-
-    def closeServer(self):
-        """
-        Closes the server and its connections.
-        :return:
-        """
-        for client in self.clients.values():
-            client.close()
-        self.server.close()
 
 
 if __name__ == "__main__":
