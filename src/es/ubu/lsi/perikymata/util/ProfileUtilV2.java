@@ -21,8 +21,6 @@ import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.sun.org.apache.xerces.internal.dom.DeepNodeListImpl;
-
 import javafx.scene.shape.LineTo;
 import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.PathElement;
@@ -39,30 +37,30 @@ public class ProfileUtilV2 {
 	 * Maximum degree in the HSB (HSV) model for considering a color as valid
 	 * red. This value is next to the orange color.
 	 */
-	public static double MAX_RED_HUE_DEGREE = 10.0;
+	public static final double MAX_RED_HUE_DEGREE = 10.0;
 
 	/**
 	 * Minimum degree in the HSB (HSV) model for considering a color as valid
 	 * red. This value is next to the pink color.
 	 */
-	public static double MIN_RED_HUE_DEGREE = 350.0;
+	public static final double MIN_RED_HUE_DEGREE = 350.0;
 
 	/**
 	 * Minimum value of saturation in the HSB (HSV) model for considering a
 	 * color as valid red.
 	 */
-	public static float MIN_SATURATION_PERMITTED = 0.8f;
+	public static final float MIN_SATURATION_PERMITTED = 0.8f;
 
 	/**
 	 * Minimum value of brightness in the HSB (HSV) model for considering a
 	 * color as valid red.
 	 */
-	public static float MIN_BRIGHTNESS_PERMITTED = 0.9f;
+	public static final float MIN_BRIGHTNESS_PERMITTED = 0.9f;
 
 	/**
 	 * Default minimum distance between detected coordinates to skip one.
 	 */
-	public static int DEFAULT_MIN_COORD_DISTANCE = 5;
+	public static final int DEFAULT_MIN_COORD_DISTANCE = 5;
 
 	/**
 	 * Finds the red pixel which are supposed to be the perikymata detected by
@@ -122,9 +120,6 @@ public class ProfileUtilV2 {
 	 */
 	public static List<int[]> deleteClosePixels(List<int[]> redPixels, int minDistance) {
 		List<int[]> redPixelsCleaned = new LinkedList<int[]>();
-
-		// Auxiliary list deep copied
-		// LinkedList<int[]> auxList = deepCopy(redPixels);
 
 		// Check very close coordinates
 		for (int i = 0; i < redPixels.size(); i++) {

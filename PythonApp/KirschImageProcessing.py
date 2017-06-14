@@ -109,13 +109,55 @@ class KirschImageProcessing():
             for coord in lines:
                 rr, cc = line(coord[0][1], coord[0][0], coord[1][1], coord[1][0])
                 imgOverlapped[rr, cc] = [255, 0, 0, 255]
-                imgOverlapped[rr - 1, cc + 1] = [255, 0, 0, 255]
+            print('fin')
         elif len(img[0][0]) == 3:
             # NORMAL IMAGE with RGB Channel
             for coord in lines:
                 rr, cc = line(coord[0][1], coord[0][0], coord[1][1], coord[1][0])
                 imgOverlapped[rr, cc] = [255, 0, 0]
-                imgOverlapped[rr - 1, cc + 1] = [255, 0, 0]
+
+        imsave(savePathOverlap, imgOverlapped)
+
+    def saveWithoutLineDetection(self, img, imgSk, savePath, savePathOverlap):
+        # Save skeletonize
+        imgSkAux = list()
+        [imgSkAux.append([]) for height in range(len(imgSk))]
+
+        for i in range(len(imgSk)):
+            for j in range(len(imgSk[0])):
+                if (imgSk[i][j] == 0):
+                    imgSkAux[i].append(np.array([0, 0, 0, 255], dtype=np.uint8))
+                else:
+                    imgSkAux[i].append(np.array([255, 0, 0, 255], dtype=np.uint8))
+
+        #Save detected
+        imsave(savePath, imgSkAux)
+
+        #Save overlapped
+        #imgOverlapped = np.copy(img)
+
+        imgOverlapped = list()
+        [imgOverlapped.append([]) for height in range(len(img))]
+        if len(img[0][0]) == 4:
+            # PNG image with RGBA Channel
+            for i in range(len(imgSk)):
+                for j in range(len(imgSk[0])):
+                    if (imgSk[i][j] != 0):
+                        #imgOverlapped[i][j] = np.array([255, 0, 0, 255], np.uint8)
+                        imgOverlapped[i].append(np.array([255, 0, 0, 255], dtype=np.uint8))
+                    else:
+                        imgOverlapped[i].append(img[i][j])
+
+        elif len(img[0][0]) == 3:
+            # NORMAL IMAGE with RGB Channel
+            for i in range(len(imgSk)):
+                for j in range(len(imgSk[0])):
+                    if (imgSk[i][j] == 1):
+                        #imgOverlapped[i][j] = np.array([255, 0, 0], np.uint8)
+                        imgOverlapped[i].append(np.array([255, 0, 0], dtype=np.uint8))
+                    else:
+                        imgOverlapped[i].append(img[i][j])
+        #Save overlapped
         imsave(savePathOverlap, imgOverlapped)
 
     def loadImage(self, path):
@@ -158,24 +200,23 @@ class KirschImageProcessing():
         t = threshold_adaptive(img, 1)
         return img >= t
 
-    def kirschProcessing(self, img, kernelId=1, angles=np.linspace(0.1, 0.4, num=300), lineLength=30, lineGap=16,
-                         minLength=30, conn=50):
-        with war.catch_warnings():
-            war.simplefilter("ignore")
+    def kirschProcessing(self, img, kernelId=1, angles=np.linspace(-0.3, 0.3, num=600), lineLength=30, lineGap=16,
+                         minLengthSmallObjects=30, conn=50, lineDetection=True):
+        #with war.catch_warnings():
+            #war.simplefilter("ignore")
             # Aqui aplicamos el kernel de kirsch
-            imgConvolve = convolve(img, self.kernels[kernelId])
-            imgBin = self.binarizeImage(imgConvolve)
-            imgRemoveSmall = self.deleteSmallObjects(imgBin, minLength, conn)
-            imgSkeletonize3D = skeletonize_3d(imgRemoveSmall)
+        imgConvolve = convolve(img, self.kernels[kernelId])
+        imgBin = self.binarizeImage(imgConvolve)
+        imgRemoveSmall = self.deleteSmallObjects(imgBin, minLengthSmallObjects, conn)
+        imgSkeletonize3D = skeletonize_3d(imgRemoveSmall)
 
-            # Detectar lineas
-            lines = probabilistic_hough_line(imgSkeletonize3D, threshold=0, line_length=lineLength, line_gap=lineGap,
-                                             theta=angles)
+        lines = None
+        if (lineDetection == True):
+            # Detect lines
+            lines = probabilistic_hough_line(imgSkeletonize3D, threshold=0, line_length=lineLength,line_gap=lineGap, theta=angles)
         return [imgSkeletonize3D, lines]
 
-
-
-    def kirschProcessing1D(self, img, kernelId=3, angles=np.linspace(0.1, 0.4, num=300), lineLength=30, lineGap=16,
+    def kirschProcessing1D(self, img, kernelId=3, angles=np.linspace(-0.3, 0.3, num=600), lineLength=30, lineGap=16,
                            minLength=30, conn=50):
         with war.catch_warnings():
             war.simplefilter("ignore")

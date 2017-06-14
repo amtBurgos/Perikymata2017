@@ -188,7 +188,7 @@ public class MainApp extends Application {
 		this.primaryStage.setTitle("Perikymata - Unsaved Project");
 		this.primaryStage.getIcons()
 				.add(new Image(this.getClass().getResource("/rsc/Tooth-icon.png").toExternalForm()));
-		this.primaryStage.setMinHeight(450.0);
+		this.primaryStage.setMinHeight(600.0);
 		this.primaryStage.setMinWidth(650.0);
 		initRootLayout();
 		showImageSelection();
@@ -548,8 +548,10 @@ public class MainApp extends Application {
 		try {
 			// Loads the FXML view.
 			FXMLLoader loader = new FXMLLoader();
-			loader.setLocation(MainApp.class.getResource("vista/PerikymataCount.fxml"));
-			AnchorPane perikymataCount = (AnchorPane) loader.load();
+			loader.setLocation(MainApp.class.getResource("vista/PerikymataCountV2.fxml"));
+
+			// AnchorPane perikymataCount = (AnchorPane) loader.load();
+			BorderPane perikymataCount = (BorderPane) loader.load();
 
 			// Shows this layout in the center of the rootLayout.
 			rootLayout.setCenter(perikymataCount);

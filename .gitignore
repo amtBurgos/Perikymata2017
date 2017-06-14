@@ -51,3 +51,5 @@ PythonApp/build/*
 PythonApp/dist/*
 src/rsc/Thumbs.db
 build/build.xml
+prototypes/ExtractLines/Lenna2.jpg
+prototypes/.ipynb_checkpoints/Lenna Images-checkpoint.ipynb

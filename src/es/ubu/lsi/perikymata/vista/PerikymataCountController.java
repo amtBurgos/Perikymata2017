@@ -6,7 +6,10 @@ import java.io.IOException;
 import java.net.ConnectException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Optional;
 import java.util.logging.Level;
 
@@ -21,8 +24,10 @@ import es.ubu.lsi.perikymata.util.sockets.ClientSocket;
 import es.ubu.lsi.perikymata.util.sockets.Request;
 import ij.io.Opener;
 import javafx.application.Platform;
+import javafx.beans.InvalidationListener;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.embed.swing.SwingFXUtils;
@@ -36,6 +41,7 @@ import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
@@ -48,7 +54,10 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Border;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
@@ -140,6 +149,12 @@ public class PerikymataCountController {
 	private ImageView drawPerikymataButtonImage;
 
 	/**
+	 * VBox for the advanced filter layout.
+	 */
+	@FXML
+	private VBox advancedFilterVBox;
+
+	/**
 	 * Image for erase perikymata button.
 	 */
 	@FXML
@@ -157,11 +172,29 @@ public class PerikymataCountController {
 	@FXML
 	private ImageView drawLineButtonImage;
 
+	// /**
+	// * Pane that contains all elements.
+	// */
+	// @FXML
+	// private AnchorPane perikymataCountPane;
+
 	/**
 	 * Pane that contains all elements.
 	 */
 	@FXML
-	private AnchorPane perikymataCountPane;
+	private BorderPane perikymataCountPane;
+
+	/**
+	 * Toggle button for opening the advanced filter layout.
+	 */
+	@FXML
+	private ToggleButton advancedFilterToggleBtn;
+
+	/**
+	 * Left anchor pane inside border pane.
+	 */
+	@FXML
+	private AnchorPane leftAnchorPane;
 
 	/**
 	 * Image view of the image used to calculate the perikymata.
@@ -194,22 +227,71 @@ public class PerikymataCountController {
 	private ImageView zoomPlusBtnImage;
 
 	/**
+	 * Minimum angle slider for advanced filtering options.
+	 */
+	@FXML
+	private Slider minAngleSlider;
+
+	/**
+	 * Minimum line length slider for advanced filtering options.
+	 */
+	@FXML
+	private Slider minLineLengthSlider;
+
+	/**
+	 * Perikymata orientation combobox for advanced filtering options.
+	 */
+	@FXML
+	private ComboBox<String> perikymataOrientationCombobox;
+
+	/**
+	 * Maximum angle slider for advanced filtering options.
+	 */
+	@FXML
+	private Slider maxAngleSlider;
+
+	/**
+	 * Line gap slider for advanced filtering options.
+	 */
+	@FXML
+	private Slider lineGapSlider;
+
+	/**
+	 * Dennoise slider for advanced filtering options.
+	 */
+	@FXML
+	private Slider denoiseForceSlider;
+
+	/**
+	 * Small objects slider for advanced filtering options.
+	 */
+	@FXML
+	private Slider smallObjectSlider;
+
+	/**
+	 * Checkbox to enable or disable lines detections.
+	 */
+	@FXML
+	private CheckBox activateDetectionCheckbox;
+
+	/**
 	 * Zoom minus button image.
 	 */
 	@FXML
 	private ImageView zoomMinusBtnImage;
 
-	/**
-	 * Label synchronized to the slider to show its value.
-	 */
-	@FXML
-	private Label perikymataThresholdLabel;
+	// /**
+	// * Label synchronized to the slider to show its value.
+	// */
+	// @FXML
+	// private Label perikymataThresholdLabel;
 
-	/**
-	 * Slider user to select the minimum threshold needed to mark a perikymata.
-	 */
-	@FXML
-	private Slider thresholdSlider;
+	// /**
+	// * Slider user to select the minimum threshold needed to mark a
+	// perikymata.
+	// */
+	// @FXML
+	// private Slider thresholdSlider;
 
 	/**
 	 * Initializes the Javafx components.
@@ -227,8 +309,9 @@ public class PerikymataCountController {
 		loading.setVisible(false);
 
 		// Show the value of the slider in the label.
-		perikymataThresholdLabel.textProperty()
-				.bind(((StringFormatter) Bindings.format("%.0f", thresholdSlider.valueProperty()).concat("%")));
+		// perikymataThresholdLabel.textProperty()
+		// .bind(((StringFormatter) Bindings.format("%.0f",
+		// thresholdSlider.valueProperty()).concat("%")));
 
 		// Sets the parameters of the measure line.
 		// measureLine = new Line();
@@ -269,6 +352,10 @@ public class PerikymataCountController {
 				.setImage(new Image(this.getClass().getResource("/rsc/Editing-Line-icon.png").toExternalForm()));
 		zoomPlusBtnImage.setImage(new Image(this.getClass().getResource("/rsc/Zoom-Plus-icon.png").toExternalForm()));
 		zoomMinusBtnImage.setImage(new Image(this.getClass().getResource("/rsc/Zoom-Minus-icon.png").toExternalForm()));
+
+		// Inflate advanced options combobox
+		perikymataOrientationCombobox.setItems(FXCollections.observableArrayList("North", "North-west", "North-east"));
+		perikymataOrientationCombobox.getSelectionModel().selectFirst();
 	}
 
 	/**
@@ -665,6 +752,7 @@ public class PerikymataCountController {
 
 			} else {
 				// statusLabel.setText("Line has not been drawn");
+				loading.setVisible(false);
 				Alert alert = new Alert(Alert.AlertType.ERROR);
 				alert.setTitle("Error calculating perikymata");
 				alert.setHeaderText("Line has not been drawn.\n");
@@ -681,6 +769,68 @@ public class PerikymataCountController {
 		croppedImageView.setOnMouseClicked(null);
 		croppedImageView.setOnMouseDragged(null);
 		croppedImageView.setOnMousePressed(null);
+	}
+
+	/**
+	 * Opens and closes the advanced filter layout.
+	 */
+	@FXML
+	private void openCloseAdvancedFilter() {
+		if (advancedFilterToggleBtn.isSelected()) {
+			leftAnchorPane.setPrefWidth(330.0);
+			advancedFilterVBox.setVisible(true);
+			// Open advanced filter layout
+		} else {
+			// Close advanced filter layout
+			advancedFilterVBox.setVisible(false);
+			leftAnchorPane.setPrefWidth(20.0);
+
+		}
+	}
+
+	/**
+	 * Enable or disable the lines detection options at advanced filtering.
+	 */
+	@FXML
+	private void enableLineDetectionCheckbox() {
+		if (activateDetectionCheckbox.isSelected()) {
+			minLineLengthSlider.setDisable(false);
+			lineGapSlider.setDisable(false);
+			minAngleSlider.setDisable(false);
+			maxAngleSlider.setDisable(false);
+		} else {
+			minLineLengthSlider.setValue(30.0);
+			minLineLengthSlider.setDisable(true);
+			lineGapSlider.setValue(16.0);
+			lineGapSlider.setDisable(true);
+			minAngleSlider.setValue(-0.3);
+			minAngleSlider.setDisable(true);
+			maxAngleSlider.setValue(0.3);
+			maxAngleSlider.setDisable(true);
+		}
+
+	}
+
+	/**
+	 * Resets default values in advanced filtering options.
+	 */
+	@FXML
+	private void resetAdvancedValues() {
+		minLineLengthSlider.setValue(30.0);
+		lineGapSlider.setValue(16.0);
+		minAngleSlider.setValue(-0.3);
+		maxAngleSlider.setValue(0.3);
+		smallObjectSlider.setValue(30.0);
+		perikymataOrientationCombobox.getSelectionModel().selectFirst();
+		denoiseForceSlider.setValue(0.5);
+	}
+
+	/**
+	 * Applies the advanced custom filter.
+	 */
+	@FXML
+	private void applyAdvancedFilter() {
+		handleFilter();
 	}
 
 	/**
@@ -703,8 +853,29 @@ public class PerikymataCountController {
 							+ "Filtered_Image.png";
 					String savePathOverlapped = mainApp.getProjectPath() + File.separator + "Cropped_Image"
 							+ File.separator + "FilteredOverlapped_Image.png";
-					Request request = new Request(Request.DEFAULT_FILTER, croppedImagePath, savePath,
-							savePathOverlapped);
+
+					// Diferent request depending if the advanced filter is open
+					Request request = null;
+					if (advancedFilterToggleBtn.isSelected()) {
+						// Advanced request
+
+						int detectLinesOrNot = activateDetectionCheckbox.isSelected() == true ? 1 : 0;
+						int minLineLength = (int) minLineLengthSlider.getValue();
+						int lineGap = (int) lineGapSlider.getValue();
+						double minAngle = minAngleSlider.getValue();
+						double maxAngle = maxAngleSlider.getValue();
+						int smallObjectLenght = (int) smallObjectSlider.getValue();
+						int kernel = perikymataOrientationCombobox.getSelectionModel().getSelectedIndex();
+						double denoiseWeigh = denoiseForceSlider.getValue();
+
+						// build request
+						request = new Request(Request.ADVANCED_FILTER, croppedImagePath, savePath, savePathOverlapped,
+								detectLinesOrNot, denoiseWeigh, kernel, minAngle, maxAngle, minLineLength, lineGap,
+								smallObjectLenght);
+					} else {
+						// Default request
+						request = new Request(Request.DEFAULT_FILTER, croppedImagePath, savePath, savePathOverlapped);
+					}
 					client.send(request);
 					String response = client.receive();
 					if (response.equals("OK")) {
@@ -718,6 +889,8 @@ public class PerikymataCountController {
 						java.awt.Image overlapped = new Opener().openImage(mainApp.getProjectPath() + File.separator
 								+ "Cropped_Image" + File.separator + "FilteredOverlapped_Image.png").getImage();
 						mainApp.setFilteredOverlappedImage(SwingFXUtils.toFXImage((BufferedImage) overlapped, null));
+					} else {
+						throw new Exception("Error in server during filtering.");
 					}
 					client.close();
 				} catch (ConnectException e) {
@@ -810,182 +983,13 @@ public class PerikymataCountController {
 				clearLine();
 			}
 			reDrawElements();
+
+			// Hide advanced options
+			advancedFilterToggleBtn.setSelected(false);
+			advancedFilterVBox.setVisible(false);
+			leftAnchorPane.setPrefWidth(20.0);
 		}
 	}
-
-	// /**
-	// * Handler that puts an event on the image to mark the start of the
-	// measure,
-	// * if start and end measures are set, line is drawn and measure dialog is
-	// * called.
-	// */
-	// @FXML
-	// private void measureStartHandler() {
-	//
-	// clearImageViewHandlers();
-	// fullOriginalImage.setVisible(true);
-	// EventHandler<MouseEvent> mouseHandler = new EventHandler<MouseEvent>() {
-	// @Override
-	// public void handle(MouseEvent mouseEvent) {
-	// if (mouseEvent.getEventType() == MouseEvent.MOUSE_CLICKED) {
-	// if (measure != null && measure.getStartMeasure() == null) {
-	// measure.setStartMeasure(new double[2]);
-	// }
-	// measure.getStartMeasure()[0] = mouseEvent.getX() *
-	// getImageToImageViewRatio();
-	// measure.getStartMeasure()[1] = mouseEvent.getY() *
-	// getImageToImageViewRatio();
-	// fullImage.setOnMouseClicked(null);
-	// statusLabel.setText("Start measure point selected.");
-	// fullOriginalImage.setVisible(false);
-	// if (measure.getStartMeasure() != null && measure.getEndMeasure() != null)
-	// {
-	// measure();
-	// }
-	// }
-	// }
-	// };
-	// statusLabel.setText("Selecting start point for the measure.");
-	// fullImage.setPickOnBounds(true);
-	// fullImage.setOnMouseClicked(mouseHandler);
-	// }
-
-	// /**
-	// * Handler that puts an event on the image to mark the end of the measure,
-	// * if start and end measures are set, line is drawn and measure dialog is
-	// * called.
-	// */
-	// @FXML
-	// private void measureEndHandler() {
-	// clearImageViewHandlers();
-	// fullOriginalImage.setVisible(true);
-	// EventHandler<MouseEvent> mouseHandler = new EventHandler<MouseEvent>() {
-	// @Override
-	// public void handle(MouseEvent mouseEvent) {
-	// if (mouseEvent.getEventType() == MouseEvent.MOUSE_CLICKED) {
-	// if (measure.getEndMeasure() == null) {
-	// measure.setEndMeasure(new double[2]);
-	// }
-	// measure.getEndMeasure()[0] = mouseEvent.getX() *
-	// getImageToImageViewRatio();
-	// measure.getEndMeasure()[1] = mouseEvent.getY() *
-	// getImageToImageViewRatio();
-	// fullImage.setOnMouseClicked(null);
-	// statusLabel.setText("End measure point selected.");
-	// fullOriginalImage.setVisible(false);
-	// if (measure.getStartMeasure() != null && measure.getEndMeasure() != null)
-	// {
-	// measure();
-	// }
-	// }
-	// }
-	// };
-	// statusLabel.setText("Selecting End point for the measure.");
-	// fullImage.setPickOnBounds(true);
-	// fullImage.setOnMouseClicked(mouseHandler);
-	// }
-
-	// /**
-	// * Draws the line between startMeasure and EndMeasure and shows a dialog
-	// * asking for the units and value of the measure.
-	// */
-	// @FXML
-	// private void measure() {
-	//
-	// measureLine.setStartX(measure.getStartMeasure()[0] /
-	// getImageToImageViewRatio());
-	// measureLine.setStartY(measure.getStartMeasure()[1] /
-	// getImageToImageViewRatio());
-	// measureLine.setEndX(measure.getEndMeasure()[0] /
-	// getImageToImageViewRatio());
-	// measureLine.setEndY(measure.getEndMeasure()[1] /
-	// getImageToImageViewRatio());
-	//
-	// mainApp.getProject().getMeasure().setStartMeasure(measure.getStartMeasure());
-	// mainApp.getProject().getMeasure().setEndMeasure(measure.getEndMeasure());
-	//
-	// // Create the custom dialog.
-	// Dialog<Pair<String, String>> dialog = new Dialog<>();
-	// dialog.setTitle("Input the image measure unit and measure value.");
-	// dialog.setHeaderText("Input the image measure unit and measure value.");
-	//
-	// // Set the button types.
-	// ButtonType doneButtonType = new ButtonType("Done", ButtonData.OK_DONE);
-	// dialog.getDialogPane().getButtonTypes().addAll(doneButtonType,
-	// ButtonType.CANCEL);
-	//
-	// // Create the username and password labels and fields.
-	// GridPane grid = new GridPane();
-	// grid.setHgap(10);
-	// grid.setVgap(10);
-	// grid.setPadding(new Insets(20, 150, 10, 10));
-	//
-	// // TextField measureUnit = new TextField();
-	// // measureUnit.setPromptText("Measure unit");
-	// ObservableList<String> options = FXCollections.observableArrayList("cm",
-	// "mm", "µm", "nm");
-	// final ComboBox<String> measureUnit = new ComboBox<>(options);
-	// if (measure == null || measure.getMeasureUnit() == null)
-	// measureUnit.setValue("mm");
-	// else
-	// measureUnit.setValue(measure.getMeasureUnit());
-	// TextField measureValue = new TextField();
-	// measureValue.setPromptText("Measure value");
-	// if (measure != null && measure.getMeasureValue() != 0) {
-	// measureValue.setText(Double.toString(measure.getMeasureValue()));
-	// }
-	// measureValue.setTextFormatter(new TextFormatter<String>(change -> {
-	// if (change.getText().matches("[0-9]*(\\.)?[0-9]*")) {
-	// if (change.getText().endsWith("."))
-	// change.setText(change.getText() + "0");
-	// return change;
-	// }
-	// return null;
-	// }));
-	//
-	// grid.add(new Label("Measure unit:"), 0, 0);
-	// grid.add(measureUnit, 1, 0);
-	// grid.add(new Label("Measure value:"), 0, 1);
-	// grid.add(measureValue, 1, 1);
-	//
-	// // Enable/Disable login button depending on whether a username was
-	// // entered.
-	// Node acceptButton = dialog.getDialogPane().lookupButton(doneButtonType);
-	// acceptButton.setDisable(true);
-	//
-	// // Do some validation (using the Java 8 lambda syntax).
-	// measureValue.textProperty().addListener((observable, oldValue, newValue)
-	// -> {
-	// acceptButton.setDisable(newValue.trim().isEmpty());
-	// });
-	//
-	// dialog.getDialogPane().setContent(grid);
-	//
-	// // Request focus on the username field by default.
-	// Platform.runLater(() -> measureUnit.requestFocus());
-	//
-	// // Convert the result to a username-password-pair when the login button
-	// // is clicked.
-	// dialog.setResultConverter(dialogButton -> {
-	// if (dialogButton == doneButtonType) {
-	//
-	// return new Pair<>(measureUnit.getValue().toString(),
-	// measureValue.getText());
-	// }
-	// statusLabel.setText("Measure has not been changed.");
-	// return null;
-	// });
-	//
-	// Optional<Pair<String, String>> result = dialog.showAndWait();
-	//
-	// result.ifPresent(measureValues -> {
-	// statusLabel.setText("Measure changed correctly.");
-	// measure.setMeasureUnit(measureValues.getKey());
-	// measure.setMeasureValue(Double.parseDouble(measureValues.getValue()));
-	// mainApp.getProject().setMeasure(measure);
-	// mainApp.makeProjectXml();
-	// });
-	// }
 
 	/**
 	 *

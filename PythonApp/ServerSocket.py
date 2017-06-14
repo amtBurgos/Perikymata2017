@@ -19,6 +19,7 @@ from socket import *
 from threading import *
 from KirschImageProcessing import *
 
+
 class ServerSocket:
     """
     Server Socket class. Communicates with the java application and do the operations
@@ -66,14 +67,14 @@ class ServerSocket:
             while working:
                 try:
                     # Wait for responses
-                    request = client.recv(1024).decode("utf-8")
+                    request = client.recv(4096).decode("utf-8")
                     if request == '':
                         # Disconnected
                         print(address, ": disconnected")
                         working = False
                     else:
-                        operation = request.split(",")
-                        response = self.doOperations(operation)
+                        operations = request.split(",")
+                        response = self.filter(operations)
                         self.sendMessage(client, response)
                         if (response == "CLOSE_SERVER"):
                             # self.closeServer()
@@ -81,7 +82,8 @@ class ServerSocket:
                             working = False
                         print(address, ": work finished")
                 except Exception as e:
-                    print(address, ": disconnected")
+                    print(address, ": Error filtering, closing connection...")
+                    self.sendMessage(client, "ERROR")
                     working = False
 
     def sendMessage(self, client, msg):
@@ -96,43 +98,52 @@ class ServerSocket:
             msg = msg + "\n"
         client.send(msg.encode("utf-8"))
 
-    def doOperations(self, operation):
-        """
-        Do the operations the client wants. Contains the communication protocol with the serve.
-        The first item of the list will be the operation to do.
-        :param operation: list with the server message which contains the operations to do
-        :return: OK / ERROR if the operation has been done or not.
-        """
+    def filter(self, operations):
+        try:
+            kirsch = KirschImageProcessing()
 
-        done = "ERROR"
-        # Code of the operation
-        print("Operations: ", operation)
-        code = int(operation[0])
-        if code == self.DEFAULT_FILTER:
-            done = self.defaultFilter(operation[1], operation[2], operation[3])
-        elif code == self.ADVANCED_FILTER:
-            print(1)
-        elif code == self.CLOSE_SERVER:
-            done = "CLOSE_SERVER"
-        return done
+            # First, extract common parameters
+            imagePath = str(operations[1])
+            savePath = str(operations[2])
+            savePathOverlap = str(operations[3])
+            kernel = 2
+            denoiseWeigh = 0.5
+            angleDetection = np.linspace(-0.3, 0.3, num=600)
+            minLineLength = 30
+            lineGapLength = 16
+            smallObjectLength = 30
+            detectLines = True
 
-    def defaultFilter(self, imagePath, savePath, savePathOverlap):
-        """
-        Filter with default parameters
-        :param imagePath: image to filter
-        :param savePath: path to save the filtered image
-        :return: OK / ERROR
-        """
-        done = "ERROR"
-        kirsch = KirschImageProcessing()
-        img = kirsch.loadImage(imagePath)
-        imgPrepared = kirsch.prepareImage(img)
-        imgSk, lines = kirsch.kirschProcessing(imgPrepared, kernelId=2, angles=np.linspace(-0.3, 0.3, num=600))
-        kirsch.saveFilteredImage(imgSk, lines, savePath)
-        #Save overlapped image too
-        kirsch.saveOverlappedImage(img, lines, savePathOverlap)
-        done = "OK"
-        return done
+            #If request is an advanced option request
+            if (operations[0] == self.ADVANCED_FILTER):
+                # Codes for solving the advanced request
+                detectLines = bool(operations[4])
+                denoiseWeigh = float(operations[5])
+                kernel = int(operations[6]) + 1
+                minAngle = float(operations[7])
+                maxAngle = float(operations[8])
+                minLineLength = int(operations[9])
+                lineGapLength = int(operations[10])
+                smallObjectLength = int(operations[11])
+                angleDetection = np.linspace(minAngle, maxAngle, num=800)
+
+
+            img = kirsch.loadImage(imagePath)
+            imgPrepared = kirsch.prepareImage(img, w=denoiseWeigh)
+            imgSk, lines = kirsch.kirschProcessing(imgPrepared, kernelId=kernel, angles=angleDetection,
+                                                   lineLength=minLineLength, lineGap=lineGapLength,
+                                                   minLengthSmallObjects=smallObjectLength, lineDetection=detectLines)
+
+            #Save images depending if the detect lines option is active
+            if (detectLines == True):
+                kirsch.saveFilteredImage(imgSk, lines, savePath)
+                # Save overlapped image too
+                kirsch.saveOverlappedImage(img, lines, savePathOverlap)
+            else:
+                kirsch.saveWithoutLineDetection(img, imgSk, savePath, savePathOverlap)
+            return "OK"
+        except (Exception):
+            return "ERROR"
 
     def handShake(self, client):
         """
@@ -153,10 +164,8 @@ class ServerSocket:
         Closes the server and its connections.
         :return:
         """
-
         for client in self.clients.values():
             client.close()
-
         self.server.close()
 
 

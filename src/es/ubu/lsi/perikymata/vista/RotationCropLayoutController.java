@@ -808,6 +808,7 @@ public class RotationCropLayoutController {
 	 */
 	public void setMainApp(MainApp mainApp) {
 		this.mainApp = mainApp;
+		//Full Screen
 		mainApp.getPrimaryStage().setMaximized(true);
 		if (mainApp.getFullImage() != null) {
 			if (mainApp.getCroppedImage() != null) {

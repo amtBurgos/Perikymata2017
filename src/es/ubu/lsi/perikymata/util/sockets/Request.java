@@ -16,6 +16,9 @@ package es.ubu.lsi.perikymata.util.sockets;
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+import java.util.LinkedList;
+import java.util.List;
+
 /**
  * Request message for python server.
  *
@@ -27,37 +30,22 @@ public class Request {
 	/**
 	 * Default filter code.
 	 */
-	public static int DEFAULT_FILTER = 0;
+	public final static int DEFAULT_FILTER = 0;
 
 	/**
 	 * Advanced filter code.
 	 */
-	public static int ADVANCED_FILTER = 1;
+	public final static int ADVANCED_FILTER = 1;
 
 	/**
 	 * Close server code.
 	 */
-	public static int CLOSE_SERVER = -1;
+	public final static int CLOSE_SERVER = -1;
 
 	/**
-	 * Image path to filter.
+	 * List with the parameters for the python server.
 	 */
-	private String imagePath;
-
-	/**
-	 * Location for saving the filtered image.
-	 */
-	private String savePath;
-
-	/**
-	 * Location for saving the filtered image.
-	 */
-	private String savePathOverlapped;
-
-	/**
-	 * Action code for python server.
-	 */
-	private int code;
+	private List<Object> parameters;
 
 	/**
 	 * Build a default request.
@@ -72,10 +60,58 @@ public class Request {
 	 *            save path for the overlapped image
 	 */
 	public Request(int code, String imagePath, String savePath, String savePathOverlapped) {
-		this.code = code;
-		this.imagePath = imagePath;
-		this.savePath = savePath;
-		this.savePathOverlapped = savePathOverlapped;
+		parameters = new LinkedList<Object>();
+		parameters.add(code);
+		parameters.add(imagePath);
+		parameters.add(savePath);
+		parameters.add(savePathOverlapped);
+
+	}
+
+	/**
+	 * Build an advance request for python server.
+	 *
+	 * @param code
+	 *            advance code
+	 * @param imagePath
+	 *            image to filter
+	 * @param savePath
+	 *            save path
+	 * @param savePathOverlaped
+	 *            save path for the overlapped image
+	 * @param detectLinesOrNot
+	 *            1 or 0 if the user wants line detection
+	 * @param denoiseWeigh
+	 *            denoise force parameter
+	 * @param kernel
+	 *            kernel id to use
+	 * @param minAngle
+	 *            minimum angle for lines detection
+	 * @param maxAngle
+	 *            maximum angle for lines detection
+	 * @param minLineLength
+	 *            minimum line length accepted for detect lines
+	 * @param lineGap
+	 *            maximum gap between pixel in the image to form a line
+	 * @param smallObjectLenght
+	 *            maximum length for remove an object in the image
+	 */
+	public Request(int code, String imagePath, String savePath, String savePathOverlapped, int detectLinesOrNot,
+			double denoiseWeigh, int kernel, double minAngle, double maxAngle, int minLineLength, int lineGap,
+			int smallObjectLenght) {
+		parameters = new LinkedList<Object>();
+		parameters.add(code);
+		parameters.add(imagePath);
+		parameters.add(savePath);
+		parameters.add(savePathOverlapped);
+		parameters.add(detectLinesOrNot);
+		parameters.add(denoiseWeigh);
+		parameters.add(kernel);
+		parameters.add(minAngle);
+		parameters.add(maxAngle);
+		parameters.add(minLineLength);
+		parameters.add(lineGap);
+		parameters.add(smallObjectLenght);
 	}
 
 	/**
@@ -84,13 +120,11 @@ public class Request {
 	@Override
 	public String toString() {
 		String command = "";
-		if (code == DEFAULT_FILTER) {
-			command = "" + code + "," + imagePath + "," + savePath + "," + savePathOverlapped;
-		} else if (code == CLOSE_SERVER) {
-			command = "" + code + "," + "NULL";
-		} else if (code == ADVANCED_FILTER) {
-			command = "" + code + "," + "TO DO";
+		for (Object o : parameters) {
+			command += o.toString();
+			command += ",";
 		}
+		command = command.substring(0, command.lastIndexOf(","));
 		return command;
 	}
 
