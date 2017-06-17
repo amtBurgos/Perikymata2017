@@ -199,7 +199,7 @@ class KirschImageProcessing():
         return img >= t
 
     def kirschProcessing(self, img, kernelId=0, angles=np.linspace(-0.3, 0.3, num=600), lineLength=30, lineGap=16,
-                         minLengthSmallObjects=30, conn=60, lineDetection=True):
+                         minLengthSmallObjects=30, conn=50, lineDetection=True):
         """
         Applys kirsch filtering and line detection to a prepared image.
         :param img: prepared image

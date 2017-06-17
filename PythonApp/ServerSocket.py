@@ -17,6 +17,7 @@
 
 from KirschImageProcessing import *
 import numpy as np
+import sys
 from socket import *
 from threading import *
 
@@ -172,4 +173,5 @@ class ServerSocket:
 
 if __name__ == "__main__":
     DEFAULT_PORT = 8885
-    ServerSocket('localhost', DEFAULT_PORT)
+    s = ServerSocket('localhost', DEFAULT_PORT)
+    sys.exit(0)
