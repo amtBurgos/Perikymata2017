@@ -15,10 +15,10 @@
   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 """
 
+from KirschImageProcessing import *
+import numpy as np
 from socket import *
 from threading import *
-from KirschImageProcessing import *
-
 
 class ServerSocket:
     """
@@ -85,6 +85,7 @@ class ServerSocket:
                 # Disconnected
                 print(address, ": disconnected")
             else:
+                print(request)
                 operations = request.split(",")
                 response = self.filter(operations)
                 self.sendMessage(client, response)
@@ -106,6 +107,11 @@ class ServerSocket:
         client.send(msg.encode("utf-8"))
 
     def filter(self, operations):
+        """
+        Filter an image with the given parameters in operations
+        :param operations:
+        :return:
+        """
         try:
             kirsch = KirschImageProcessing()
 
@@ -122,11 +128,11 @@ class ServerSocket:
             detectLines = True
 
             # If request is an advanced option request
-            if (operations[0] == self.ADVANCED_FILTER):
+            if (int(operations[0]) == self.ADVANCED_FILTER):
                 # Codes for solving the advanced request
-                detectLines = bool(operations[4])
+                detectLines = bool(int(operations[4]))
                 denoiseWeigh = float(operations[5])
-                kernel = int(operations[6]) + 1
+                kernel = int(operations[6])
                 minAngle = float(operations[7])
                 maxAngle = float(operations[8])
                 minLineLength = int(operations[9])
@@ -142,9 +148,7 @@ class ServerSocket:
 
             # Save images depending if the detect lines option is active
             if (detectLines == True):
-                kirsch.saveFilteredImage(imgSk, lines, savePath)
-                # Save overlapped image too
-                kirsch.saveOverlappedImage(img, lines, savePathOverlap)
+                kirsch.saveWithLineDetection(img, imgSk, lines, savePath, savePathOverlap)
             else:
                 kirsch.saveWithoutLineDetection(img, imgSk, savePath, savePathOverlap)
             return "OK"
@@ -153,7 +157,7 @@ class ServerSocket:
 
     def handShake(self, client):
         """
-        Do a handshake with the server to know the connection is well done.
+        Does a handshake with the server to know the connection is well done.
         :return: True / False is handshake is successful or not.
         """
         done = False

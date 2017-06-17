@@ -15,26 +15,21 @@
   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 """
 
-from skimage import io
+import numpy as np
+import warnings as war
+
 from os import walk
 from os import path
-
-from skimage.color import rgb2grey
-from skimage import exposure
-from skimage.restoration import denoise_tv_chambolle
-
-from skimage.filters import threshold_adaptive
-from skimage.color import rgb2gray
-from skimage.morphology import skeletonize_3d, remove_small_objects, skeletonize
 from scipy.ndimage import convolve
-from skimage.transform import probabilistic_hough_line
-import warnings as war
-import matplotlib.pyplot as plt
-import numpy as np
-from skimage.draw import line
+from skimage import io
 from skimage.color import grey2rgb
-from skimage.io import imsave
-
+from skimage.color import rgb2gray
+from skimage.draw import line
+from skimage.exposure import equalize_adapthist
+from skimage.filters import threshold_adaptive
+from skimage.morphology import skeletonize_3d, remove_small_objects
+from skimage.restoration import denoise_tv_chambolle
+from skimage.transform import probabilistic_hough_line
 
 class KirschImageProcessing():
     def __init__(self):
@@ -78,95 +73,71 @@ class KirschImageProcessing():
                             [-3, 0, 5],
                             [-3, -3, -3]], dtype=np.float32)
 
-        self.kernels = [self.N, self.NW, self.W,
+        self.kernels = [self.W, self.NW, self.NE, self.N,
                         self.SW, self.S, self.SE,
-                        self.E, self.NE]
+                        self.E]
 
-    def saveFilteredImage(self, imgSk, lines, savePath):
+    def saveWithLineDetection(self, img, imgSk, lines, savePath, savePathOverlap):
         """
-        Saves the image to the specified folder.
-        :param imgSk: image skeletonized
-        :param lines: lines detedted
-        :param savePath: save path
+        Saves images which have been applied lines detection.
+        :param img: original image
+        :param imgSk: skeletonized image
+        :param lines: lines detected
+        :param savePath: skeletonize image save path
+        :param savePathOverlap: overlapped image save path
         :return: None
         """
-        img = grey2rgb(imgSk)
+        imgSkRGB = grey2rgb(imgSk)
+        imgOverlapped = np.copy(img)
         for coord in lines:
             rr, cc = line(coord[0][1], coord[0][0], coord[1][1], coord[1][0])
-            img[rr, cc] = [255, 0, 0]
-        imsave(savePath, img)
+            imgSkRGB[rr, cc] = [255, 0, 0]
+            # If png image, len is 4, else 3
+            imgOverlapped[rr, cc] = [255, 0, 0, 255] if (len(img[0][0]) == 4) else [255, 0, 0]
 
-    def saveOverlappedImage(self, img, lines, savePathOverlap):
-        """
-        Overlap the lines detected into the original image
-        :param img: original image
-        :param lines: lines detected
-        :param savePathOverlap:
-        """
-        imgOverlapped = np.copy(img)
-        if len(img[0][0]) == 4:
-            # PNG image with RGBA Channel
-            for coord in lines:
-                rr, cc = line(coord[0][1], coord[0][0], coord[1][1], coord[1][0])
-                imgOverlapped[rr, cc] = [255, 0, 0, 255]
-        elif len(img[0][0]) == 3:
-            # NORMAL IMAGE with RGB Channel
-            for coord in lines:
-                rr, cc = line(coord[0][1], coord[0][0], coord[1][1], coord[1][0])
-                imgOverlapped[rr, cc] = [255, 0, 0]
-
-        imsave(savePathOverlap, imgOverlapped)
+        # Save images
+        io.imsave(savePath, imgSkRGB)
+        io.imsave(savePathOverlap, imgOverlapped)
 
     def saveWithoutLineDetection(self, img, imgSk, savePath, savePathOverlap):
-        # Save skeletonize
-        imgSkAux = list()
-        [imgSkAux.append([]) for height in range(len(imgSk))]
+        """
+        Saves images which have not been applied lines detection.
+        :param img: original image
+        :param imgSk: skeletonized image
+        :param savePath: skeletonize image save path
+        :param savePathOverlap: overlapped image save path
+        :return: None
+        """
 
-        for i in range(len(imgSk)):
-            for j in range(len(imgSk[0])):
-                if (imgSk[i][j] == 0):
-                    imgSkAux[i].append(np.array([0, 0, 0, 255], dtype=np.uint8))
-                else:
-                    imgSkAux[i].append(np.array([255, 0, 0, 255], dtype=np.uint8))
+        # PNG IMAGE
+        imgOverlapped = np.copy(img)
+        if (len(img[0][0]) == 4):
+            imgSkRGB = np.full_like(img, [0, 0, 0, 255])
+            imgSkRGB[imgSk == 255] = [255, 0, 0, 255]
+            imgOverlapped[imgSk == 255] = [255, 0, 0, 255]
+        else:
+            # Other types of image
+            imgSkRGB = np.full_like(img, [0, 0, 0])
+            imgSkRGB[imgSk == 255] = [255, 0, 0]
+            imgOverlapped[imgSk == 255] = [255, 0, 0]
 
-        #Save detected
-        imsave(savePath, imgSkAux)
-
-        #Save overlapped
-        #imgOverlapped = np.copy(img)
-
-        imgOverlapped = list()
-        [imgOverlapped.append([]) for height in range(len(img))]
-        if len(img[0][0]) == 4:
-            # PNG image with RGBA Channel
-            for i in range(len(imgSk)):
-                for j in range(len(imgSk[0])):
-                    if (imgSk[i][j] != 0):
-                        #imgOverlapped[i][j] = np.array([255, 0, 0, 255], np.uint8)
-                        imgOverlapped[i].append(np.array([255, 0, 0, 255], dtype=np.uint8))
-                    else:
-                        imgOverlapped[i].append(img[i][j])
-
-        elif len(img[0][0]) == 3:
-            # NORMAL IMAGE with RGB Channel
-            for i in range(len(imgSk)):
-                for j in range(len(imgSk[0])):
-                    if (imgSk[i][j] == 1):
-                        #imgOverlapped[i][j] = np.array([255, 0, 0], np.uint8)
-                        imgOverlapped[i].append(np.array([255, 0, 0], dtype=np.uint8))
-                    else:
-                        imgOverlapped[i].append(img[i][j])
-        #Save overlapped
-        imsave(savePathOverlap, imgOverlapped)
+        # Save images
+        io.imsave(savePath, imgSkRGB)
+        io.imsave(savePathOverlap, imgOverlapped)
 
     def loadImage(self, path):
+        """
+        Loads an image.
+        :param path: image path to load
+        :return: Loaded Image
+        """
         return io.imread(path)
 
     def loadImagesFrom(self, package):
         """
-        Cargar imágenes dada la ruta de una carpeta. Carga también las imágenes en subcarpetas
-        @param package - ruta a una carpeta
-        @return data - diccionario nombre-imagen con las imágenes cargadas
+        Load a bunch of images.
+        :param package: folder path
+        :return: dictionary with image loaded
         """
         data = dict()
         for root, dirs, files in walk(package):
@@ -175,35 +146,75 @@ class KirschImageProcessing():
                     data[name] = io.imread(path.join(root, name))
         return data
 
+    """
     def showImage(self, img, returnImg=False):
+
+        Shows an image. Used with jupyter notebooks.
+        :param img: image to show
+        :param returnImg: image figure option
+        :return: image figure
+
         fig = plt.figure(figsize=(20, 20))
         plt.imshow(img, cmap=plt.cm.gray)
         if returnImg == True:
             return fig
+    """
 
     def prepareImage(self, img, clip=0.0, nb=100, w=0.5):
+        """
+        Prepare an image applying filters.
+        :param img: orignal image
+        :param clip: contrast force
+        :param nb: gray bins
+        :param w: denoise force
+        :return: prepared image
+        """
         with war.catch_warnings():
             war.simplefilter("ignore")
             imgGray = rgb2gray(img)
-            imgAdapted = exposure.equalize_adapthist(imgGray, clip_limit=clip, nbins=nb)
+            imgAdapted = equalize_adapthist(imgGray, clip_limit=clip, nbins=nb)
             imgDenoise = denoise_tv_chambolle(imgAdapted, weight=w)
         return imgDenoise
 
     def deleteSmallObjects(self, img, minLength=30, conn=50):
+        """
+        Deletes small objects along the image.
+        :param img: image for removing objects
+        :param minLength: minimum length for an object to be removed
+        :param conn: neighborhood of a pixel to determine the object to remove
+        :return: image with small objects removed
+        """
         img_2 = remove_small_objects(img, minLength, connectivity=conn)
         img_3 = ~np.array(img_2)
         img_4 = remove_small_objects(img_3, minLength, connectivity=conn)
         return ~np.array(img_4)
 
     def binarizeImage(self, img):
+        """
+        Binarized an image.
+        :param img: image to binarized
+        :return: image binarized
+        """
         t = threshold_adaptive(img, 1)
         return img >= t
 
-    def kirschProcessing(self, img, kernelId=1, angles=np.linspace(-0.3, 0.3, num=600), lineLength=30, lineGap=16,
-                         minLengthSmallObjects=30, conn=50, lineDetection=True):
-        #with war.catch_warnings():
-            #war.simplefilter("ignore")
-            # Aqui aplicamos el kernel de kirsch
+    def kirschProcessing(self, img, kernelId=0, angles=np.linspace(-0.3, 0.3, num=600), lineLength=30, lineGap=16,
+                         minLengthSmallObjects=30, conn=60, lineDetection=True):
+        """
+        Applys kirsch filtering and line detection to a prepared image.
+        :param img: prepared image
+        :param kernelId: id of the kirsch kernel to apply
+        :param angles: angles for detecting lines
+        :param lineLength: minimum line length to detect
+        :param lineGap: maximum gap between pixel in the image to form a line
+        :param minLengthSmallObjects: minimum length for an object to be removed
+        :param conn: neighborhood of a pixel to determine the object to remove
+        :param lineDetection: true / false if the user want to detect lines
+        :return: processed image and lines detected
+        """
+        # with war.catch_warnings():
+        # war.simplefilter("ignore")
+        # Aqui aplicamos el kernel de kirsch
         imgConvolve = convolve(img, self.kernels[kernelId])
         imgBin = self.binarizeImage(imgConvolve)
         imgRemoveSmall = self.deleteSmallObjects(imgBin, minLengthSmallObjects, conn)
@@ -212,20 +223,7 @@ class KirschImageProcessing():
         lines = None
         if (lineDetection == True):
             # Detect lines
-            lines = probabilistic_hough_line(imgSkeletonize3D, threshold=0, line_length=lineLength,line_gap=lineGap, theta=angles)
-        return [imgSkeletonize3D, lines]
-
-    def kirschProcessing1D(self, img, kernelId=3, angles=np.linspace(-0.3, 0.3, num=600), lineLength=30, lineGap=16,
-                           minLength=30, conn=50):
-        with war.catch_warnings():
-            war.simplefilter("ignore")
-            # Aqui aplicamos el kernel de kirsch
-            imgConvolve = convolve(img, self.kernels[kernelId])
-            imgBin = self.binarizeImage(imgConvolve)
-            imgRemoveSmall = self.deleteSmallObjects(imgBin, minLength, conn)
-            imgSkeletonize = skeletonize(imgRemoveSmall)
-
-            # Detectar lineas
-            lines = probabilistic_hough_line(imgSkeletonize, threshold=0, line_length=lineLength, line_gap=lineGap,
+            lines = probabilistic_hough_line(imgSkeletonize3D, threshold=0, line_length=lineLength,
+                                             line_gap=lineGap,
                                              theta=angles)
-        return [imgSkeletonize, lines]
+        return [imgSkeletonize3D, lines]

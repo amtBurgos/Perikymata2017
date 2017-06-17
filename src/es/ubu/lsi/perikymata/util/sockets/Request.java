@@ -94,7 +94,7 @@ public class Request {
 	 * @param lineGap
 	 *            maximum gap between pixel in the image to form a line
 	 * @param smallObjectLenght
-	 *            maximum length for remove an object in the image
+	 *            maximum length for removing an object in the image
 	 */
 	public Request(int code, String imagePath, String savePath, String savePathOverlapped, int detectLinesOrNot,
 			double denoiseWeigh, int kernel, double minAngle, double maxAngle, int minLineLength, int lineGap,
