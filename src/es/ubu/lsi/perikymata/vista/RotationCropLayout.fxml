@@ -20,7 +20,7 @@
          <children>
             <ToolBar prefHeight="40.0" prefWidth="200.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
                <items>
-                  <Label prefHeight="17.0" prefWidth="53.0" text="Rotation" />
+                  <Label prefHeight="17.0" prefWidth="57.0" text="Rotation" />
                   <Slider fx:id="rotationSlider" blockIncrement="1.0" max="40.0" min="-40.0" onMouseReleased="#handleRotation" prefHeight="14.0" prefWidth="216.0">
                      <tooltip>
                         <Tooltip text="Slide to rotate the image" />
@@ -86,10 +86,10 @@
    <bottom>
       <AnchorPane prefHeight="40.0" prefWidth="590.0" BorderPane.alignment="CENTER">
          <children>
-            <HBox alignment="CENTER_LEFT" layoutX="24.0" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" prefHeight="41.0" prefWidth="150.0">
+            <HBox alignment="CENTER_LEFT" layoutX="24.0" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" prefHeight="41.0" prefWidth="189.0">
                <children>
-                  <Button fx:id="returnBtn" mnemonicParsing="false" onMouseClicked="#handleReturn" text="Return" />
-                  <Button mnemonicParsing="false" onMouseClicked="#handleReset" text="Reset View">
+                  <Button fx:id="returnBtn" mnemonicParsing="false" onMouseClicked="#handleReturn" prefWidth="63.0" text="Return" />
+                  <Button mnemonicParsing="false" onMouseClicked="#handleReset" prefWidth="91.0" text="Reset View">
                      <tooltip>
                         <Tooltip text="Resets the view" />
                      </tooltip>
@@ -99,7 +99,7 @@
                   </Button>
                </children>
             </HBox>
-            <HBox alignment="CENTER_RIGHT" layoutX="16.0" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" prefHeight="41.0" prefWidth="444.0" AnchorPane.rightAnchor="16.0">
+            <HBox alignment="CENTER_RIGHT" layoutX="16.0" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" prefHeight="41.0" prefWidth="291.0" AnchorPane.rightAnchor="24.0">
                <children>
                   <Button fx:id="saveAndContinueBtn" alignment="CENTER_RIGHT" mnemonicParsing="false" onMouseClicked="#handleSaveAndContinue" text="Save all and Continue" />
                </children>

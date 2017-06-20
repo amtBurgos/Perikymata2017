@@ -211,26 +211,32 @@ public class MainApp extends Application {
 	 * Starts the Python Server.
 	 */
 	public void startServer() {
-		try {
-			ArrayList<String> command = new ArrayList<String>();
-			if (SystemUtil.isWindows()) {
-				// run start server command
-				command.add("cmd.exe");
-				command.add("/c");
-				command.add("start");
-				command.add("PythonApp\\StartServerWindowsTest.bat");
-				//command.add("PythonApp\\StartServerWindowsTest.bat");
-			} else {
-				// run start server command
-				// Runtime.getRuntime().exec("./PythonApp/StartServerLinux.sh");
-				command.add("/bin/bash");
-				command.add("./PythonApp/StartServerLinux.sh");
+
+		Runnable initializeServer = () -> {
+			try {
+				ArrayList<String> command = new ArrayList<String>();
+				if (SystemUtil.isWindows()) {
+					// run start server command
+					command.add("cmd.exe");
+					command.add("/c");
+					command.add("start");
+					command.add("PythonApp\\StartServerWindowsTest.bat");
+					// command.add("PythonApp\\StartServerWindows.bat");
+				} else {
+					// Run in background
+					command.add("python3");
+					command.add("PythonApp/ServerSocket.py");
+				}
+				ProcessBuilder process = new ProcessBuilder(command).redirectErrorStream(true);
+				process.start();
+
+			} catch (IOException e) {
+				getLogger().log(Level.SEVERE, "Exception starting server from sript", e);
 			}
-			ProcessBuilder builder = new ProcessBuilder(command);
-			builder.start();
-		} catch (IOException e) {
-			getLogger().log(Level.SEVERE, "Exception starting server from sript", e);
-		}
+		};
+		// start the thread
+		new Thread(initializeServer).start();
+
 	}
 
 	/**
