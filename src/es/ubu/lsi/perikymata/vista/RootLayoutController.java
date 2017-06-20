@@ -69,15 +69,6 @@ public class RootLayoutController {
 	 * graphic interface to the Image filters application stage.
 	 */
 	@FXML
-	private void windowImageFilters() {
-		mainApp.showImageFilters();
-	}
-
-	/**
-	 * Handler that calls the main controller and changes the content of the
-	 * graphic interface to the Image filters application stage.
-	 */
-	@FXML
 	private void windowRotationCrop() {
 		mainApp.showRotationCrop();
 	}
@@ -156,48 +147,7 @@ public class RootLayoutController {
 	 */
 	@FXML
 	private void handleExit() {
-		Thread thread = new Thread(new Runnable() {
-			@Override
-			public void run() {
-
-				try {
-					ClientSocket client = new ClientSocket();
-					// Close server request
-					Request request = new Request(Request.CLOSE_SERVER, "CLOSE_SERVER");
-					client.send(request);
-					String response = client.receive();
-					client.close();
-					if (!response.equals("OK")) {
-						throw new Exception("Error closing server. Response not OK");
-					}
-					System.exit(0);
-				} catch (ConnectException e) {
-					mainApp.getLogger().log(Level.SEVERE, "Exception occur closing server.", e);
-					Platform.runLater(() -> {
-						Alert alert = new Alert(Alert.AlertType.ERROR);
-						alert.setTitle("Error closing server");
-						alert.setHeaderText("Can't close server\n");
-						alert.setContentText("Server not running. This application will close.");
-						alert.showAndWait();
-					});
-				} catch (Exception e) {
-					mainApp.getLogger().log(Level.SEVERE, "Exception occur closing server.", e);
-					Platform.runLater(() -> {
-						Alert alert = new Alert(Alert.AlertType.ERROR);
-						alert.setTitle("Error closing server");
-						alert.setHeaderText("Can't close server.\n");
-						alert.setContentText("Can't close server. This application will close.");
-						Optional<ButtonType> option = alert.showAndWait();
-
-						if (option.get().equals(ButtonType.OK)) {
-							System.exit(0);
-						}
-
-					});
-				}
-			}
-		});
-		thread.start();
+		mainApp.closeApplication();
 	}
 
 }

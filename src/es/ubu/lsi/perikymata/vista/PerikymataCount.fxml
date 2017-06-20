@@ -1,35 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!--
-/**
- * License: GPL
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License 2
- * as published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
- */
- -->
-
-<?import javafx.scene.control.*?>
-<?import javafx.scene.canvas.*?>
+<?import javafx.geometry.*?>
 <?import javafx.scene.image.*?>
+<?import javafx.scene.control.*?>
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane fx:id="perikymataCountPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="350.0" prefWidth="475.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="es.ubu.lsi.perikymata.vista.PerikymataCountController">
-   <children>
-      <AnchorPane layoutX="15.0" layoutY="2.0" prefHeight="41.0" prefWidth="597.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0">
+<BorderPane fx:id="perikymataCountPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="es.ubu.lsi.perikymata.vista.PerikymataCountController">
+   <center>
+      <ScrollPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" BorderPane.alignment="CENTER">
+         <content>
+            <AnchorPane fx:id="imageAnchorPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0">
+               <children>
+                  <ImageView fx:id="croppedImageView" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="23.0" AnchorPane.topAnchor="0.0" />
+               </children>
+            </AnchorPane>
+         </content>
+      </ScrollPane>
+   </center>
+   <top>
+      <AnchorPane maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="60.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <children>
-            <ToolBar layoutX="2.0" layoutY="13.0" prefHeight="35.0" prefWidth="238.0" AnchorPane.leftAnchor="2.0" AnchorPane.rightAnchor="325.0">
+            <ToolBar layoutX="2.0" layoutY="10.0" prefHeight="35.0" prefWidth="238.0" AnchorPane.leftAnchor="2.0" AnchorPane.rightAnchor="325.0">
               <items>
                   <Button fx:id="zoomPlusButton" mnemonicParsing="false" onAction="#zoomPlus">
                      <tooltip>
@@ -37,14 +29,16 @@
                      </tooltip>
                      <graphic>
                         <ImageView fx:id="zoomPlusBtnImage" fitHeight="17.0" fitWidth="17.0" pickOnBounds="true" preserveRatio="true" />
-                     </graphic></Button>
+                     </graphic>
+                  </Button>
                   <Button fx:id="zoomMinusButton" mnemonicParsing="false" onAction="#zoomMinus">
                      <tooltip>
                         <Tooltip text="Zoom minus on image" />
                      </tooltip>
                      <graphic>
                         <ImageView fx:id="zoomMinusBtnImage" fitHeight="17.0" fitWidth="17.0" pickOnBounds="true" preserveRatio="true" />
-                     </graphic></Button>
+                     </graphic>
+                  </Button>
                   <Button mnemonicParsing="false" onMouseClicked="#handleFilter" text="Filter">
                      <tooltip>
                         <Tooltip text="Apply default filter to image" />
@@ -61,24 +55,22 @@
                      <tooltip>
                         <Tooltip text="Delete the line and counted perikymata" />
                      </tooltip></Button>
-                  <Button mnemonicParsing="false" onAction="#alternateFilteredImages" text="Alternate Filters">
+                  <Button mnemonicParsing="false" onAction="#alternateFilteredImages" text="Alternate View">
                      <tooltip>
                         <Tooltip text="Change to overlapped filter view" />
                      </tooltip></Button>
-                  <Button mnemonicParsing="false" onAction="#resetView" text="Reset view">
+                  <ToggleButton fx:id="advancedFilterToggleBtn" mnemonicParsing="false" onAction="#openCloseAdvancedFilter" text="Advanced Filter">
                      <tooltip>
-                        <Tooltip text="Discard all changes and start again" />
-                     </tooltip></Button>
-                  <!-- <Button mnemonicParsing="false" onAction="#selectStart" text="Deciles - Change Start" />
-                  <Button layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#selectEnd" text="Deciles - Change End" /> -->
+                        <Tooltip text="Opens the advanced filter layout" />
+                     </tooltip>
+                  </ToggleButton>
               </items>
             </ToolBar>
-            <Button layoutX="161.0" layoutY="8.0" mnemonicParsing="false" onAction="#calculatePerikymata" prefHeight="25.0" prefWidth="137.0" text="Auto-mark perikymata" AnchorPane.rightAnchor="165.0" AnchorPane.topAnchor="8.0">
+            <Button layoutX="161.0" layoutY="8.0" mnemonicParsing="false" onAction="#calculatePerikymata" prefHeight="25.0" prefWidth="137.0" text="Auto-mark perikymata" AnchorPane.rightAnchor="165.0" AnchorPane.topAnchor="15.0">
                <tooltip>
                   <Tooltip text="Auto-mark perikymata" />
                </tooltip></Button>
-            <Slider fx:id="thresholdSlider" blockIncrement="1.0" layoutX="144.0" layoutY="41.0" minorTickCount="24" prefHeight="14.0" prefWidth="78.0" showTickMarks="true" snapToTicks="true" AnchorPane.rightAnchor="223.0" AnchorPane.topAnchor="41.0" />
-            <Button layoutX="280.0" layoutY="9.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleDrawPerikymata" prefHeight="24.0" prefWidth="32.0" AnchorPane.rightAnchor="125.0" AnchorPane.topAnchor="8.0">
+            <Button layoutX="280.0" layoutY="9.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleDrawPerikymata" prefHeight="24.0" prefWidth="32.0" AnchorPane.rightAnchor="125.0" AnchorPane.topAnchor="15.0">
                <graphic>
                   <ImageView fx:id="drawPerikymataButtonImage" fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true" />
                </graphic>
@@ -86,7 +78,7 @@
                   <Tooltip text="Mark new perikymata" />
                </tooltip>
             </Button>
-            <Button layoutX="324.0" layoutY="9.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleErasePerikymata" prefHeight="24.0" prefWidth="32.0" AnchorPane.rightAnchor="85.0" AnchorPane.topAnchor="8.0">
+            <Button layoutX="324.0" layoutY="9.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#handleErasePerikymata" prefHeight="24.0" prefWidth="32.0" AnchorPane.rightAnchor="85.0" AnchorPane.topAnchor="15.0">
                <tooltip>
                   <Tooltip text="Erase Marked Perikymata" />
                </tooltip>
@@ -94,27 +86,182 @@
                   <ImageView fx:id="erasePerikymataButtonImage" fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true" />
                </graphic>
             </Button>
-            <Button layoutX="456.0" layoutY="8.0" mnemonicParsing="false" onAction="#generateCsvFile" text="Export Data" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="8.0">
-               <tooltip>
-                  <Tooltip text="Export data to csv file" />
-               </tooltip></Button>
-            <Label layoutX="225.0" layoutY="37.0" prefHeight="14.0" prefWidth="118.0" text="Detection Threshold:" AnchorPane.rightAnchor="102.0" AnchorPane.topAnchor="37.0" />
-            <Label fx:id="perikymataThresholdLabel" layoutX="340.0" layoutY="37.0" prefHeight="17.0" prefWidth="42.0" text="Value" AnchorPane.rightAnchor="63.0" AnchorPane.topAnchor="37.0" />
+         </children>
+         <padding>
+            <Insets left="10.0" right="15.0" />
+         </padding>
+         <BorderPane.margin>
+            <Insets />
+         </BorderPane.margin>
+      </AnchorPane>
+   </top>
+   <left>
+      <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="-Infinity" minHeight="0.0" minWidth="20.0" prefWidth="20.0" BorderPane.alignment="CENTER" />
+   </left>
+   <bottom>
+      <AnchorPane maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="40.0" minWidth="0.0" prefHeight="50.0" BorderPane.alignment="CENTER">
+         <children>
+            <HBox layoutX="15.0" layoutY="324.0" prefHeight="25.0" prefWidth="445.0" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0">
+            <children>
+                  <Button mnemonicParsing="false" onAction="#resetView" text="Reset view">
+                     <tooltip>
+                        <Tooltip text="Discard all changes and start again" />
+                     </tooltip>
+                  </Button>
+               <ImageView fx:id="loading" fitHeight="25.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                     <HBox.margin>
+                        <Insets left="15.0" />
+                     </HBox.margin>
+                  </ImageView>
+            </children>
+               <padding>
+                  <Insets left="5.0" />
+               </padding>
+         </HBox>
+            <HBox layoutX="25.0" layoutY="16.0" prefHeight="25.0" prefWidth="100.0" AnchorPane.bottomAnchor="15.0" AnchorPane.rightAnchor="0.0">
+               <children>
+                  <Button alignment="CENTER_RIGHT" mnemonicParsing="false" onAction="#generateCsvFile" text="Export Data">
+                     <tooltip>
+                        <Tooltip text="Export data to csv file" />
+                     </tooltip>
+                  </Button>
+               </children>
+               <padding>
+                  <Insets left="5.0" />
+               </padding>
+            </HBox>
          </children>
       </AnchorPane>
-      <ScrollPane layoutX="27.0" layoutY="62.0" prefHeight="253.0" prefWidth="445.0" AnchorPane.bottomAnchor="35.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="62.0">
-        <content>
-          <AnchorPane fx:id="imageAnchorPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0">
-               <children>
-                  <ImageView fx:id="croppedImageView" pickOnBounds="true" preserveRatio="true" smooth="false" AnchorPane.bottomAnchor="-6.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="23.0" AnchorPane.topAnchor="0.0" />
-               </children>
-            </AnchorPane>
-        </content>
-      </ScrollPane>
-      <HBox layoutX="15.0" layoutY="324.0" prefHeight="25.0" prefWidth="445.0" AnchorPane.bottomAnchor="9.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0">
+   </bottom>
+   <right>
+      <AnchorPane fx:id="leftAnchorPane" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="330.0" BorderPane.alignment="CENTER">
          <children>
-            <ImageView fx:id="loading" fitHeight="25.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true" />
+            <VBox fx:id="advancedFilterVBox" spacing="10.0" AnchorPane.rightAnchor="9.0" AnchorPane.topAnchor="53.0">
+               <padding>
+                  <Insets bottom="20.0" left="12.0" right="5.0" />
+               </padding>
+               <children>
+                  <CheckBox fx:id="activateDetectionCheckbox" mnemonicParsing="false" nodeOrientation="RIGHT_TO_LEFT" onAction="#enableLineDetectionCheckbox" selected="true" text="Enable lines detection">
+                     <tooltip>
+                        <Tooltip text="Enable or disable line detection" />
+                     </tooltip>
+                  </CheckBox>
+                  <HBox maxWidth="1.7976931348623157E308" spacing="3.0">
+                     <children>
+                        <Label text="Min Line lentgh" />
+                        <Slider fx:id="minLineLengthSlider" blockIncrement="1.0" majorTickUnit="5.0" max="60.0" min="15.0" minorTickCount="2" prefHeight="38.0" prefWidth="190.0" showTickLabels="true" showTickMarks="true" snapToTicks="true" value="30.0">
+                           <HBox.margin>
+                              <Insets left="27.0" />
+                           </HBox.margin>
+                           <tooltip>
+                              <Tooltip text="Min line length to detect" />
+                           </tooltip>
+                        </Slider>
+                     </children>
+                  </HBox>
+                  <HBox layoutX="15.0" layoutY="62.0" maxWidth="1.7976931348623157E308" spacing="3.0">
+                     <children>
+                        <Label text="Line gap" />
+                        <Slider fx:id="lineGapSlider" blockIncrement="1.0" majorTickUnit="10.0" max="50.0" min="10.0" minorTickCount="2" prefHeight="38.0" prefWidth="190.0" showTickLabels="true" showTickMarks="true" snapToTicks="true" value="16.0">
+                           <HBox.margin>
+                              <Insets left="64.0" />
+                           </HBox.margin>
+                           <tooltip>
+                              <Tooltip text="Max gap between pixels to form a detected line" />
+                           </tooltip>
+                        </Slider>
+                     </children>
+                  </HBox>
+                  <HBox maxWidth="1.7976931348623157E308" spacing="3.0">
+                     <children>
+                        <Label text="Min detection angle" />
+                        <Slider fx:id="minAngleSlider" blockIncrement="0.1" majorTickUnit="0.1" max="-0.1" min="-0.5" minorTickCount="0" prefWidth="190.0" showTickLabels="true" showTickMarks="true" snapToTicks="true" value="-0.3">
+                           <HBox.margin>
+                              <Insets left="3.0" />
+                           </HBox.margin>
+                           <tooltip>
+                              <Tooltip text="Min line angle to detect" />
+                           </tooltip>
+                        </Slider>
+                     </children>
+                  </HBox>
+                  <HBox maxWidth="1.7976931348623157E308" spacing="3.0">
+                     <children>
+                        <Label text="Max detection angle" />
+                        <Slider fx:id="maxAngleSlider" blockIncrement="0.1" majorTickUnit="0.1" max="0.5" min="0.1" minorTickCount="0" prefWidth="190.0" showTickLabels="true" showTickMarks="true" snapToTicks="true" value="0.3">
+                           <HBox.margin>
+                              <Insets left="2.0" />
+                           </HBox.margin>
+                           <tooltip>
+                              <Tooltip text="Max line angle to detect" />
+                           </tooltip>
+                        </Slider>
+                     </children>
+                  </HBox>
+                  <HBox maxWidth="1.7976931348623157E308" spacing="3.0">
+                     <children>
+                        <Label text="Small objects filter" />
+                        <Slider fx:id="smallObjectSlider" majorTickUnit="10.0" max="80.0" min="10.0" minorTickCount="4" prefWidth="190.0" showTickLabels="true" showTickMarks="true" snapToTicks="true" value="30.0">
+                           <HBox.margin>
+                              <Insets left="13.0" />
+                           </HBox.margin>
+                           <tooltip>
+                              <Tooltip text="Min objects length to remove from image" />
+                           </tooltip>
+                        </Slider>
+                     </children>
+                  </HBox>
+                  <HBox layoutX="22.0" layoutY="235.0" maxWidth="1.7976931348623157E308" spacing="60.0">
+                     <children>
+                        <Label text="Perikymata orientation" />
+                        <ComboBox fx:id="perikymataOrientationCombobox" nodeOrientation="LEFT_TO_RIGHT" prefHeight="25.0" prefWidth="122.0">
+                           <tooltip>
+                              <Tooltip text="Perikymata general orientation at first glance " />
+                           </tooltip>
+                        </ComboBox>
+                     </children>
+                  </HBox>
+                  <HBox maxWidth="1.7976931348623157E308" spacing="3.0">
+                     <children>
+                        <Label text="Denoise Force" />
+                        <Slider fx:id="denoiseForceSlider" blockIncrement="0.1" majorTickUnit="0.1" max="0.9" min="0.1" minorTickCount="0" prefWidth="190.0" showTickLabels="true" showTickMarks="true" snapToTicks="true" value="0.5">
+                           <HBox.margin>
+                              <Insets left="35.0" />
+                           </HBox.margin>
+                           <tooltip>
+                              <Tooltip text="Image denoise force" />
+                           </tooltip>
+                        </Slider>
+                     </children>
+                  </HBox>
+                  <HBox prefHeight="28.0" prefWidth="304.0" spacing="5.0">
+                     <children>
+                        <Button mnemonicParsing="false" onAction="#resetAdvancedValues" text="Reset Values">
+                           <HBox.margin>
+                              <Insets left="10.0" />
+                           </HBox.margin>
+                           <tooltip>
+                              <Tooltip text="Reset al options to default values" />
+                           </tooltip>
+                        </Button>
+                        <Button mnemonicParsing="false" onAction="#applyAdvancedFilter" text="Apply Filter">
+                           <HBox.margin>
+                              <Insets left="120.0" />
+                           </HBox.margin>
+                           <tooltip>
+                              <Tooltip text="Apply custom filter" />
+                           </tooltip>
+                        </Button>
+                     </children>
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
+                  </HBox>
+               </children>
+            </VBox>
          </children>
-      </HBox>
-   </children>
-</AnchorPane>
+         <BorderPane.margin>
+            <Insets />
+         </BorderPane.margin></AnchorPane>
+   </right>
+</BorderPane>

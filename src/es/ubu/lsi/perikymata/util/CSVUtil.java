@@ -30,6 +30,7 @@ import es.ubu.lsi.perikymata.modelo.Measure;
  * Util to write the Perikymata data into a CSV
  *
  * @author Sergio Chico Carrancio
+ * @author Andres Miguel Teran
  */
 public class CSVUtil {
 
@@ -106,7 +107,6 @@ public class CSVUtil {
 		// Decile data header
 		writer.append("Decile");
 		writer.append(',');
-//		writer.append("Coordinates");
 		writer.append("CoordinateX");
 		writer.append(',');
 		writer.append("CoordinateY");
@@ -208,9 +208,6 @@ public class CSVUtil {
 		writer.append(Integer.toString(decile + 1));
 		writer.append(',');
 
-		// Coordinates of the perikymata
-//		writer.append(Integer.toString(peaksCoords.get(currentPerikymataIndex)[0]) + " "
-//				+ Integer.toString(peaksCoords.get(currentPerikymataIndex)[1]));
 		writer.append(Integer.toString(peaksCoords.get(currentPerikymataIndex)[0]) + ","
 				+ Integer.toString(peaksCoords.get(currentPerikymataIndex)[1]));
 		writer.append(',');

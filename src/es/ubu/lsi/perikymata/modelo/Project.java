@@ -23,15 +23,16 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
-import es.ubu.lsi.perikymata.modelo.filters.Filter;
+//import es.ubu.lsi.perikymata.modelo.filters.Filter;
 import es.ubu.lsi.perikymata.util.DrawLineXmlAdapter;
-import es.ubu.lsi.perikymata.util.FiltersXmlAdapter;
+//import es.ubu.lsi.perikymata.util.FiltersXmlAdapter;
 import javafx.scene.shape.PathElement;
 
 /**
  * Project class, stores persistent data. Is used to read or create a XML file.
  *
  * @author Sergio Chico Carrancio
+ * @author Andres Miguel Teran
  */
 @XmlRootElement
 public class Project {
@@ -40,10 +41,10 @@ public class Project {
 	 */
 	private String projectName;
 
-	/**
-	 * List of applied filters.
-	 */
-	private List<Filter> filterList;
+//	/**
+//	 * List of applied filters.
+//	 */
+//	private List<Filter> filterList;
 
 	/**
 	 * List of the elements used to draw the free-draw line.
@@ -93,28 +94,28 @@ public class Project {
 		this.projectName = projectName;
 	}
 
-	/**
-	 * Getter for the list of filters, used to read from a XML. If you want to
-	 * add a new filter, see:
-	 *
-	 * @see FiltersXmlAdapter
-	 * @return list of filters.
-	 */
-	@XmlElement(name = "filter")
-	@XmlJavaTypeAdapter(FiltersXmlAdapter.class)
-	public List<Filter> getFilterList() {
-		return filterList;
-	}
+//	/**
+//	 * Getter for the list of filters, used to read from a XML. If you want to
+//	 * add a new filter, see:
+//	 *
+//	 * @see FiltersXmlAdapter
+//	 * @return list of filters.
+//	 */
+//	@XmlElement(name = "filter")
+//	@XmlJavaTypeAdapter(FiltersXmlAdapter.class)
+//	public List<Filter> getFilterList() {
+//		return filterList;
+//	}
 
-	/**
-	 * Setter for the list of applied filters.
-	 *
-	 * @param filterList
-	 *            applied filters.
-	 */
-	public void setFilterList(List<Filter> filterList) {
-		this.filterList = filterList;
-	}
+//	/**
+//	 * Setter for the list of applied filters.
+//	 *
+//	 * @param filterList
+//	 *            applied filters.
+//	 */
+//	public void setFilterList(List<Filter> filterList) {
+//		this.filterList = filterList;
+//	}
 
 	/**
 	 *

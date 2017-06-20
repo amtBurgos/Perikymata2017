@@ -17,13 +17,18 @@ package es.ubu.lsi.perikymata;
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.ConnectException;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Optional;
 import java.util.Properties;
@@ -32,26 +37,29 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
+import javax.imageio.ImageIO;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
 import es.ubu.lsi.perikymata.MainApp;
-import es.ubu.lsi.perikymata.util.StitchingUtil;
+import es.ubu.lsi.perikymata.util.StitchingTemporaryUtil;
+import es.ubu.lsi.perikymata.util.SystemUtil;
+import es.ubu.lsi.perikymata.util.sockets.ClientSocket;
+import es.ubu.lsi.perikymata.util.sockets.Request;
 import es.ubu.lsi.perikymata.modelo.Project;
-import es.ubu.lsi.perikymata.modelo.filters.Filter;
-import es.ubu.lsi.perikymata.vista.ImageFiltersController;
 import es.ubu.lsi.perikymata.vista.ImageSelectionController;
 import es.ubu.lsi.perikymata.vista.PerikymataCountController;
 import es.ubu.lsi.perikymata.vista.RootLayoutController;
 import es.ubu.lsi.perikymata.vista.RotationCropLayoutController;
 import es.ubu.lsi.perikymata.vista.TemporaryFolderSelectionController;
-import ij.io.Opener;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingFXUtils;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Cursor;
 import javafx.scene.Parent;
@@ -68,6 +76,8 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
+import sun.misc.IOUtils;
 
 /**
  * Controller for the main application, contains the data that needs to be
@@ -90,6 +100,7 @@ public class MainApp extends Application {
 
 	/**
 	 * Gets the root layout
+	 *
 	 * @return the rootLayout
 	 */
 	public BorderPane getRootLayout() {
@@ -98,6 +109,7 @@ public class MainApp extends Application {
 
 	/**
 	 * Sets the root layout.
+	 *
 	 * @param rootLayout
 	 *            the rootLayout to set
 	 */
@@ -137,11 +149,6 @@ public class MainApp extends Application {
 	private ObservableList<String> filesList = FXCollections.observableArrayList();
 
 	/**
-	 * List of applied filters.
-	 */
-	private ObservableList<Filter> appliedFilters = FXCollections.observableArrayList();
-
-	/**
 	 * Data of a perikymata project.
 	 */
 	private Project project;
@@ -154,7 +161,7 @@ public class MainApp extends Application {
 	/**
 	 * Util for temporary folder validation.
 	 */
-	private StitchingUtil tempUtil = new StitchingUtil();
+	private StitchingTemporaryUtil tempUtil = new StitchingTemporaryUtil();
 
 	/**
 	 * Image selection breadcrumb.
@@ -192,9 +199,38 @@ public class MainApp extends Application {
 				.add(new Image(this.getClass().getResource("/rsc/Tooth-icon.png").toExternalForm()));
 		this.primaryStage.setMinHeight(600.0);
 		this.primaryStage.setMinWidth(650.0);
+
+		// Start Python Server
+		startServer();
+
 		initRootLayout();
 		showImageSelection();
+	}
 
+	/**
+	 * Starts the Python Server.
+	 */
+	public void startServer() {
+		try {
+			ArrayList<String> command = new ArrayList<String>();
+			if (SystemUtil.isWindows()) {
+				// run start server command
+				// Runtime.getRuntime().exec("PythonApp\\StartServerWindows.bat");
+				command.add("cmd.exe");
+				command.add("/c");
+				command.add("start");
+				command.add("PythonApp\\StartServerWindowsTest.bat");
+			} else {
+				// run start server command
+				// Runtime.getRuntime().exec("./PythonApp/StartServerLinux.sh");
+				command.add("/bin/bash");
+				command.add("./PythonApp/StartServerLinux.sh");
+			}
+			ProcessBuilder builder = new ProcessBuilder(command);
+			builder.start();
+		} catch (IOException e) {
+			getLogger().log(Level.SEVERE, "Exception starting server from sript", e);
+		}
 	}
 
 	/**
@@ -274,7 +310,7 @@ public class MainApp extends Application {
 				} else if (result.get() == buttonTypeOpen) {
 					cont = openProject();
 				} else {
-					System.exit(0);
+					Platform.exit();
 				}
 			}
 		}
@@ -349,6 +385,7 @@ public class MainApp extends Application {
 	 *
 	 * @param file
 	 *            XML project.
+	 * @throws IOException
 	 */
 	public void loadProjectFromFile(File file) {
 		try {
@@ -359,51 +396,57 @@ public class MainApp extends Application {
 			project = (Project) um.unmarshal(file);
 			this.primaryStage.setTitle("Perikymata - " + project.getProjectName());
 
-			// Adds the filters from the xml to the list of filters.
-			if (project.getFilterList() != null) {
-				this.getAppliedFilters().addAll(project.getFilterList());
-			}
-
 			// Adds the Full image to the project (if exists)
 			File fullImageFile = Paths.get(file.getParent(), "Full_Image", "Full_Image.png").toFile();
 			if (fullImageFile.exists()) {
-				java.awt.Image full = new Opener().openImage(fullImageFile.getPath()).getImage();
-				setFullImage(SwingFXUtils.toFXImage((BufferedImage) full, null));
+				try {
+					BufferedImage full = ImageIO.read(fullImageFile);
+					setFullImage(SwingFXUtils.toFXImage(full, null));
 
-				// Adds the cropped image to the project (if exists)
-				File croppedImageFile = Paths.get(file.getParent(), "Cropped_Image", "Cropped_Image.png").toFile();
-				if (croppedImageFile.exists()) {
-					java.awt.Image cropped = new Opener().openImage(croppedImageFile.getAbsolutePath()).getImage();
-					setCroppedImage(SwingFXUtils.toFXImage((BufferedImage) cropped, null));
+					// Adds the cropped image to the project (if exists)
+					File croppedImageFile = Paths.get(file.getParent(), "Cropped_Image", "Cropped_Image.png").toFile();
+					if (croppedImageFile.exists()) {
+						BufferedImage cropped = ImageIO.read(croppedImageFile);
+						setCroppedImage(SwingFXUtils.toFXImage(cropped, null));
 
-					// Adds the filtered image to the project (if exists)
-					File filteredImageFile = Paths.get(file.getParent(), "Cropped_Image", "Filtered_Image.png")
-							.toFile();
-					if (filteredImageFile.exists()) {
-						java.awt.Image filtered = new Opener().openImage(filteredImageFile.getAbsolutePath())
-								.getImage();
-						setFilteredImage(SwingFXUtils.toFXImage((BufferedImage) filtered, null));
+						// Adds the filtered image to the project (if exists)
+						File filteredImageFile = Paths.get(file.getParent(), "Cropped_Image", "Filtered_Image.png")
+								.toFile();
+						if (filteredImageFile.exists()) {
+
+							BufferedImage filtered = ImageIO.read(filteredImageFile);
+							setFilteredImage(SwingFXUtils.toFXImage(filtered, null));
+
+						} else {
+							setFilteredImage(null);
+						}
+
+						// Adds the filtered overlapped image to the project (if
+						// exists)
+						File filteredOverlappedImageFile = Paths
+								.get(file.getParent(), "Cropped_Image", "FilteredOverlapped_Image.png").toFile();
+						if (filteredOverlappedImageFile.exists()) {
+							BufferedImage filteredOverlapped = ImageIO.read(filteredOverlappedImageFile);
+							setFilteredOverlappedImage(SwingFXUtils.toFXImage(filteredOverlapped, null));
+
+						} else {
+							setFilteredOverlappedImage(null);
+						}
+
 					} else {
+						// If doesn't exists we set it to null
+						setCroppedImage(null);
 						setFilteredImage(null);
-					}
-
-					// Adds the filtered overlapped image to the project (if
-					// exists)
-					File filteredOverlappedImageFile = Paths
-							.get(file.getParent(), "Cropped_Image", "FilteredOverlapped_Image.png").toFile();
-					if (filteredOverlappedImageFile.exists()) {
-						java.awt.Image filteredOverlapped = new Opener()
-								.openImage(filteredOverlappedImageFile.getAbsolutePath()).getImage();
-						setFilteredOverlappedImage(SwingFXUtils.toFXImage((BufferedImage) filteredOverlapped, null));
-					} else {
 						setFilteredOverlappedImage(null);
 					}
-
-				} else {
-					// If doesn't exists we set it to null
-					setCroppedImage(null);
-					setFilteredImage(null);
-					setFilteredOverlappedImage(null);
+				} catch (IOException e) {
+					this.getLogger().log(Level.SEVERE, "Exception occur loading images.", e);
+					Alert alert = new Alert(Alert.AlertType.ERROR);
+					alert.setTitle("Internal error.");
+					alert.setHeaderText("Error loading images.\n");
+					alert.setContentText("This application will close now, please try again.\n");
+					alert.showAndWait();
+					System.exit(-1);
 				}
 
 			}
@@ -485,34 +528,6 @@ public class MainApp extends Application {
 	}
 
 	/**
-	 * Shows the Filter Application Window.
-	 */
-	public void showImageFilters() {
-		try {
-			// Loads the FXML view.
-			FXMLLoader loader = new FXMLLoader();
-			loader.setLocation(MainApp.class.getResource("vista/ImageFilters.fxml"));
-			AnchorPane imageFilters = (AnchorPane) loader.load();
-
-			// Shows this layout in the center of the rootLayout.
-			rootLayout.setCenter(imageFilters);
-
-			// Gives a mainapp's reference to the controller of the layout.
-			ImageFiltersController controller = loader.getController();
-			controller.setMainApp(this);
-
-		} catch (IOException e) {
-			this.getLogger().log(Level.SEVERE, "Exception occur loading imageFilters Stage.", e);
-			Alert alert = new Alert(Alert.AlertType.INFORMATION);
-			alert.setTitle("Internal error.");
-			alert.setHeaderText("Error loading image filtering stage.\n");
-			alert.setContentText("This application will close now, please try again.\n");
-			alert.showAndWait();
-			System.exit(-1);
-		}
-	}
-
-	/**
 	 * Shows the Rotation Window.
 	 */
 	public void showRotationCrop() {
@@ -550,9 +565,8 @@ public class MainApp extends Application {
 		try {
 			// Loads the FXML view.
 			FXMLLoader loader = new FXMLLoader();
-			loader.setLocation(MainApp.class.getResource("vista/PerikymataCountV2.fxml"));
+			loader.setLocation(MainApp.class.getResource("vista/PerikymataCount.fxml"));
 
-			// AnchorPane perikymataCount = (AnchorPane) loader.load();
 			BorderPane perikymataCount = (BorderPane) loader.load();
 
 			// Shows this layout in the center of the rootLayout.
@@ -622,13 +636,6 @@ public class MainApp extends Application {
 	 */
 	public ObservableList<String> getFilesList() {
 		return filesList;
-	}
-
-	/**
-	 * @return the appliedFilters
-	 */
-	public ObservableList<Filter> getAppliedFilters() {
-		return appliedFilters;
 	}
 
 	/**
@@ -895,12 +902,73 @@ public class MainApp extends Application {
 	 * project.
 	 */
 	public void clearData() {
-		this.appliedFilters.clear();
 		this.filesList.clear();
 		this.filteredImage = null;
+		this.filteredOverlappedImage = null;
 		this.fullImage = null;
 		this.croppedImage = null;
 		this.project = null;
 		this.projectPath = null;
+	}
+
+	/**
+	 * Stops the application.
+	 */
+	@Override
+	public void stop() throws Exception {
+		closeApplication();
+	}
+
+	/**
+	 * Closes the application and the python server.
+	 */
+	public void closeApplication() {
+		Thread thread = new Thread(new Runnable() {
+			@Override
+			public void run() {
+
+				try {
+					ClientSocket client = new ClientSocket();
+					// Close server request
+					Request request = new Request(Request.CLOSE_SERVER, "CLOSE_SERVER");
+					client.send(request);
+					String response = client.receive();
+					client.close();
+					if (!response.equals("OK")) {
+						throw new Exception("Error closing server. Response not OK");
+					}
+					Platform.exit();
+				} catch (ConnectException e) {
+					getLogger().log(Level.SEVERE, "Exception occur closing server.", e);
+					Platform.runLater(() -> {
+						Alert alert = new Alert(Alert.AlertType.ERROR);
+						alert.setTitle("Error closing server");
+						alert.setHeaderText("Can't close server\n");
+						alert.setContentText("Server not running. This application will close.");
+						Optional<ButtonType> option = alert.showAndWait();
+
+						if (option.get().equals(ButtonType.OK)) {
+							System.exit(-1);
+						}
+
+					});
+				} catch (Exception e) {
+					getLogger().log(Level.SEVERE, "Exception occur closing server.", e);
+					Platform.runLater(() -> {
+						Alert alert = new Alert(Alert.AlertType.ERROR);
+						alert.setTitle("Error closing server");
+						alert.setHeaderText("Can't close server.\n");
+						alert.setContentText("Can't close server. This application will close.");
+						Optional<ButtonType> option = alert.showAndWait();
+
+						if (option.get().equals(ButtonType.OK)) {
+							System.exit(-1);
+						}
+
+					});
+				}
+			}
+		});
+		thread.start();
 	}
 }

@@ -27,12 +27,12 @@ import java.util.List;
 import org.junit.Rule;
 import org.junit.Test;
 
-import es.ubu.lsi.perikymata.util.ProfileUtil;
+import es.ubu.lsi.perikymata.util.ProfileUtilV2;
 import es.ubu.lsi.perikymata.vista.PerikymataCountController;
 
 /**
  * Tests the method that gets all the coordinates between two points.
- * 
+ *
  * @author Sergio Chico Carrancio
  */
 public class BresenhamTest {
@@ -46,7 +46,7 @@ public class BresenhamTest {
 			IllegalArgumentException, InvocationTargetException {
 		// It is a private method, so we make it accessible to be able to test
 		// it.
-		Method method = ProfileUtil.class.getDeclaredMethod("Bresenham", int.class, int.class, int.class, int.class);
+		Method method = ProfileUtilV2.class.getDeclaredMethod("Bresenham", int.class, int.class, int.class, int.class);
 		method.setAccessible(true);
 		List<int[]> lista = (List<int[]>) method.invoke(new PerikymataCountController(), 0, 0, 3, 3);
 		List<int[]> resultado = new ArrayList<>();
