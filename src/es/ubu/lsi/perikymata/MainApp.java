@@ -215,11 +215,11 @@ public class MainApp extends Application {
 			ArrayList<String> command = new ArrayList<String>();
 			if (SystemUtil.isWindows()) {
 				// run start server command
-				// Runtime.getRuntime().exec("PythonApp\\StartServerWindows.bat");
 				command.add("cmd.exe");
 				command.add("/c");
 				command.add("start");
 				command.add("PythonApp\\StartServerWindowsTest.bat");
+				//command.add("PythonApp\\StartServerWindowsTest.bat");
 			} else {
 				// run start server command
 				// Runtime.getRuntime().exec("./PythonApp/StartServerLinux.sh");
