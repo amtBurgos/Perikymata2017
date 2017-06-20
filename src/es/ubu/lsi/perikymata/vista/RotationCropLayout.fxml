@@ -64,7 +64,7 @@
                   </HBox>
                   <ToggleButton fx:id="measureLineBtn" mnemonicParsing="false" onAction="#handleMeasure" text="Measure Line">
                      <tooltip>
-                        <Tooltip text="Press and drap into the image to set the line of the measure" />
+                        <Tooltip text="Press and drag into the image to set the line of the measure" />
                      </tooltip>
                   </ToggleButton>
                   <Button mnemonicParsing="false" onAction="#handleMeasureUnits" text="Measure Unit and Value">

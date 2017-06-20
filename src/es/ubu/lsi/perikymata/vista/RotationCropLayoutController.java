@@ -675,10 +675,18 @@ public class RotationCropLayoutController {
 		// Save cropped image to disk, and load it in the image
 		// preview
 		File outputfile = new File(
-				mainApp.getProjectPath() + File.separator + "Cropped_Image" + File.separator + "Cropped_image.png");
+				mainApp.getProjectPath() + File.separator + "Cropped_Image" + File.separator + "Cropped_Image.png");
 		outputfile.setWritable(true, false);
 		ImageIO.write(img, "png", outputfile);
+
+		// Save where the deciles start and end in the image
+		mainApp.getProject().setxDecileStart(0d);
+		mainApp.getProject().setxDecileEnd(previewImage.getImage().getWidth());
 		mainApp.setCroppedImage(previewImage.getImage());
+
+		// Remove previous filtered image if there was any
+		mainApp.setFilteredImage(null);
+		mainApp.setFilteredOverlappedImage(null);
 	}
 
 	/**
@@ -800,6 +808,7 @@ public class RotationCropLayoutController {
 	 */
 	public void setMainApp(MainApp mainApp) {
 		this.mainApp = mainApp;
+		//Full Screen
 		mainApp.getPrimaryStage().setMaximized(true);
 		if (mainApp.getFullImage() != null) {
 			if (mainApp.getCroppedImage() != null) {

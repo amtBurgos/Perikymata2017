@@ -48,7 +48,7 @@ import javafx.scene.control.CheckBox;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-import es.ubu.lsi.perikymata.util.StitchingUtil;
+import es.ubu.lsi.perikymata.util.StitchingTemporaryUtil;
 
 /**
  * Controller for the select temporary folder window. Contains method for
@@ -127,7 +127,7 @@ public class TemporaryFolderSelectionController {
 	/**
 	 * Util for validate temporary paths.
 	 */
-	private StitchingUtil stitchingUtil;
+	private StitchingTemporaryUtil stitchingUtil;
 
 	/**
 	 * Initializes the controller class. This method is automatically called
@@ -135,7 +135,7 @@ public class TemporaryFolderSelectionController {
 	 */
 	@FXML
 	private void initialize() {
-		stitchingUtil = new StitchingUtil();
+		stitchingUtil = new StitchingTemporaryUtil();
 		cbTempFolder.setAllowIndeterminate(false);
 		defaultTempFolder = System.getProperty("java.io.tmpdir");
 	}

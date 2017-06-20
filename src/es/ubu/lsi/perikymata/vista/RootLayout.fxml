@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.web.*?>
 <?import javafx.scene.control.*?>
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
@@ -20,7 +23,6 @@
           <Menu mnemonicParsing="false" text="Stage">
             <items>
               <MenuItem mnemonicParsing="false" onAction="#windowImageSelection" text="Select images" />
-                  <MenuItem mnemonicParsing="false" onAction="#windowImageFilters" text="Apply filters" />
                   <MenuItem mnemonicParsing="false" onAction="#windowRotationCrop" text="Rotate and crop" />
                   <MenuItem mnemonicParsing="false" onAction="#windowPerikymataCount" text="Count perikymata" />
             </items>
@@ -38,4 +40,47 @@
         </menus>
       </MenuBar>
    </top>
+   <bottom>
+      <AnchorPane prefHeight="30.0" BorderPane.alignment="CENTER">
+         <children>
+            <HBox prefHeight="30.0" AnchorPane.leftAnchor="1.0" AnchorPane.rightAnchor="0.0">
+               <children>
+                  <Label fx:id="ImageSelectionBreadcrumb" onMouseClicked="#windowImageSelection" text="Image Selection &gt; ">
+                     <HBox.margin>
+                        <Insets left="15.0" />
+                     </HBox.margin>
+                     <tooltip>
+                        <Tooltip text="Go to image selection window" />
+                     </tooltip>
+                     <font>
+                        <Font size="13.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="RotationAndCropBreadcrumb" layoutX="25.0" layoutY="10.0" onMouseClicked="#windowRotationCrop" text="Rotation &amp; Crop &gt; ">
+                     <tooltip>
+                        <Tooltip text="Go to image rotation and crop window" />
+                     </tooltip>
+                     <font>
+                        <Font size="13.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="PerikymataCountBreadcrumb" layoutX="125.0" layoutY="10.0" onMouseClicked="#windowPerikymataCount" text="Perikymata Count ">
+                     <tooltip>
+                        <Tooltip text="Go to perikymata count window" />
+                     </tooltip>
+                     <font>
+                        <Font size="13.0" />
+                     </font>
+                  </Label>
+               </children>
+            </HBox>
+         </children>
+         <BorderPane.margin>
+            <Insets />
+         </BorderPane.margin>
+         <padding>
+            <Insets left="10.0" />
+         </padding>
+      </AnchorPane>
+   </bottom>
 </BorderPane>

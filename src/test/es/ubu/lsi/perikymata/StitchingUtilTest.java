@@ -29,7 +29,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import es.ubu.lsi.perikymata.util.StitchingUtil;
+import es.ubu.lsi.perikymata.util.StitchingTemporaryUtil;
 
 /**
  * Test for StitchingUtil class.
@@ -42,7 +42,7 @@ public class StitchingUtilTest {
 	/**
 	 * Test object.
 	 */
-	private StitchingUtil util;
+	private StitchingTemporaryUtil util;
 
 	/**
 	 * Operations executed before every test.
@@ -51,7 +51,7 @@ public class StitchingUtilTest {
 	 */
 	@Before
 	public void setUp() throws Exception {
-		util = new StitchingUtil();
+		util = new StitchingTemporaryUtil();
 	}
 
 	/**

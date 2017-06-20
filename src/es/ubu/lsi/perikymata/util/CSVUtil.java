@@ -28,8 +28,9 @@ import es.ubu.lsi.perikymata.modelo.Measure;
 
 /**
  * Util to write the Perikymata data into a CSV
- * 
+ *
  * @author Sergio Chico Carrancio
+ * @author Andres Miguel Teran
  */
 public class CSVUtil {
 
@@ -40,16 +41,16 @@ public class CSVUtil {
 	 * "Project name"
 	 * Measure unit,"measure unit"
 	 * Decile size,"measure size, calculated in the measure unit"
-	 * 
+	 *
 	 * Decile,Coordinates,Distance to previous
 	 * "number of decile","X Y coordinates","Distance in the measure unit to previous"
-	 * 
+	 *
 	 * Perikymata per decile
 	 * 1,2,3,4,5,6,7,8,9,10
 	 * "decile 1","decile 2",...
 	 * ----------------------------
 	 * </pre>
-	 * 
+	 *
 	 * @param mainApp
 	 *            Reference to the main application, used to retrieve data.
 	 * @param measure
@@ -106,7 +107,9 @@ public class CSVUtil {
 		// Decile data header
 		writer.append("Decile");
 		writer.append(',');
-		writer.append("Coordinates");
+		writer.append("CoordinateX");
+		writer.append(',');
+		writer.append("CoordinateY");
 		writer.append(',');
 		writer.append("Distance to previous");
 		writer.append('\n');
@@ -180,7 +183,7 @@ public class CSVUtil {
 
 	/**
 	 * Writes the value
-	 * 
+	 *
 	 * @param writer
 	 *            CSV file writer.
 	 * @param decile
@@ -205,8 +208,7 @@ public class CSVUtil {
 		writer.append(Integer.toString(decile + 1));
 		writer.append(',');
 
-		// Coordinates of the perikymata
-		writer.append(Integer.toString(peaksCoords.get(currentPerikymataIndex)[0]) + " "
+		writer.append(Integer.toString(peaksCoords.get(currentPerikymataIndex)[0]) + ","
 				+ Integer.toString(peaksCoords.get(currentPerikymataIndex)[1]));
 		writer.append(',');
 
@@ -224,7 +226,7 @@ public class CSVUtil {
 
 	/**
 	 * Orders the List of coordinates by the first component(x).
-	 * 
+	 *
 	 * @param peaks
 	 *            List of the coordinates of the perikymata
 	 */

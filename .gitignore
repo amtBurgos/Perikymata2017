@@ -44,5 +44,17 @@ ImageProcessingPython/build/*
 ImageProcessingPython/cmd.exe
 ImageProcessingPython/dist/*
 *.spec
-!src/rsc/Square-icon.png
+!src/rsc/*
 src/es/ubu/lsi/perikymata/vista/Auxiliar.java
+errorLog_2017-05-18_02-16-13.log.1
+PythonApp/build/*
+PythonApp/dist/*
+src/rsc/Thumbs.db
+build/build.xml
+prototypes/ExtractLines/Lenna2.jpg
+prototypes/.ipynb_checkpoints/Lenna Images-checkpoint.ipynb
+PythonApp/cmd.exe
+PythonApp/cmd.exe
+Ejemplos/*
+prototypes/ExtractLines/Lenna Images.ipynb
+prototypes/ExtractLines/Lenna Images.ipynb

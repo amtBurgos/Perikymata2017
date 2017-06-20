@@ -1,5 +1,8 @@
 Tooth icon: 	 http://www.iconarchive.com/show/outline-icons-by-iconsmind/Tooth-icon.html
 Crop image icon: http://www.iconarchive.com/show/outline-icons-by-iconsmind/Crop-2-icon.html
+Editing line icon: http://www.iconarchive.com/show/ios7-icons-by-icons8/Editing-Line-icon.html
+Zoom plus icon: http://www.iconarchive.com/show/gentle-edges-icons-by-pixelkit/Zoom-Plus-icon.html
+Zoom minus icon: http://www.iconarchive.com/show/gentle-edges-icons-by-pixelkit/Zoom-Minus-icon.html
 
 These icons have been made by "IconsMind" and are licensed as follows:
 

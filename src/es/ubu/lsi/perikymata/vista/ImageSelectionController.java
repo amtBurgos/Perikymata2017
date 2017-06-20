@@ -29,11 +29,13 @@ import java.util.ArrayList;
 
 import java.util.List;
 import java.util.logging.Level;
-import java.util.regex.Pattern;
+
+import javax.imageio.ImageIO;
 
 import es.ubu.lsi.perikymata.MainApp;
-import es.ubu.lsi.perikymata.util.StitchingUtil;
-import ij.io.Opener;
+import es.ubu.lsi.perikymata.util.StitchingTemporaryUtil;
+import es.ubu.lsi.perikymata.util.SystemUtil;
+//import ij.io.Opener;
 import javafx.application.Platform;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
@@ -50,6 +52,7 @@ import javafx.stage.FileChooser;
  * Controller for the layout that is used to the image fragments.
  *
  * @author Sergio Chico Carrancio
+ * @author Andres Miguel Teran
  *
  */
 public class ImageSelectionController {
@@ -69,7 +72,7 @@ public class ImageSelectionController {
 	/**
 	 * Utility for prepare the application for stitching.
 	 */
-	private StitchingUtil stitchingUtil;
+	private StitchingTemporaryUtil stitchingUtil;
 
 	/**
 	 * Reference to the main application.
@@ -99,7 +102,7 @@ public class ImageSelectionController {
 	private void initialize() {
 		previewImage.fitHeightProperty().bind(((Pane) previewImage.getParent()).heightProperty());
 		previewImage.fitWidthProperty().bind(((Pane) previewImage.getParent()).widthProperty());
-		stitchingUtil = new StitchingUtil();
+		stitchingUtil = new StitchingTemporaryUtil();
 
 		// Loads loading gif.
 		loading.setImage(new Image(this.getClass().getResource("/rsc/482.gif").toExternalForm()));
@@ -113,8 +116,10 @@ public class ImageSelectionController {
 	private void handleOpen() {
 		FileChooser fileChooser = new FileChooser();
 
-		// Set extension filter
-		FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("All files (*.*)", "*.*");
+		// Set extension filter for image files
+		FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter(
+				"Image files (*.png, *.jpg, *.jpeg, *.tif, *.tiff, *.bmp)", "*.png", "*.jpg", "*.jpeg", "*.tif",
+				"*.tiff", "*.bmp");
 		fileChooser.getExtensionFilters().add(extFilter);
 
 		// Show open file dialog
@@ -122,10 +127,18 @@ public class ImageSelectionController {
 
 		if (file != null) {
 
-			java.awt.Image full = new Opener().openImage(file.getParent(), file.getName()).getImage();
+			// java.awt.Image full = new Opener().openImage(file.getParent(),
+			// file.getName()).getImage();
+			BufferedImage full = null;
+			try {
 
-			try (FileOutputStream fileStream = new FileOutputStream(
-					new File(Paths.get(mainApp.getProjectPath(), "Full_Image", "Full_Image.png").toString()))) {
+				full = ImageIO.read(file);
+
+				// try (FileOutputStream fileStream = new FileOutputStream(
+				// new File(Paths.get(mainApp.getProjectPath(), "Full_Image",
+				// "Full_Image.png").toString()))) {
+				FileOutputStream fileStream = new FileOutputStream(
+						new File(Paths.get(mainApp.getProjectPath(), "Full_Image", "Full_Image.png").toString()));
 
 				Files.copy(file.toPath(), fileStream);
 			} catch (IOException e) {
@@ -138,10 +151,10 @@ public class ImageSelectionController {
 				alert.showAndWait();
 			}
 
-			mainApp.setFullImage(SwingFXUtils.toFXImage((BufferedImage) full, null));
+			mainApp.setFullImage(SwingFXUtils.toFXImage(full, null));
 			previewImage.setImage(mainApp.getFullImage());
-			mainApp.setFilteredImage(mainApp.getFullImage());
-
+			// AMT
+			// mainApp.setFilteredImage(mainApp.getFullImage());
 		}
 	}
 
@@ -152,8 +165,10 @@ public class ImageSelectionController {
 	private void handleOpenMultiple() {
 		FileChooser fileChooser = new FileChooser();
 
-		// Set extension filter
-		FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("All files (*.*)", "*.*");
+		// Set extension filter for image files
+		FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter(
+				"Image files (*.png, *.jpg, *.jpeg, *.tif, *.tiff, *.bmp)", "*.png", "*.jpg", "*.jpeg", "*.tif",
+				"*.tiff", "*.bmp");
 		fileChooser.getExtensionFilters().add(extFilter);
 
 		// Show open file dialog
@@ -197,8 +212,8 @@ public class ImageSelectionController {
 		Image i = SwingFXUtils.toFXImage(op.filter(im, null), null);
 		previewImage.setImage(i);
 		mainApp.setFullImage(i);
-		mainApp.setFilteredImage(i);
-
+		// AMT
+		// mainApp.setFilteredImage(i);
 	}
 
 	/**
@@ -260,8 +275,8 @@ public class ImageSelectionController {
 						tempFolder = System.getProperty("java.io.tmpdir");
 					}
 
-					if (!tempFolder.substring(tempFolder.length() - 1).equals(System.getProperty("file.separator"))) {
-						tempFolder += System.getProperty("file.separator");
+					if (!tempFolder.substring(tempFolder.length() - 1).equals(File.separator)) {
+						tempFolder += File.separator;
 					}
 
 					File tempFullImage = new File(tempFolder + "Full_Image.png");
@@ -269,18 +284,15 @@ public class ImageSelectionController {
 							Paths.get(mainApp.getProjectPath(), "Full_Image", "Full_Image.png").toString());
 					boolean copied = stitchingUtil.copyFile(tempFullImage, finalFullImage, true, false);
 					if (copied) {
-						java.awt.Image full = new Opener()
-								.openImage(
-										Paths.get(mainApp.getProjectPath(), "Full_Image", "Full_Image.png").toString())
-								.getImage();
+						BufferedImage full = ImageIO.read(new File(
+								Paths.get(mainApp.getProjectPath(), "Full_Image", "Full_Image.png").toString()));
 
 						changeStatus("Stitching completed!");
 						loading.setVisible(false);
 						mainApp.getRootLayout().setDisable(false);
 						Platform.runLater(() -> {
-							mainApp.setFullImage(SwingFXUtils.toFXImage((BufferedImage) full, null));
-							this.previewImage.setImage(SwingFXUtils.toFXImage((BufferedImage) full, null));
-							mainApp.setFilteredImage(SwingFXUtils.toFXImage((BufferedImage) full, null));
+							mainApp.setFullImage(SwingFXUtils.toFXImage(full, null));
+							this.previewImage.setImage(SwingFXUtils.toFXImage(full, null));
 						});
 					} else {
 						changeStatus("Failed to load full image");
@@ -322,14 +334,14 @@ public class ImageSelectionController {
 		File sourceFile = null;
 		InputStream sourceInputStream = null;
 		File tempFile = null;
-		String[] nameAndExtension = getNameAndExtension(path, isResource);
+		String[] nameAndExtension = stitchingUtil.getNameAndExtension(path, isResource);
 
 		if (tempFolder.toUpperCase().equals("DEFAULT")) {
 			tempFolder = System.getProperty("java.io.tmpdir");
 		}
 
-		if (!tempFolder.substring(tempFolder.length() - 1).equals(System.getProperty("file.separator"))) {
-			tempFolder += System.getProperty("file.separator");
+		if (!tempFolder.substring(tempFolder.length() - 1).equals(File.separator)) {
+			tempFolder += File.separator;
 		}
 
 		tempFile = new File(tempFolder + nameAndExtension[0] + "." + nameAndExtension[1]);
@@ -341,24 +353,6 @@ public class ImageSelectionController {
 			stitchingUtil.copyFile(sourceFile, tempFile, false, true);
 		}
 		return tempFile.getAbsolutePath();
-	}
-
-	/**
-	 * Get the name and extension of the image.
-	 *
-	 * @param path
-	 *            of the image
-	 * @return string array with the name and extension of the image
-	 */
-	private String[] getNameAndExtension(String path, boolean isResource) {
-		String[] splittedFileName = null;
-		if (isResource) {
-			splittedFileName = path.split(Pattern.quote("/"));
-		} else {
-			splittedFileName = path.split(Pattern.quote(System.getProperty("file.separator")));
-		}
-		String[] nameAndExtension = splittedFileName[splittedFileName.length - 1].split(Pattern.quote("."));
-		return nameAndExtension;
 	}
 
 	/**
@@ -377,18 +371,18 @@ public class ImageSelectionController {
 			tempFolder = System.getProperty("java.io.tmpdir");
 		}
 
-		if (!tempFolder.substring(tempFolder.length() - 1).equals(System.getProperty("file.separator"))) {
-			tempFolder += System.getProperty("file.separator");
+		if (!tempFolder.substring(tempFolder.length() - 1).equals(File.separator)) {
+			tempFolder += File.separator;
 		}
 
 		try {
-			if (System.getProperty("os.name").toUpperCase().contains("WIN")) {
+			if (SystemUtil.isWindows()) {
 				resourcePath += "Stitching32.exe";
 			} else {
-				if (System.getProperty("os.arch").contains("64")) {
-					resourcePath += "Stitching64Dinamic.ubu";
+				if (SystemUtil.is64bits()) {
+					resourcePath += "Stitching64.ubu";
 				} else {
-					resourcePath += "Stitching32Dinamic.ubu";
+					resourcePath += "Stitching32.ubu";
 				}
 			}
 

@@ -16,9 +16,17 @@ package es.ubu.lsi.perikymata.vista;
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
+
+import java.net.ConnectException;
+import java.util.Optional;
+import java.util.logging.Level;
 import es.ubu.lsi.perikymata.MainApp;
+import es.ubu.lsi.perikymata.util.sockets.ClientSocket;
+import es.ubu.lsi.perikymata.util.sockets.Request;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 
 /**
  * Controller for the rootLayout. The BorderLayout contains a common menu bar
@@ -54,15 +62,6 @@ public class RootLayoutController {
 	@FXML
 	private void windowImageSelection() {
 		mainApp.showImageSelection();
-	}
-
-	/**
-	 * Handler that calls the main controller and changes the content of the
-	 * graphic interface to the Image filters application stage.
-	 */
-	@FXML
-	private void windowImageFilters() {
-		mainApp.showImageFilters();
 	}
 
 	/**
@@ -117,8 +116,15 @@ public class RootLayoutController {
 		Alert alert = new Alert(Alert.AlertType.INFORMATION);
 		alert.setTitle("Paleontological analysis of dental images - Perikymata");
 		alert.setHeaderText("About");
-		alert.setContentText("Author: Sergio Chico Carrancio\n" + "Tutor: Dr. Jose Francisco Diez Pastor\n"
-				+ "Tutor: Dr Raul Marticorena Sanchez  \n" + "Universidad de Burgos, July 2016\n\n\n"
+		alert.setContentText("v2.0\n" + "Author: Andrés Miguel Terán\n" + "Tutor: Dr. Jose Francisco Diez Pastor\n"
+				+ "Tutor: Dr Raul Marticorena Sanchez  \n" + "Universidad de Burgos, July 2017\n"
+				+ "Perikymata v2.0 (Analisis Paleontologico de piezas dentales 2.0)\n"
+				+ "Perikymata v2.0 comes with ABSOLUTELY NO WARRANTY;\n"
+				+ "for details view the file PERIKYMATA_LICENSE.txt\n"
+				+ "This is free software, and you are welcome to redistribute it under "
+				+ "the conditions found in the license." + "\n\n" + "v1.0\n" + "Author: Sergio Chico Carrancio\n"
+				+ "Tutor: Dr. Jose Francisco Diez Pastor\n" + "Tutor: Dr Raul Marticorena Sanchez  \n"
+				+ "Universidad de Burgos, July 2016\n"
 				+ "Perikymata v1.0 (Analisis Paleontologico de piezas dentales)\n"
 				+ "Copyright (C) 2016 Sergio Chico Carrancio.\n"
 				+ "Perikymata v1.0 comes with ABSOLUTELY NO WARRANTY;\n"
@@ -137,10 +143,11 @@ public class RootLayoutController {
 	}
 
 	/**
-	 * Closes the application.
+	 * Closes the application and the python server.
 	 */
 	@FXML
 	private void handleExit() {
-		System.exit(0);
+		mainApp.closeApplication();
 	}
+
 }
