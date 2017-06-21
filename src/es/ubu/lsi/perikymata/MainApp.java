@@ -310,7 +310,7 @@ public class MainApp extends Application {
 				} else if (result.get() == buttonTypeOpen) {
 					cont = openProject();
 				} else {
-					Platform.exit();
+					closeApplication();
 				}
 			}
 		}
@@ -937,7 +937,7 @@ public class MainApp extends Application {
 					if (!response.equals("OK")) {
 						throw new Exception("Error closing server. Response not OK");
 					}
-					Platform.exit();
+					System.exit(-1);
 				} catch (ConnectException e) {
 					getLogger().log(Level.SEVERE, "Exception occur closing server.", e);
 					Platform.runLater(() -> {
