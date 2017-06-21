@@ -264,7 +264,7 @@
             </VBox>
          </children>
          <BorderPane.margin>
-            <Insets top="90.0" />
+            <Insets top="95.0" />
          </BorderPane.margin></AnchorPane>
    </right>
 </BorderPane>
