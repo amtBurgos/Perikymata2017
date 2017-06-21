@@ -1,32 +1,8 @@
 package es.ubu.lsi.perikymata.vista;
 
-/**
- * License: GPL
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License 2
- * as published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
- */
-
-import java.net.ConnectException;
-import java.util.Optional;
-import java.util.logging.Level;
 import es.ubu.lsi.perikymata.MainApp;
-import es.ubu.lsi.perikymata.util.sockets.ClientSocket;
-import es.ubu.lsi.perikymata.util.sockets.Request;
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
 
 /**
  * Controller for the rootLayout. The BorderLayout contains a common menu bar

@@ -17,14 +17,11 @@ package es.ubu.lsi.perikymata;
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 import java.awt.image.BufferedImage;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.ConnectException;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
@@ -43,12 +40,11 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
-import es.ubu.lsi.perikymata.MainApp;
+import es.ubu.lsi.perikymata.modelo.Project;
 import es.ubu.lsi.perikymata.util.StitchingTemporaryUtil;
 import es.ubu.lsi.perikymata.util.SystemUtil;
 import es.ubu.lsi.perikymata.util.sockets.ClientSocket;
 import es.ubu.lsi.perikymata.util.sockets.Request;
-import es.ubu.lsi.perikymata.modelo.Project;
 import es.ubu.lsi.perikymata.vista.ImageSelectionController;
 import es.ubu.lsi.perikymata.vista.PerikymataCountController;
 import es.ubu.lsi.perikymata.vista.RootLayoutController;
@@ -59,7 +55,6 @@ import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingFXUtils;
-import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Cursor;
 import javafx.scene.Parent;
@@ -76,8 +71,6 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
-import sun.misc.IOUtils;
 
 /**
  * Controller for the main application, contains the data that needs to be
