@@ -92,7 +92,7 @@ public class RootLayoutController {
 		Alert alert = new Alert(Alert.AlertType.INFORMATION);
 		alert.setTitle("Paleontological analysis of dental images - Perikymata");
 		alert.setHeaderText("About");
-		alert.setContentText("v2.0\n" + "Author: Andrés Miguel Terán\n" + "Tutor: Dr. Jose Francisco Diez Pastor\n"
+		alert.setContentText("v2.0\n" + "Author: Andrï¿½s Miguel Terï¿½n\n" + "Tutor: Dr. Jose Francisco Diez Pastor\n"
 				+ "Tutor: Dr Raul Marticorena Sanchez  \n" + "Universidad de Burgos, July 2017\n"
 				+ "Perikymata v2.0 (Analisis Paleontologico de piezas dentales 2.0)\n"
 				+ "Perikymata v2.0 comes with ABSOLUTELY NO WARRANTY;\n"
@@ -116,6 +116,18 @@ public class RootLayoutController {
 	@FXML
 	private void handleTempFolder() {
 		mainApp.showTemporaryFolderSelection(false);
+	}
+
+	/**
+	 * Set full screen view.
+	 */
+	@FXML
+	private void handleFullScreen() {
+		if (mainApp.getPrimaryStage().isMaximized()) {
+			mainApp.getPrimaryStage().setMaximized(false);
+		} else {
+			mainApp.getPrimaryStage().setMaximized(true);
+		}
 	}
 
 	/**

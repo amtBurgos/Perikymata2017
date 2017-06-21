@@ -30,6 +30,7 @@
             <Menu mnemonicParsing="false" text="Configuration">
                <items>
                   <MenuItem mnemonicParsing="false" onAction="#handleTempFolder" text="Set temporary folder" />
+                  <MenuItem mnemonicParsing="false" onAction="#handleFullScreen" text="Full screen" />
                </items>
             </Menu>
           <Menu mnemonicParsing="false" text="Help">
