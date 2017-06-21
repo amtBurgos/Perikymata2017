@@ -286,7 +286,7 @@ public class MainApp extends Application {
 			
 			//Set minimum width and height
 			this.primaryStage.setMinHeight(600.0);
-			this.primaryStage.setMinWidth(650.0);
+			this.primaryStage.setMinWidth(670.0);
 			
 		} catch (IOException e) {
 			this.getLogger().log(Level.SEVERE, "Exception occur loading the root layout.", e);

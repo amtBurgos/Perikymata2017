@@ -693,7 +693,7 @@ public class PerikymataCountController {
 		} else {
 			// Close advanced filter layout
 			advancedFilterVBox.setVisible(false);
-			leftAnchorPane.setPrefWidth(20.0);
+			leftAnchorPane.setPrefWidth(1.0);
 
 		}
 	}

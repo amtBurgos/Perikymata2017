@@ -16,6 +16,9 @@
                </children>
             </AnchorPane>
          </content>
+         <BorderPane.margin>
+            <Insets right="20.0" />
+         </BorderPane.margin>
       </ScrollPane>
    </center>
    <top>
@@ -134,7 +137,7 @@
       </AnchorPane>
    </bottom>
    <right>
-      <AnchorPane fx:id="leftAnchorPane" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="330.0" BorderPane.alignment="CENTER">
+      <AnchorPane fx:id="leftAnchorPane" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="350.0" BorderPane.alignment="CENTER">
          <children>
             <VBox fx:id="advancedFilterVBox" spacing="10.0" AnchorPane.rightAnchor="9.0" AnchorPane.topAnchor="53.0">
                <padding>
