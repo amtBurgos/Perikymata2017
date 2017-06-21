@@ -197,7 +197,6 @@ public class MainApp extends Application {
 		this.primaryStage.setTitle("Perikymata - Unsaved Project");
 		this.primaryStage.getIcons()
 				.add(new Image(this.getClass().getResource("/rsc/Tooth-icon.png").toExternalForm()));
-		
 
 		// Start Python Server
 		startServer();
@@ -218,8 +217,8 @@ public class MainApp extends Application {
 					command.add("cmd.exe");
 					command.add("/c");
 					command.add("start");
-					command.add("PythonApp\\StartServerWindowsTest.bat");
-					// command.add("PythonApp\\StartServerWindows.bat");
+					// command.add("PythonApp\\StartServerWindowsTest.bat");
+					command.add("PythonApp\\StartServerWindows.bat");
 				} else {
 					// Run in background
 					command.add("python3");
@@ -283,11 +282,11 @@ public class MainApp extends Application {
 			controller.setMainApp(this);
 
 			primaryStage.show();
-			
-			//Set minimum width and height
+
+			// Set minimum width and height
 			this.primaryStage.setMinHeight(600.0);
 			this.primaryStage.setMinWidth(670.0);
-			
+
 		} catch (IOException e) {
 			this.getLogger().log(Level.SEVERE, "Exception occur loading the root layout.", e);
 		}
@@ -523,8 +522,6 @@ public class MainApp extends Application {
 			// Gives a mainapp's reference to the controller of the layout.
 			ImageSelectionController controller = loader.getController();
 			controller.setMainApp(this);
-			
-			
 
 		} catch (IOException e) {
 			this.getLogger().log(Level.SEVERE, "Exception occur loading imageSelection Stage.", e);
