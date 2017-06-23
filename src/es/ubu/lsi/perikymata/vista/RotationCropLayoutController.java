@@ -66,6 +66,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.StrokeLineCap;
+import javafx.stage.Stage;
 import javafx.util.Pair;
 
 /**
@@ -276,6 +277,8 @@ public class RotationCropLayoutController {
 		} catch (Exception e) {
 			mainApp.getLogger().log(Level.SEVERE, "Exception occur cropping image.", e);
 			Alert alert = new Alert(Alert.AlertType.ERROR);
+			Stage window = (Stage) alert.getDialogPane().getScene().getWindow();
+			window.getIcons().add(new Image(this.getClass().getResource("/rsc/Tooth-icon.png").toExternalForm()));
 			alert.setTitle("Error cropping image");
 			alert.setHeaderText("Can't crop image.\n");
 			alert.setContentText("Can't crop image");
@@ -304,6 +307,8 @@ public class RotationCropLayoutController {
 				} catch (Exception e) {
 					mainApp.getLogger().log(Level.SEVERE, "Exception occur rotating image.", e);
 					Alert alert = new Alert(Alert.AlertType.ERROR);
+					Stage window = (Stage) alert.getDialogPane().getScene().getWindow();
+					window.getIcons().add(new Image(this.getClass().getResource("/rsc/Tooth-icon.png").toExternalForm()));
 					alert.setTitle("Error rotating image");
 					alert.setHeaderText("Can't rotate image.\n");
 					alert.setContentText("Can't rotate image");
@@ -311,6 +316,8 @@ public class RotationCropLayoutController {
 				}
 			} else {
 				Alert alert = new Alert(Alert.AlertType.WARNING);
+				Stage window = (Stage) alert.getDialogPane().getScene().getWindow();
+				window.getIcons().add(new Image(this.getClass().getResource("/rsc/Tooth-icon.png").toExternalForm()));
 				alert.setTitle("Can't rotate image");
 				alert.setHeaderText("Invalid input.\n");
 				alert.setContentText("Please, insert a number between -40.0 and 40.0.");
@@ -478,6 +485,8 @@ public class RotationCropLayoutController {
 		} catch (Exception e) {
 			mainApp.getLogger().log(Level.SEVERE, "Exception occur rotating image.", e);
 			Alert alert = new Alert(Alert.AlertType.ERROR);
+			Stage window = (Stage) alert.getDialogPane().getScene().getWindow();
+			window.getIcons().add(new Image(this.getClass().getResource("/rsc/Tooth-icon.png").toExternalForm()));
 			alert.setTitle("Error rotating image");
 			alert.setHeaderText("Can't rotate image.\n");
 			alert.setContentText("Can't rotate image");
@@ -497,6 +506,8 @@ public class RotationCropLayoutController {
 				nextStage();
 			} else {
 				Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+				Stage window = (Stage) alert.getDialogPane().getScene().getWindow();
+				window.getIcons().add(new Image(this.getClass().getResource("/rsc/Tooth-icon.png").toExternalForm()));
 				alert.setTitle("Incompleted Operations");
 				alert.setContentText("Continue without saving?");
 				ButtonType continueBtn = new ButtonType("Continue");
@@ -528,6 +539,8 @@ public class RotationCropLayoutController {
 		} catch (Exception e) {
 			mainApp.getLogger().log(Level.SEVERE, "Exception saving project and loading next stage.", e);
 			Alert alert = new Alert(Alert.AlertType.ERROR);
+			Stage window = (Stage) alert.getDialogPane().getScene().getWindow();
+			window.getIcons().add(new Image(this.getClass().getResource("/rsc/Tooth-icon.png").toExternalForm()));
 			alert.setTitle("Error loading next stage.");
 			alert.setHeaderText("Can't load next stage.\n");
 			alert.setContentText("Can't load next stage");
@@ -561,6 +574,8 @@ public class RotationCropLayoutController {
 		} catch (Exception e) {
 			mainApp.getLogger().log(Level.SEVERE, "Exception occur opening area selectore.", e);
 			Alert alert = new Alert(Alert.AlertType.ERROR);
+			Stage window = (Stage) alert.getDialogPane().getScene().getWindow();
+			window.getIcons().add(new Image(this.getClass().getResource("/rsc/Tooth-icon.png").toExternalForm()));
 			alert.setTitle("Error opening area selector.");
 			alert.setHeaderText("Can't open area selector.\n");
 			alert.setContentText("Can't open area selector.");
@@ -646,6 +661,8 @@ public class RotationCropLayoutController {
 				mainApp.getProject().getMeasure().setStartMeasure(measure.getStartMeasure());
 				mainApp.getProject().getMeasure().setEndMeasure(measure.getEndMeasure());
 				Alert alert = new Alert(Alert.AlertType.INFORMATION);
+				Stage window = (Stage) alert.getDialogPane().getScene().getWindow();
+				window.getIcons().add(new Image(this.getClass().getResource("/rsc/Tooth-icon.png").toExternalForm()));
 				alert.setHeaderText("Measure saved.\n");
 				alert.setContentText("Measure line length successfully saved.");
 				alert.showAndWait();
@@ -700,6 +717,8 @@ public class RotationCropLayoutController {
 		} catch (Exception e) {
 			mainApp.getLogger().log(Level.SEVERE, "Exception loading previous stage.", e);
 			Alert alert = new Alert(Alert.AlertType.ERROR);
+			Stage window = (Stage) alert.getDialogPane().getScene().getWindow();
+			window.getIcons().add(new Image(this.getClass().getResource("/rsc/Tooth-icon.png").toExternalForm()));
 			alert.setTitle("Error loading previous stage.");
 			alert.setHeaderText("Can't load previous stage.\n");
 			alert.setContentText("Can't load previous stage");

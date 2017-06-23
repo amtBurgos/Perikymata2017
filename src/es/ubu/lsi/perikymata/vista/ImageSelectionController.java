@@ -47,6 +47,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 
 /**
  * Controller for the layout that is used to the image fragments.
@@ -144,6 +145,8 @@ public class ImageSelectionController {
 			} catch (IOException e) {
 				mainApp.getLogger().log(Level.SEVERE, "Exception occur opening full image.", e);
 				Alert alert = new Alert(Alert.AlertType.INFORMATION);
+				Stage window = (Stage) alert.getDialogPane().getScene().getWindow();
+				window.getIcons().add(new Image(this.getClass().getResource("/rsc/Tooth-icon.png").toExternalForm()));
 				alert.setTitle("Error opening full image");
 				alert.setHeaderText("Can't open or copy full image.\n");
 				alert.setContentText(
@@ -187,6 +190,8 @@ public class ImageSelectionController {
 					} catch (IOException e) {
 						mainApp.getLogger().log(Level.SEVERE, "Exception occur opening fragment files.", e);
 						Alert alert = new Alert(Alert.AlertType.INFORMATION);
+						Stage window = (Stage) alert.getDialogPane().getScene().getWindow();
+						window.getIcons().add(new Image(this.getClass().getResource("/rsc/Tooth-icon.png").toExternalForm()));
 						alert.setTitle("Error opening or coping fragments.");
 						alert.setHeaderText("Can't open or copy fragment file.\n");
 						alert.setContentText("Cant open or copy the image to stitch with path:\n" + file.toString());
@@ -228,7 +233,9 @@ public class ImageSelectionController {
 			filesListView.getItems().remove(selectedIndex);
 		} else {
 			// Nothing selected.
-			Alert alert = new Alert(AlertType.WARNING);
+			Alert alert = new Alert(Alert.AlertType.WARNING);
+			Stage window = (Stage) alert.getDialogPane().getScene().getWindow();
+			window.getIcons().add(new Image(this.getClass().getResource("/rsc/Tooth-icon.png").toExternalForm()));
 			alert.setTitle("No Selection");
 			alert.setHeaderText("No Image Selected");
 			alert.setContentText("Please select a image in the table to delete it");

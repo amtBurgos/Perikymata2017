@@ -45,6 +45,7 @@ import javafx.scene.shape.LineTo;
 import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
 import javafx.scene.shape.PathElement;
+import javafx.stage.Stage;
 
 /**
  * Controller for the layout that is used to count perikyma.
@@ -249,7 +250,9 @@ public class PerikymataCountController {
 				croppedImageView.setImage(mainApp.getFilteredImage());
 			}
 		} else {
-			Alert alert = new Alert(AlertType.ERROR);
+			Alert alert = new Alert(Alert.AlertType.ERROR);
+			Stage window = (Stage) alert.getDialogPane().getScene().getWindow();
+			window.getIcons().add(new Image(this.getClass().getResource("/rsc/Tooth-icon.png").toExternalForm()));
 			alert.setTitle("Error");
 			alert.setHeaderText("Can not alternate filtered images");
 			alert.setContentText("Filtered images unavailable.");
@@ -342,6 +345,8 @@ public class PerikymataCountController {
 			} else {
 				loading.setVisible(false);
 				Alert alert = new Alert(Alert.AlertType.ERROR);
+				Stage window = (Stage) alert.getDialogPane().getScene().getWindow();
+				window.getIcons().add(new Image(this.getClass().getResource("/rsc/Tooth-icon.png").toExternalForm()));
 				alert.setTitle("Error calculating perikymata");
 				alert.setHeaderText("Line has not been drawn.\n");
 				alert.setContentText("Line has not been drawn");
@@ -467,7 +472,9 @@ public class PerikymataCountController {
 	 * Throws an alert alerting the filter has not been applied.
 	 */
 	private void filterNotAppliedAlert() {
-		Alert alert = new Alert(AlertType.ERROR);
+		Alert alert = new Alert(Alert.AlertType.ERROR);
+		Stage window = (Stage) alert.getDialogPane().getScene().getWindow();
+		window.getIcons().add(new Image(this.getClass().getResource("/rsc/Tooth-icon.png").toExternalForm()));
 		alert.setTitle("Error");
 		alert.setHeaderText("Filter not applied");
 		alert.setContentText("Filter not applied to the image.");
@@ -480,7 +487,9 @@ public class PerikymataCountController {
 	@FXML
 	private void generateCsvFile() {
 
-		Alert alert = new Alert(AlertType.ERROR);
+		Alert alert = new Alert(Alert.AlertType.ERROR);
+		Stage window = (Stage) alert.getDialogPane().getScene().getWindow();
+		window.getIcons().add(new Image(this.getClass().getResource("/rsc/Tooth-icon.png").toExternalForm()));
 		alert.setTitle("Error recovering CSV information");
 		alert.setHeaderText("Cannot make CSV.");
 		try {
@@ -770,6 +779,8 @@ public class PerikymataCountController {
 			mainApp.setFilteredImage(null);
 		} catch (Exception e) {
 			Alert alert = new Alert(Alert.AlertType.ERROR);
+			Stage window = (Stage) alert.getDialogPane().getScene().getWindow();
+			window.getIcons().add(new Image(this.getClass().getResource("/rsc/Tooth-icon.png").toExternalForm()));
 			alert.setTitle("Error");
 			alert.setHeaderText("Error resetting view.\n");
 			alert.setContentText("Error resetting view.");

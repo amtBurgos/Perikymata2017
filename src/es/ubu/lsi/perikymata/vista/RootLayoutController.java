@@ -3,6 +3,8 @@ package es.ubu.lsi.perikymata.vista;
 import es.ubu.lsi.perikymata.MainApp;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
+import javafx.scene.image.Image;
+import javafx.stage.Stage;
 
 /**
  * Controller for the rootLayout. The BorderLayout contains a common menu bar
@@ -90,6 +92,8 @@ public class RootLayoutController {
 	@FXML
 	private void handleAbout() {
 		Alert alert = new Alert(Alert.AlertType.INFORMATION);
+		Stage window = (Stage) alert.getDialogPane().getScene().getWindow();
+		window.getIcons().add(new Image(this.getClass().getResource("/rsc/Tooth-icon.png").toExternalForm()));
 		alert.setTitle("Paleontological analysis of dental images - Perikymata");
 		alert.setHeaderText("About");
 		alert.setContentText("v2.0\n" + "Author: Andr�s Miguel Ter�n\n" + "Tutor: Dr. Jose Francisco Diez Pastor\n"

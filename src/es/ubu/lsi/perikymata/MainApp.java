@@ -293,7 +293,9 @@ public class MainApp extends Application {
 		} else {
 			Boolean cont = false;
 			while (!cont) {
-				Alert alert = new Alert(AlertType.CONFIRMATION);
+				Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+				Stage window = (Stage) alert.getDialogPane().getScene().getWindow();
+				window.getIcons().add(new Image(this.getClass().getResource("/rsc/Tooth-icon.png").toExternalForm()));
 				alert.setTitle("A project needs to be open.");
 				alert.setHeaderText("You need to open or create a new project to continue.");
 				alert.setContentText("Cancel will close the application.");
@@ -373,6 +375,8 @@ public class MainApp extends Application {
 
 			this.getLogger().log(Level.SEVERE, "Exception occur creating XML.", e);
 			Alert alert = new Alert(Alert.AlertType.INFORMATION);
+			Stage window = (Stage) alert.getDialogPane().getScene().getWindow();
+			window.getIcons().add(new Image(this.getClass().getResource("/rsc/Tooth-icon.png").toExternalForm()));
 			alert.setTitle("Error saving project");
 			alert.setHeaderText("Project was not saved.\n");
 			alert.setContentText("Error saving project on path: " + parent.toString());
@@ -442,6 +446,8 @@ public class MainApp extends Application {
 				} catch (IOException e) {
 					this.getLogger().log(Level.SEVERE, "Exception occur loading images.", e);
 					Alert alert = new Alert(Alert.AlertType.ERROR);
+					Stage window = (Stage) alert.getDialogPane().getScene().getWindow();
+					window.getIcons().add(new Image(this.getClass().getResource("/rsc/Tooth-icon.png").toExternalForm()));
 					alert.setTitle("Internal error.");
 					alert.setHeaderText("Error loading images.\n");
 					alert.setContentText("This application will close now, please try again.\n");
@@ -469,6 +475,8 @@ public class MainApp extends Application {
 
 			this.getLogger().log(Level.SEVERE, "Exception occur loading project.", e);
 			Alert alert = new Alert(Alert.AlertType.INFORMATION);
+			Stage window = (Stage) alert.getDialogPane().getScene().getWindow();
+			window.getIcons().add(new Image(this.getClass().getResource("/rsc/Tooth-icon.png").toExternalForm()));
 			alert.setTitle("Error loading project");
 			alert.setHeaderText("Project cannot be loaded.\n");
 			alert.setContentText("Error loading project on path: " + file.toString());
@@ -519,6 +527,8 @@ public class MainApp extends Application {
 		} catch (IOException e) {
 			this.getLogger().log(Level.SEVERE, "Exception occur loading imageSelection Stage.", e);
 			Alert alert = new Alert(Alert.AlertType.INFORMATION);
+			Stage window = (Stage) alert.getDialogPane().getScene().getWindow();
+			window.getIcons().add(new Image(this.getClass().getResource("/rsc/Tooth-icon.png").toExternalForm()));
 			alert.setTitle("Internal error.");
 			alert.setHeaderText("Error loading image selection stage.\n");
 			alert.setContentText("This application will close now, please try again.\n");
@@ -550,6 +560,8 @@ public class MainApp extends Application {
 		} catch (IOException e) {
 			this.getLogger().log(Level.SEVERE, "Exception occur loading rotation and crop Stage.", e);
 			Alert alert = new Alert(Alert.AlertType.ERROR);
+			Stage window = (Stage) alert.getDialogPane().getScene().getWindow();
+			window.getIcons().add(new Image(this.getClass().getResource("/rsc/Tooth-icon.png").toExternalForm()));
 			alert.setTitle("Internal error.");
 			alert.setHeaderText("Error loading rotation stage.\n");
 			alert.setContentText("This application will close now, please try again.\n");
@@ -582,6 +594,8 @@ public class MainApp extends Application {
 		} catch (IOException e) {
 			this.getLogger().log(Level.SEVERE, "Exception occur loading PerikymataCount Stage.", e);
 			Alert alert = new Alert(Alert.AlertType.INFORMATION);
+			Stage window = (Stage) alert.getDialogPane().getScene().getWindow();
+			window.getIcons().add(new Image(this.getClass().getResource("/rsc/Tooth-icon.png").toExternalForm()));
 			alert.setTitle("Internal error.");
 			alert.setHeaderText("Error loading perikymata counting stage.\n");
 			alert.setContentText("This application will close now, please try again.\n");
@@ -613,6 +627,8 @@ public class MainApp extends Application {
 		} catch (Exception e) {
 			this.getLogger().log(Level.SEVERE, "Exception occur loading temporary folder selection window.", e);
 			Alert alert = new Alert(Alert.AlertType.INFORMATION);
+			Stage window = (Stage) alert.getDialogPane().getScene().getWindow();
+			window.getIcons().add(new Image(this.getClass().getResource("/rsc/Tooth-icon.png").toExternalForm()));
 			alert.setTitle("Internal error.");
 			alert.setHeaderText("Error loading temporary folder selection window.\n");
 			alert.setContentText("This application will close now, please try again.\n");
@@ -752,6 +768,8 @@ public class MainApp extends Application {
 		} catch (IOException e) {
 			this.getLogger().log(Level.SEVERE, "Exception writing properties file.", e);
 			Alert alert = new Alert(Alert.AlertType.INFORMATION);
+			Stage window = (Stage) alert.getDialogPane().getScene().getWindow();
+			window.getIcons().add(new Image(this.getClass().getResource("/rsc/Tooth-icon.png").toExternalForm()));
 			alert.setTitle("Error saving properties file.");
 			alert.setHeaderText("Error saving properties file.\n");
 			alert.setContentText("Check that you have writing permissions on the folder\n"
@@ -787,6 +805,8 @@ public class MainApp extends Application {
 		} catch (IOException e) {
 			this.getLogger().log(Level.SEVERE, "Exception occur opening properties file .", e);
 			Alert alert = new Alert(Alert.AlertType.INFORMATION);
+			Stage window = (Stage) alert.getDialogPane().getScene().getWindow();
+			window.getIcons().add(new Image(this.getClass().getResource("/rsc/Tooth-icon.png").toExternalForm()));
 			alert.setTitle("Error opening properties file.");
 			alert.setHeaderText("Error loading opening properties file.\n");
 			alert.setContentText(
@@ -942,9 +962,11 @@ public class MainApp extends Application {
 					getLogger().log(Level.SEVERE, "Exception occur closing server.", e);
 					Platform.runLater(() -> {
 						Alert alert = new Alert(Alert.AlertType.ERROR);
+						Stage window = (Stage) alert.getDialogPane().getScene().getWindow();
+						window.getIcons().add(new Image(this.getClass().getResource("/rsc/Tooth-icon.png").toExternalForm()));
 						alert.setTitle("Error closing server");
 						alert.setHeaderText("Can't close server\n");
-						alert.setContentText("Server not running. This application will close.");
+						alert.setContentText("Cant't close server because is not running. This application will close.");
 						Optional<ButtonType> option = alert.showAndWait();
 
 						if (option.get().equals(ButtonType.OK)) {
@@ -956,6 +978,8 @@ public class MainApp extends Application {
 					getLogger().log(Level.SEVERE, "Exception occur closing server.", e);
 					Platform.runLater(() -> {
 						Alert alert = new Alert(Alert.AlertType.ERROR);
+						Stage window = (Stage) alert.getDialogPane().getScene().getWindow();
+						window.getIcons().add(new Image(this.getClass().getResource("/rsc/Tooth-icon.png").toExternalForm()));
 						alert.setTitle("Error closing server");
 						alert.setHeaderText("Can't close server.\n");
 						alert.setContentText("Can't close server. This application will close.");

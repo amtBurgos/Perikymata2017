@@ -42,6 +42,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
@@ -308,6 +309,8 @@ public class TemporaryFolderSelectionController {
 	private void showErrorDefautlTempFolder() {
 		mainApp.getLogger().log(Level.INFO, "Default temporary folder can't be saved because is invalid.");
 		Alert alert = new Alert(Alert.AlertType.ERROR);
+		Stage window = (Stage) alert.getDialogPane().getScene().getWindow();
+		window.getIcons().add(new Image(this.getClass().getResource("/rsc/Tooth-icon.png").toExternalForm()));
 		alert.setTitle("Default temporary folder invalid");
 		alert.setHeaderText("The default system temporary path is invalid.\n");
 		alert.setContentText("Please, select a custom location without whitespaces and with enough permissions.\n");
@@ -321,6 +324,8 @@ public class TemporaryFolderSelectionController {
 	private void showErrorCustomTempFolder() {
 		mainApp.getLogger().log(Level.INFO, "Custom temporary folder can't be saved because is invalid.");
 		Alert alert = new Alert(Alert.AlertType.ERROR);
+		Stage window = (Stage) alert.getDialogPane().getScene().getWindow();
+		window.getIcons().add(new Image(this.getClass().getResource("/rsc/Tooth-icon.png").toExternalForm()));
 		alert.setTitle("Custom temporary folder invalid");
 		alert.setHeaderText("The custom temporary path selected is invalid.\n");
 		alert.setContentText("Please, select a location without whitespaces and with enough permissions.\n");
