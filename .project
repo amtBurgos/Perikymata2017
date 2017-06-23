@@ -16,7 +16,7 @@
 	</natures>
 	<filteredResources>
 		<filter>
-			<id>1498046502624</id>
+			<id>1498221087186</id>
 			<name></name>
 			<type>10</type>
 			<matcher>
@@ -37,10 +37,6 @@
 					<matcher>
 						<id>org.eclipse.ui.ide.multiFilter</id>
 						<arguments>1.0-name-matches-false-false-build</arguments>
-					</matcher>
-					<matcher>
-						<id>org.eclipse.ui.ide.multiFilter</id>
-						<arguments>1.0-name-matches-false-false-PythonApp</arguments>
 					</matcher>
 				</arguments>
 			</matcher>
