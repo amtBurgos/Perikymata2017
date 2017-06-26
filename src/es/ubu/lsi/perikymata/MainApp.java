@@ -223,7 +223,7 @@ public class MainApp extends Application {
 					// run start server command
 					command.add("cmd.exe");
 					command.add("/c");
-					// command.add("start");
+					command.add("start");
 					command.add("PythonApp\\StartServerWindows.bat");
 					/*
 					 * During application development run server in the python
