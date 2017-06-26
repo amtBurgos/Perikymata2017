@@ -191,24 +191,39 @@ public class MainApp extends Application {
 				.add(new Image(this.getClass().getResource("/rsc/Tooth-icon.png").toExternalForm()));
 
 		// Start Python Server
-		startServer();
+		startServer(false);
 
 		initRootLayout();
-		showImageSelection();
+		// showImageSelection();
+		// Open the project depending on the last image available
+		if (filteredImage != null) {
+			showPerikymataCount();
+		} else if (croppedImage != null) {
+			showRotationCrop();
+		} else {
+			showImageSelection();
+		}
 	}
 
 	/**
 	 * Starts the Python Server.
+	 *
+	 * restart true if want to restart
 	 */
-	public void startServer() {
+	public void startServer(boolean restart) {
 		Runnable initializeServer = () -> {
 			try {
+
+				if (restart) {
+					stopServer();
+				}
+
 				ArrayList<String> command = new ArrayList<String>();
 				if (SystemUtil.isWindows()) {
 					// run start server command
 					command.add("cmd.exe");
 					command.add("/c");
-					//command.add("start");
+					// command.add("start");
 					command.add("PythonApp\\StartServerWindows.bat");
 					/*
 					 * During application development run server in the python
@@ -224,6 +239,8 @@ public class MainApp extends Application {
 
 			} catch (IOException e) {
 				getLogger().log(Level.SEVERE, "Exception starting server from sript", e);
+			} catch (Exception e) {
+				getLogger().log(Level.SEVERE, "Exception restarting server. Can't restart because is not running.", e);
 			}
 		};
 		// start the thread
@@ -890,8 +907,6 @@ public class MainApp extends Application {
 
 			loadProjectFromFile(file);
 			setProjectPath(file.getParent());
-			showImageSelection();
-			return true;
 		}
 		return false;
 
@@ -943,6 +958,34 @@ public class MainApp extends Application {
 	}
 
 	/**
+	 * Stops the server.
+	 *
+	 * @throws ConnectException
+	 *             if the connection is not possible
+	 * @throws Exception
+	 *             If the server has other kind of errors
+	 */
+	public void stopServer() throws ConnectException, Exception {
+		ClientSocket client = new ClientSocket();
+		// Close server request
+		Request request = new Request(Request.CLOSE_SERVER, "CLOSE_SERVER");
+		client.send(request);
+		String response = client.receive();
+		client.close();
+		if (!response.equals("OK")) {
+			// Stop process if we are in Linux
+			ArrayList<String> command = new ArrayList<String>();
+			if (!SystemUtil.isWindows()) {
+				command.add("pkill");
+				command.add("python3");
+			}
+			ProcessBuilder process = new ProcessBuilder(command);
+			process.start();
+			throw new Exception("Error closing server. Response not OK");
+		}
+	}
+
+	/**
 	 * Closes the application and the python server.
 	 */
 	public void closeApplication() {
@@ -951,15 +994,7 @@ public class MainApp extends Application {
 			public void run() {
 
 				try {
-					ClientSocket client = new ClientSocket();
-					// Close server request
-					Request request = new Request(Request.CLOSE_SERVER, "CLOSE_SERVER");
-					client.send(request);
-					String response = client.receive();
-					client.close();
-					if (!response.equals("OK")) {
-						throw new Exception("Error closing server. Response not OK");
-					}
+					stopServer();
 					System.exit(-1);
 				} catch (ConnectException e) {
 					getLogger().log(Level.SEVERE, "Exception occur closing server.", e);

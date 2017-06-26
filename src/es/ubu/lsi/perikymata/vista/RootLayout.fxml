@@ -16,6 +16,7 @@
             <items>
                   <MenuItem mnemonicParsing="false" onAction="#handleNew" text="New Project" />
                   <MenuItem mnemonicParsing="false" onAction="#handleOpen" text="Open Project" />
+                  <MenuItem mnemonicParsing="false" onAction="#handleRestartServer" text="Restart Server" />
                   <MenuItem mnemonicParsing="false" onAction="#handleSave" text="Save" />
               <MenuItem mnemonicParsing="false" onAction="#handleExit" text="Close" />
             </items>

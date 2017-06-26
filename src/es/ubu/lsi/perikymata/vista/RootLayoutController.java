@@ -123,6 +123,14 @@ public class RootLayoutController {
 	}
 
 	/**
+	 * Restart the server.
+	 */
+	@FXML
+	private void handleRestartServer() {
+		mainApp.startServer(true);
+	}
+
+	/**
 	 * Set full screen view.
 	 */
 	@FXML

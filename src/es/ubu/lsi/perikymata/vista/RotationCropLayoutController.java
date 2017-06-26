@@ -308,7 +308,8 @@ public class RotationCropLayoutController {
 					mainApp.getLogger().log(Level.SEVERE, "Exception occur rotating image.", e);
 					Alert alert = new Alert(Alert.AlertType.ERROR);
 					Stage window = (Stage) alert.getDialogPane().getScene().getWindow();
-					window.getIcons().add(new Image(this.getClass().getResource("/rsc/Tooth-icon.png").toExternalForm()));
+					window.getIcons()
+							.add(new Image(this.getClass().getResource("/rsc/Tooth-icon.png").toExternalForm()));
 					alert.setTitle("Error rotating image");
 					alert.setHeaderText("Can't rotate image.\n");
 					alert.setContentText("Can't rotate image");
@@ -329,11 +330,26 @@ public class RotationCropLayoutController {
 	}
 
 	/**
+	 * Cleans the measure line button.
+	 */
+	private void cleanMeasureButton() {
+		previewImage.setVisible(true);
+		originalImagePreview.setVisible(false);
+		originalImagePreview.setCursor(Cursor.DEFAULT);
+		removeLinesFromView();
+		originalImagePreview.removeEventHandler(MouseEvent.MOUSE_PRESSED, originalMousePressedHandler);
+		originalImagePreview.removeEventHandler(MouseEvent.MOUSE_DRAGGED, originalMouseDraggedHandler);
+		originalImagePreview.removeEventHandler(MouseEvent.MOUSE_RELEASED, originalMouseReleasedHandler);
+		measureLineBtn.setSelected(false);
+	}
+
+	/**
 	 * Handles the measure.
 	 */
 	@FXML
 	private void handleMeasure() {
 		if (measureLineBtn.isSelected()) {
+			cleanSelectorAreaButton();
 			originalImagePreview.setCursor(Cursor.CROSSHAIR);
 			previewImage.setVisible(false);
 			originalImagePreview.setVisible(true);
@@ -342,13 +358,7 @@ public class RotationCropLayoutController {
 			originalImagePreview.addEventHandler(MouseEvent.MOUSE_DRAGGED, originalMouseDraggedHandler);
 			originalImagePreview.addEventHandler(MouseEvent.MOUSE_RELEASED, originalMouseReleasedHandler);
 		} else {
-			previewImage.setVisible(true);
-			originalImagePreview.setVisible(false);
-			originalImagePreview.setCursor(Cursor.DEFAULT);
-			removeLinesFromView();
-			originalImagePreview.removeEventHandler(MouseEvent.MOUSE_PRESSED, originalMousePressedHandler);
-			originalImagePreview.removeEventHandler(MouseEvent.MOUSE_DRAGGED, originalMouseDraggedHandler);
-			originalImagePreview.removeEventHandler(MouseEvent.MOUSE_RELEASED, originalMouseReleasedHandler);
+			cleanMeasureButton();
 		}
 	}
 
@@ -373,7 +383,7 @@ public class RotationCropLayoutController {
 		grid.setVgap(10);
 		grid.setPadding(new Insets(20, 150, 10, 10));
 
-		ObservableList<String> options = FXCollections.observableArrayList("cm", "mm", "µm", "nm");
+		ObservableList<String> options = FXCollections.observableArrayList("cm", "mm", "\u00B5", "nm");
 		final ComboBox<String> measureUnit = new ComboBox<>(options);
 		if (measure == null || measure.getMeasureUnit() == null)
 			measureUnit.setValue("mm");
@@ -549,6 +559,18 @@ public class RotationCropLayoutController {
 	}
 
 	/**
+	 * Cleans the selector area button.
+	 */
+	private void cleanSelectorAreaButton() {
+		previewImage.removeEventHandler(MouseEvent.MOUSE_PRESSED, mousePressedHandler);
+		previewImage.removeEventHandler(MouseEvent.MOUSE_DRAGGED, mouseDraggedHandler);
+		previewImage.removeEventHandler(MouseEvent.MOUSE_RELEASED, mouseReleasedHandler);
+		previewImage.setCursor(Cursor.DEFAULT);
+		removeRectanglesFromView();
+		areaSelectorBtn.setSelected(false);
+	}
+
+	/**
 	 * Handles the opening of the area selector, setting up event handlers for
 	 * the image preview node.
 	 */
@@ -556,6 +578,7 @@ public class RotationCropLayoutController {
 	private void handleSelectorArea() {
 		try {
 			if (areaSelectorBtn.isSelected()) {
+				cleanMeasureButton();
 				// Add listener to start a rectangle on the image
 				previewImage.addEventHandler(MouseEvent.MOUSE_PRESSED, mousePressedHandler);
 				previewImage.addEventHandler(MouseEvent.MOUSE_DRAGGED, mouseDraggedHandler);
@@ -563,13 +586,7 @@ public class RotationCropLayoutController {
 
 				previewImage.setCursor(Cursor.CROSSHAIR);
 			} else {
-				// Remove listeners and possibles rectangles areas
-				previewImage.removeEventHandler(MouseEvent.MOUSE_PRESSED, mousePressedHandler);
-				previewImage.removeEventHandler(MouseEvent.MOUSE_DRAGGED, mouseDraggedHandler);
-				previewImage.removeEventHandler(MouseEvent.MOUSE_RELEASED, mouseReleasedHandler);
-
-				previewImage.setCursor(Cursor.DEFAULT);
-				removeRectanglesFromView();
+				cleanSelectorAreaButton();
 			}
 		} catch (Exception e) {
 			mainApp.getLogger().log(Level.SEVERE, "Exception occur opening area selectore.", e);
@@ -827,7 +844,7 @@ public class RotationCropLayoutController {
 	 */
 	public void setMainApp(MainApp mainApp) {
 		this.mainApp = mainApp;
-		//Full Screen
+		// Full Screen
 		mainApp.getPrimaryStage().setMaximized(true);
 		if (mainApp.getFullImage() != null) {
 			if (mainApp.getCroppedImage() != null) {
