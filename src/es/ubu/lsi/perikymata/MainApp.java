@@ -60,7 +60,6 @@ import javafx.scene.Cursor;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
@@ -209,9 +208,12 @@ public class MainApp extends Application {
 					// run start server command
 					command.add("cmd.exe");
 					command.add("/c");
-					command.add("start");
-					// command.add("PythonApp\\StartServerWindowsTest.bat");
+					//command.add("start");
 					command.add("PythonApp\\StartServerWindows.bat");
+					/*
+					 * During application development run server in the python
+					 * IDE, not here. This is only for deployment.
+					 */
 				} else {
 					// Run in background
 					command.add("python3");
@@ -447,7 +449,8 @@ public class MainApp extends Application {
 					this.getLogger().log(Level.SEVERE, "Exception occur loading images.", e);
 					Alert alert = new Alert(Alert.AlertType.ERROR);
 					Stage window = (Stage) alert.getDialogPane().getScene().getWindow();
-					window.getIcons().add(new Image(this.getClass().getResource("/rsc/Tooth-icon.png").toExternalForm()));
+					window.getIcons()
+							.add(new Image(this.getClass().getResource("/rsc/Tooth-icon.png").toExternalForm()));
 					alert.setTitle("Internal error.");
 					alert.setHeaderText("Error loading images.\n");
 					alert.setContentText("This application will close now, please try again.\n");
@@ -963,10 +966,12 @@ public class MainApp extends Application {
 					Platform.runLater(() -> {
 						Alert alert = new Alert(Alert.AlertType.ERROR);
 						Stage window = (Stage) alert.getDialogPane().getScene().getWindow();
-						window.getIcons().add(new Image(this.getClass().getResource("/rsc/Tooth-icon.png").toExternalForm()));
+						window.getIcons()
+								.add(new Image(this.getClass().getResource("/rsc/Tooth-icon.png").toExternalForm()));
 						alert.setTitle("Error closing server");
 						alert.setHeaderText("Can't close server\n");
-						alert.setContentText("Cant't close server because is not running. This application will close.");
+						alert.setContentText(
+								"Cant't close server because is not running. This application will close.");
 						Optional<ButtonType> option = alert.showAndWait();
 
 						if (option.get().equals(ButtonType.OK)) {
@@ -979,7 +984,8 @@ public class MainApp extends Application {
 					Platform.runLater(() -> {
 						Alert alert = new Alert(Alert.AlertType.ERROR);
 						Stage window = (Stage) alert.getDialogPane().getScene().getWindow();
-						window.getIcons().add(new Image(this.getClass().getResource("/rsc/Tooth-icon.png").toExternalForm()));
+						window.getIcons()
+								.add(new Image(this.getClass().getResource("/rsc/Tooth-icon.png").toExternalForm()));
 						alert.setTitle("Error closing server");
 						alert.setHeaderText("Can't close server.\n");
 						alert.setContentText("Can't close server. This application will close.");

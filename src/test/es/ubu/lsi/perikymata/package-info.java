@@ -1,10 +1,10 @@
 /**
- * Contains the client sockets connection with the python applicacion.
+ * Constains the classes for testing.
  *
+ * @author Sergio Chico Carrancio
  * @author Andres Miguel Teran
- *
  */
-package es.ubu.lsi.perikymata.util.sockets;
+package test.es.ubu.lsi.perikymata;
 
 /**
  * License: GPL

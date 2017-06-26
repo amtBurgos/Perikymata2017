@@ -1,10 +1,11 @@
 /**
- * Contains the client sockets connection with the python applicacion.
+ * Constains all image resources.
  *
+ * @author Sergio Chico Carrancio
  * @author Andres Miguel Teran
  *
  */
-package es.ubu.lsi.perikymata.util.sockets;
+package rsc;
 
 /**
  * License: GPL

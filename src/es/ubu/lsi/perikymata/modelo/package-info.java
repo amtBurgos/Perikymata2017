@@ -1,10 +1,10 @@
 /**
- * Contains the client sockets connection with the python applicacion.
+ * Contains the model classes.
  *
+ * @author Sergio Chico Carrancio
  * @author Andres Miguel Teran
- *
  */
-package es.ubu.lsi.perikymata.util.sockets;
+package es.ubu.lsi.perikymata.modelo;
 
 /**
  * License: GPL

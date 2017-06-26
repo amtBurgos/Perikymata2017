@@ -248,7 +248,6 @@ public class ImageSelectionController {
 	 */
 	@FXML
 	private void nextScreen() {
-		// mainApp.showImageFilters();
 		mainApp.showRotationCrop();
 	}
 
