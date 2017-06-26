@@ -88,7 +88,6 @@
          <children>
             <HBox alignment="CENTER_LEFT" layoutX="24.0" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" prefHeight="41.0" prefWidth="189.0">
                <children>
-                  <Button fx:id="returnBtn" mnemonicParsing="false" onMouseClicked="#handleReturn" prefWidth="63.0" text="Return" />
                   <Button mnemonicParsing="false" onMouseClicked="#handleReset" prefWidth="91.0" text="Reset View">
                      <tooltip>
                         <Tooltip text="Resets the view" />

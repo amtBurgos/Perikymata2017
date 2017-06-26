@@ -724,27 +724,6 @@ public class RotationCropLayoutController {
 	}
 
 	/**
-	 * Goes to the previous stage, image selection and stitching.
-	 */
-	@FXML
-	private void handleReturn() {
-		try {
-			handleReset();
-			mainApp.showImageSelection();
-		} catch (Exception e) {
-			mainApp.getLogger().log(Level.SEVERE, "Exception loading previous stage.", e);
-			Alert alert = new Alert(Alert.AlertType.ERROR);
-			Stage window = (Stage) alert.getDialogPane().getScene().getWindow();
-			window.getIcons().add(new Image(this.getClass().getResource("/rsc/Tooth-icon.png").toExternalForm()));
-			alert.setTitle("Error loading previous stage.");
-			alert.setHeaderText("Can't load previous stage.\n");
-			alert.setContentText("Can't load previous stage");
-			alert.showAndWait();
-		}
-
-	}
-
-	/**
 	 * Removes red lines from the origal image view.
 	 */
 	private void removeLinesFromView() {
