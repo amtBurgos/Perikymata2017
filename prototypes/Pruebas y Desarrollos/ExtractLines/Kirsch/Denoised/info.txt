@@ -1,0 +1,5 @@
+Imágenes del filtro kirsch usando distintas fuerzas en la reducción de ruido
+
+En las imágenes que están aquí afuera, el peso de la reducción de ruido es 0.5
+
+imgDenoise = denoise_tv_chambolle(imgAdapted, weight=0.5)

@@ -1,0 +1,1 @@
+Imágenes del filtro kirsch esqueletonizadas usando skeletonize3d y el skeletonize normal

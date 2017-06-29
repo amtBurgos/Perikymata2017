@@ -1,0 +1,5 @@
+Contiene los notebooks y ficheros usados para la elaboración de los filtros y la extracción de líneas.
+Incluye también las imágenes originales recortadas:
+
+Full1Cropped.png
+Full2Cropped.png

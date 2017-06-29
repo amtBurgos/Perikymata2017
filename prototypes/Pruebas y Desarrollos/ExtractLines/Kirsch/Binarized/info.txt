@@ -1,0 +1,1 @@
+Imagen solo binarizadas usando el filtrado de Kirsch 

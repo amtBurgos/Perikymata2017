@@ -1,0 +1,1 @@
+Imágenes del filtro Sobel variando el ruido

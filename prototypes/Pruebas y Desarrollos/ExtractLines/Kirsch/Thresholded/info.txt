@@ -1,0 +1,1 @@
+Imágenes del filtro Kirsch usando el threshold adaptativo y la eliminación de objetos pequeños

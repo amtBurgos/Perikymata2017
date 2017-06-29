@@ -1,0 +1,2 @@
+A tener en cuenta:
+A la hora de ejecutar algunos de los notebooks, será necesario tener la misma estructura de carpetas que se haya usado en el notebook y los mismos archivos que utilice internamente.

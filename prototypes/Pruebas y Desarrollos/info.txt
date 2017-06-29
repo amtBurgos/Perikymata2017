@@ -1,0 +1,3 @@
+Aquí se incluyen los primeros notebooks y los primeros fitlrados. 
+
+En la carpeta ExtractLines es donde se ha continuado desarrollando el filtrado final y las imágenes aplicadas con el.
