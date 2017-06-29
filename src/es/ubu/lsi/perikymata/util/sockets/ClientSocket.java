@@ -38,9 +38,9 @@ public class ClientSocket {
 	private final String HOST = "localhost";
 
 	/**
-	 * Port number.
+	 * Port list to try
 	 */
-	private final int DEFAULT_PORT = 8885;
+	private final int DEFAULT_PORT = 10341;
 
 	/**
 	 * Client socket.
