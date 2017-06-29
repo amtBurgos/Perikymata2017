@@ -1,5 +1,6 @@
 /**
- * Contains the client sockets connection with the python applicacion.
+ * Contains the client socket for connecting with the python applicacion and the
+ * request to be made.
  *
  * @author Andres Miguel Teran
  *
