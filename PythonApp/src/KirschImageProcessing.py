@@ -148,8 +148,7 @@ class KirschImageProcessing():
 
     """
     def showImage(self, img, returnImg=False):
-
-        Shows an image. Used with jupyter notebooks.
+        Shows an image. Uncomment this function and use it with Jupyter Notebooks.
         :param img: image to show
         :param returnImg: image figure option
         :return: image figure

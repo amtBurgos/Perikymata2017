@@ -997,7 +997,7 @@ public class MainApp extends Application {
 					stopServer();
 					System.exit(-1);
 				} catch (ConnectException e) {
-					getLogger().log(Level.SEVERE, "Exception occur closing server.", e);
+					//getLogger().log(Level.SEVERE, "Exception occur closing server.", e);
 					Platform.runLater(() -> {
 						// Alert alert = new Alert(Alert.AlertType.ERROR);
 						// Stage window = (Stage)
@@ -1018,22 +1018,22 @@ public class MainApp extends Application {
 
 					});
 				} catch (Exception e) {
-					getLogger().log(Level.SEVERE, "Exception occur closing server.", e);
-					Platform.runLater(() -> {
-						Alert alert = new Alert(Alert.AlertType.ERROR);
-						Stage window = (Stage) alert.getDialogPane().getScene().getWindow();
-						window.getIcons()
-								.add(new Image(this.getClass().getResource("/rsc/Tooth-icon.png").toExternalForm()));
-						alert.setTitle("Error closing server");
-						alert.setHeaderText("Can't close server.\n");
-						alert.setContentText("Can't close server. This application will close.");
-						Optional<ButtonType> option = alert.showAndWait();
+					//getLogger().log(Level.SEVERE, "Exception occur closing server.", e);
+//					Platform.runLater(() -> {
+//						Alert alert = new Alert(Alert.AlertType.ERROR);
+//						Stage window = (Stage) alert.getDialogPane().getScene().getWindow();
+//						window.getIcons()
+//								.add(new Image(this.getClass().getResource("/rsc/Tooth-icon.png").toExternalForm()));
+//						alert.setTitle("Error closing server");
+//						alert.setHeaderText("Can't close server.\n");
+//						alert.setContentText("Can't close server. This application will close.");
+//						Optional<ButtonType> option = alert.showAndWait();
 
-						if (option.get().equals(ButtonType.OK)) {
+						//if (option.get().equals(ButtonType.OK)) {
 							System.exit(-1);
-						}
+						//}
 
-					});
+					//});
 				}
 			}
 		});

@@ -15,11 +15,19 @@
   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 """
 
-from KirschImageProcessing import *
-import numpy as np
-import sys
 from socket import *
 from threading import *
+
+import numpy as np
+
+
+#Uncomment this for exporting server with Java application
+from KirschImageProcessing import *
+
+#Uncomment this for developing this Python file
+#from src.KirschImageProcessing import *
+
+
 
 
 class ServerSocket:
