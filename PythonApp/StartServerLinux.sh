@@ -1,3 +1,3 @@
 #!/bin/bash
 clear
-python3 ServerSocket.py
+python3 src/ServerSocket.py

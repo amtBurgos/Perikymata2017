@@ -232,7 +232,7 @@ public class MainApp extends Application {
 				} else {
 					// Run in background
 					command.add("python3");
-					command.add("PythonApp/ServerSocket.py");
+					command.add("PythonApp/src/ServerSocket.py");
 				}
 				ProcessBuilder process = new ProcessBuilder(command);
 				process.start();
@@ -999,19 +999,22 @@ public class MainApp extends Application {
 				} catch (ConnectException e) {
 					getLogger().log(Level.SEVERE, "Exception occur closing server.", e);
 					Platform.runLater(() -> {
-						Alert alert = new Alert(Alert.AlertType.ERROR);
-						Stage window = (Stage) alert.getDialogPane().getScene().getWindow();
-						window.getIcons()
-								.add(new Image(this.getClass().getResource("/rsc/Tooth-icon.png").toExternalForm()));
-						alert.setTitle("Error closing server");
-						alert.setHeaderText("Can't close server\n");
-						alert.setContentText(
-								"Cant't close server because is not running. This application will close.");
-						Optional<ButtonType> option = alert.showAndWait();
+						// Alert alert = new Alert(Alert.AlertType.ERROR);
+						// Stage window = (Stage)
+						// alert.getDialogPane().getScene().getWindow();
+						// window.getIcons()
+						// .add(new
+						// Image(this.getClass().getResource("/rsc/Tooth-icon.png").toExternalForm()));
+						// alert.setTitle("Error closing server");
+						// alert.setHeaderText("Can't close server\n");
+						// alert.setContentText(
+						// "Cant't close server because is not running. This
+						// application will close.");
+						// Optional<ButtonType> option = alert.showAndWait();
 
-						if (option.get().equals(ButtonType.OK)) {
-							System.exit(-1);
-						}
+						// if (option.get().equals(ButtonType.OK)) {
+						System.exit(-1);
+						// }
 
 					});
 				} catch (Exception e) {

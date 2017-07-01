@@ -1,4 +1,4 @@
-6"""
+"""
   License: GPL
 
   This program is free software; you can redistribute it and/or

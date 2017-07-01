@@ -48,4 +48,6 @@ PythonApp/cmd.exe
 PythonApp/cmd.exe
 Example Projects/*
 Perikymata_v2.1.jar
-**/cmd.exe
+*.exe
+Others/*
+*.ucls

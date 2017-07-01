@@ -16,7 +16,7 @@
 	</natures>
 	<filteredResources>
 		<filter>
-			<id>1498520471096</id>
+			<id>1498909353628</id>
 			<name></name>
 			<type>10</type>
 			<matcher>
@@ -24,7 +24,7 @@
 				<arguments>
 					<matcher>
 						<id>org.eclipse.ui.ide.multiFilter</id>
-						<arguments>1.0-name-matches-true-false-Ejemplos</arguments>
+						<arguments>1.0-name-matches-true-false-Example Projects</arguments>
 					</matcher>
 					<matcher>
 						<id>org.eclipse.ui.ide.multiFilter</id>
@@ -35,6 +35,15 @@
 						<arguments>1.0-name-matches-true-false-ImageProcessingPython</arguments>
 					</matcher>
 				</arguments>
+			</matcher>
+		</filter>
+		<filter>
+			<id>1498909353628</id>
+			<name></name>
+			<type>10</type>
+			<matcher>
+				<id>org.eclipse.ui.ide.multiFilter</id>
+				<arguments>1.0-name-matches-false-false-Others</arguments>
 			</matcher>
 		</filter>
 	</filteredResources>
