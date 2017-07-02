@@ -122,13 +122,13 @@ public class RootLayoutController {
 		mainApp.showTemporaryFolderSelection(false);
 	}
 
-	/**
-	 * Restart the server.
-	 */
-	@FXML
-	private void handleRestartServer() {
-		mainApp.startServer(true);
-	}
+//	/**
+//	 * Restart the server.
+//	 */
+//	@FXML
+//	private void handleRestartServer() {
+//		mainApp.startServer(true);
+//	}
 
 	/**
 	 * Set full screen view.

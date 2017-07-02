@@ -1,0 +1,1 @@
+Se incluyen las primeras versiones del filtrado con Frangi y las primeras pruebas con PyInstaller

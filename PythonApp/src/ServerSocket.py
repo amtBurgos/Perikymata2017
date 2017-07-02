@@ -17,13 +17,11 @@
 
 from socket import *
 from threading import *
-
+import sys
 import numpy as np
-
 
 #Uncomment this for exporting server with Java application
 from KirschImageProcessing import *
-
 #Uncomment this for developing this Python file
 #from src.KirschImageProcessing import *
 
@@ -51,9 +49,9 @@ class ServerSocket:
         with socket(AF_INET, SOCK_STREAM) as self.server:
             self.server.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1)
             self.server.bind((host, port))
-            print("Server running at port:" + str(port))
             self.server.listen(5)
             self.serverWorking = True
+            print("Server running at port:" + str(port))
             print('Waiting clients...')
             try:
                 while self.serverWorking:
@@ -69,121 +67,122 @@ class ServerSocket:
                         else:
                             # If its a filter request, throw a thread
                             Thread(target=self.clientThread, args=(client, addr, request)).start()
-            except:
+            except Exception as e:
+                print(e)
                 print("Server will close")
         print("Closing server...")
 
 
-def getOperation(self, request):
-    """
-    Returns the type of operation of the server
-    :param request: filter request
-    :return: request code
-    """
-    operations = request.split(",")
-    return int(operations[0])
+    def getOperation(self, request):
+        """
+        Returns the type of operation of the server
+        :param request: filter request
+        :return: request code
+        """
+        operations = request.split(",")
+        return int(operations[0])
 
 
-def clientThread(self, client, address, request):
-    """
-    Thread for client management.
-    :param client: client connection
-    :param address: client address
-    :param request: request from Java application
-    :return: None
-    """
-    print('Client connected: ' + str(address))
-    try:
-        if request == '':
-            # Disconnected
-            print(address, ": disconnected")
-        else:
-            print(request)
-            operations = request.split(",")
-            response = self.filter(operations)
-            self.sendMessage(client, response)
-            print(address, ": work finished")
-    except Exception as e:
-        print(address, ": Error filtering, closing connection...")
-        self.sendMessage(client, "ERROR")
+    def clientThread(self, client, address, request):
+        """
+        Thread for client management.
+        :param client: client connection
+        :param address: client address
+        :param request: request from Java application
+        :return: None
+        """
+        print('Client connected: ' + str(address))
+        try:
+            if request == '':
+                # Disconnected
+                print(address, ": disconnected")
+            else:
+                print(request)
+                operations = request.split(",")
+                response = self.filter(operations)
+                self.sendMessage(client, response)
+                print(address, ": work finished")
+        except Exception as e:
+            print(address, ": Error filtering, closing connection...")
+            self.sendMessage(client, "ERROR")
 
 
-def sendMessage(self, client, msg):
-    """
-    Checks whether the message is well formed and sends it.
-    Message must end with '\n' so they can be sent.
-    :param client: client connection
-    :param msg: message
-    :return: None
-    """
-    if (msg[-1] != "\n"):
-        msg = msg + "\n"
-    client.send(msg.encode("utf-8"))
+    def sendMessage(self, client, msg):
+        """
+        Checks whether the message is well formed and sends it.
+        Message must end with '\n' so they can be sent.
+        :param client: client connection
+        :param msg: message
+        :return: None
+        """
+        if (msg[-1] != "\n"):
+            msg = msg + "\n"
+        client.send(msg.encode("utf-8"))
 
 
-def filter(self, operations):
-    """
-    Filter an image with the given parameters in operations
-    :param operations:
-    :return:
-    """
-    try:
-        kirsch = KirschImageProcessing()
+    def filter(self, operations):
+        """
+        Filter an image with the given parameters in operations
+        :param operations:
+        :return:
+        """
+        try:
+            kirsch = KirschImageProcessing()
 
-        # First, extract common parameters
-        imagePath = str(operations[1])
-        savePath = str(operations[2])
-        savePathOverlap = str(operations[3])
-        kernel = 2
-        denoiseWeigh = 0.5
-        angleDetection = np.linspace(-0.3, 0.3, num=600)
-        minLineLength = 30
-        lineGapLength = 16
-        smallObjectLength = 30
-        detectLines = True
+            # First, extract common parameters
+            imagePath = str(operations[1])
+            savePath = str(operations[2])
+            savePathOverlap = str(operations[3])
+            kernel = 2
+            denoiseWeigh = 0.5
+            angleDetection = np.linspace(-0.3, 0.3, num=600)
+            minLineLength = 30
+            lineGapLength = 16
+            smallObjectLength = 30
+            detectLines = True
 
-        # If request is an advanced option request
-        if (int(operations[0]) == self.ADVANCED_FILTER):
-            # Codes for solving the advanced request
-            detectLines = bool(int(operations[4]))
-            denoiseWeigh = float(operations[5])
-            kernel = int(operations[6])
-            minAngle = float(operations[7])
-            maxAngle = float(operations[8])
-            minLineLength = int(operations[9])
-            lineGapLength = int(operations[10])
-            smallObjectLength = int(operations[11])
-            angleDetection = np.linspace(minAngle, maxAngle, num=800)
+            # If request is an advanced option request
+            if (int(operations[0]) == self.ADVANCED_FILTER):
+                # Codes for solving the advanced request
+                detectLines = bool(int(operations[4]))
+                denoiseWeigh = float(operations[5])
+                kernel = int(operations[6])
+                minAngle = float(operations[7])
+                maxAngle = float(operations[8])
+                minLineLength = int(operations[9])
+                lineGapLength = int(operations[10])
+                smallObjectLength = int(operations[11])
+                angleDetection = np.linspace(minAngle, maxAngle, num=800)
 
-        img = kirsch.loadImage(imagePath)
-        imgPrepared = kirsch.prepareImage(img, w=denoiseWeigh)
-        imgSk, lines = kirsch.kirschProcessing(imgPrepared, kernelId=kernel, angles=angleDetection,
-                                               lineLength=minLineLength, lineGap=lineGapLength,
-                                               minLengthSmallObjects=smallObjectLength, lineDetection=detectLines)
+            img = kirsch.loadImage(imagePath)
+            imgPrepared = kirsch.prepareImage(img, w=denoiseWeigh)
+            imgSk, lines = kirsch.kirschProcessing(imgPrepared, kernelId=kernel, angles=angleDetection,
+                                                   lineLength=minLineLength, lineGap=lineGapLength,
+                                                   minLengthSmallObjects=smallObjectLength, lineDetection=detectLines)
 
-        # Save images depending if the detect lines option is active
-        if (detectLines == True):
-            kirsch.saveWithLineDetection(img, imgSk, lines, savePath, savePathOverlap)
-        else:
-            kirsch.saveWithoutLineDetection(img, imgSk, savePath, savePathOverlap)
-        return "OK"
-    except (Exception):
-        return "ERROR"
+            # Save images depending if the detect lines option is active
+            if (detectLines == True):
+                kirsch.saveWithLineDetection(img, imgSk, lines, savePath, savePathOverlap)
+            else:
+                kirsch.saveWithoutLineDetection(img, imgSk, savePath, savePathOverlap)
+            return "OK"
+        except (Exception):
+            return "ERROR"
 
 
-def handShake(self, client):
-    """
-    Does a handshake with the server to know the connection is well done.
-    :return: True / False is handshake is successful or not.
-    """
-    done = False
-    msg = "HELLO FROM PYTHON\n"
-    self.sendMessage(client, msg)
-    response = client.recv(1024).decode("utf-8")
-    if response == "HELLO FROM JAVA":
-        print("Handshake successful")
-        done = True
-    return done
+    def handShake(self, client):
+        """
+        Does a handshake with the server to know the connection is well done.
+        :return: True / False is handshake is successful or not.
+        """
+        done = False
+        msg = "HELLO FROM PYTHON\n"
+        self.sendMessage(client, msg)
+        response = client.recv(1024).decode("utf-8")
+        if response == "HELLO FROM JAVA":
+            print("Handshake successful")
+            done = True
+        return done
 
 
 if __name__ == "__main__":

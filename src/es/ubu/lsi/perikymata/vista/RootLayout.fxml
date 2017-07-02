@@ -16,11 +16,12 @@
             <items>
                   <MenuItem mnemonicParsing="false" onAction="#handleNew" text="New Project" />
                   <MenuItem mnemonicParsing="false" onAction="#handleOpen" text="Open Project" />
-                  <MenuItem mnemonicParsing="false" onAction="#handleRestartServer" text="Restart Server" />
+                  <!-- <MenuItem mnemonicParsing="false" onAction="#handleRestartServer" text="Restart Server" /> -->
                   <MenuItem mnemonicParsing="false" onAction="#handleSave" text="Save" />
               <MenuItem mnemonicParsing="false" onAction="#handleExit" text="Close" />
             </items>
           </Menu>
+
           <Menu mnemonicParsing="false" text="Stage">
             <items>
               <MenuItem mnemonicParsing="false" onAction="#windowImageSelection" text="Select images" />
@@ -28,6 +29,7 @@
                   <MenuItem mnemonicParsing="false" onAction="#windowPerikymataCount" text="Count perikymata" />
             </items>
           </Menu>
+
             <Menu mnemonicParsing="false" text="Configuration">
                <items>
                   <MenuItem mnemonicParsing="false" onAction="#handleTempFolder" text="Set temporary folder" />

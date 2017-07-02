@@ -191,7 +191,7 @@ public class MainApp extends Application {
 				.add(new Image(this.getClass().getResource("/rsc/Tooth-icon.png").toExternalForm()));
 
 		// Start Python Server
-		startServer(false);
+		startServer();
 
 		initRootLayout();
 		// showImageSelection();
@@ -210,13 +210,13 @@ public class MainApp extends Application {
 	 *
 	 * restart true if want to restart
 	 */
-	public void startServer(boolean restart) {
+	public void startServer() {
 		Runnable initializeServer = () -> {
 			try {
 
-				if (restart) {
-					stopServer();
-				}
+				// if (restart) {
+				// stopServer();
+				// }
 
 				ArrayList<String> command = new ArrayList<String>();
 				if (SystemUtil.isWindows()) {
@@ -229,6 +229,7 @@ public class MainApp extends Application {
 					 * During application development run server in the python
 					 * IDE, not here. This is only for deployment.
 					 */
+
 				} else {
 					// Run in background
 					command.add("python3");
@@ -237,8 +238,9 @@ public class MainApp extends Application {
 				ProcessBuilder process = new ProcessBuilder(command);
 				process.start();
 
-			} catch (IOException e) {
-				getLogger().log(Level.SEVERE, "Exception starting server from sript", e);
+				// } catch (IOException e) {
+				// getLogger().log(Level.SEVERE, "Exception starting server from
+				// sript", e);
 			} catch (Exception e) {
 				getLogger().log(Level.SEVERE, "Exception restarting server. Can't restart because is not running.", e);
 			}
@@ -904,9 +906,9 @@ public class MainApp extends Application {
 		if (file != null) {
 			// destroys old data to create new.
 			clearData();
-
 			loadProjectFromFile(file);
 			setProjectPath(file.getParent());
+			return true;
 		}
 		return false;
 
@@ -997,7 +999,8 @@ public class MainApp extends Application {
 					stopServer();
 					System.exit(-1);
 				} catch (ConnectException e) {
-					//getLogger().log(Level.SEVERE, "Exception occur closing server.", e);
+					// getLogger().log(Level.SEVERE, "Exception occur closing
+					// server.", e);
 					Platform.runLater(() -> {
 						// Alert alert = new Alert(Alert.AlertType.ERROR);
 						// Stage window = (Stage)
@@ -1018,22 +1021,26 @@ public class MainApp extends Application {
 
 					});
 				} catch (Exception e) {
-					//getLogger().log(Level.SEVERE, "Exception occur closing server.", e);
-//					Platform.runLater(() -> {
-//						Alert alert = new Alert(Alert.AlertType.ERROR);
-//						Stage window = (Stage) alert.getDialogPane().getScene().getWindow();
-//						window.getIcons()
-//								.add(new Image(this.getClass().getResource("/rsc/Tooth-icon.png").toExternalForm()));
-//						alert.setTitle("Error closing server");
-//						alert.setHeaderText("Can't close server.\n");
-//						alert.setContentText("Can't close server. This application will close.");
-//						Optional<ButtonType> option = alert.showAndWait();
+					// getLogger().log(Level.SEVERE, "Exception occur closing
+					// server.", e);
+					// Platform.runLater(() -> {
+					// Alert alert = new Alert(Alert.AlertType.ERROR);
+					// Stage window = (Stage)
+					// alert.getDialogPane().getScene().getWindow();
+					// window.getIcons()
+					// .add(new
+					// Image(this.getClass().getResource("/rsc/Tooth-icon.png").toExternalForm()));
+					// alert.setTitle("Error closing server");
+					// alert.setHeaderText("Can't close server.\n");
+					// alert.setContentText("Can't close server. This
+					// application will close.");
+					// Optional<ButtonType> option = alert.showAndWait();
 
-						//if (option.get().equals(ButtonType.OK)) {
-							System.exit(-1);
-						//}
+					// if (option.get().equals(ButtonType.OK)) {
+					System.exit(-1);
+					// }
 
-					//});
+					// });
 				}
 			}
 		});

@@ -8,4 +8,5 @@ IF %ERRORLEVEL%==0 (
 	echo "Starting Server..."
 	python PythonApp\src\ServerSocket.py
 )
+pause
 exit

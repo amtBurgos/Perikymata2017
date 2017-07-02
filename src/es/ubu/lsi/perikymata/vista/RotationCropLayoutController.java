@@ -383,7 +383,7 @@ public class RotationCropLayoutController {
 		grid.setVgap(10);
 		grid.setPadding(new Insets(20, 150, 10, 10));
 
-		ObservableList<String> options = FXCollections.observableArrayList("cm", "mm", "\u00B5", "nm");
+		ObservableList<String> options = FXCollections.observableArrayList("cm", "mm", "\u00B5m", "nm");
 		final ComboBox<String> measureUnit = new ComboBox<>(options);
 		if (measure == null || measure.getMeasureUnit() == null)
 			measureUnit.setValue("mm");

@@ -73,9 +73,12 @@ class KirschImageProcessing():
                             [-3, 0, 5],
                             [-3, -3, -3]], dtype=np.float32)
 
-        self.kernels = [self.W, self.NW, self.NE, self.N,
-                        self.SW, self.S, self.SE,
-                        self.E]
+        #self.kernels = [self.W, self.NW, self.NE, self.N,
+        #                self.SW, self.S, self.SE,
+        #                self.E]
+        self.kernels = [self.W, self.NW, self.NE,
+                        self.E, self.SE, self.SW,
+                        self.S, self.N]
 
     def saveWithLineDetection(self, img, imgSk, lines, savePath, savePathOverlap):
         """
