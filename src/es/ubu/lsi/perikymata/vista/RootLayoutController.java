@@ -96,7 +96,7 @@ public class RootLayoutController {
 		window.getIcons().add(new Image(this.getClass().getResource("/rsc/Tooth-icon.png").toExternalForm()));
 		alert.setTitle("Paleontological analysis of dental images - Perikymata");
 		alert.setHeaderText("About");
-		alert.setContentText("v2.0\n" + "Author: Andr�s Miguel Ter�n\n" + "Tutor: Dr. Jose Francisco Diez Pastor\n"
+		alert.setContentText("v2.0\n" + "Author: Andres Miguel Teran\n" + "Tutor: Dr. Jose Francisco Diez Pastor\n"
 				+ "Tutor: Dr Raul Marticorena Sanchez  \n" + "Universidad de Burgos, July 2017\n"
 				+ "Perikymata v2.0 (Analisis Paleontologico de piezas dentales 2.0)\n"
 				+ "Perikymata v2.0 comes with ABSOLUTELY NO WARRANTY;\n"
@@ -121,14 +121,6 @@ public class RootLayoutController {
 	private void handleTempFolder() {
 		mainApp.showTemporaryFolderSelection(false);
 	}
-
-//	/**
-//	 * Restart the server.
-//	 */
-//	@FXML
-//	private void handleRestartServer() {
-//		mainApp.startServer(true);
-//	}
 
 	/**
 	 * Set full screen view.

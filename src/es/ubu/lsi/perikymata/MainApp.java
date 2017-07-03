@@ -194,7 +194,6 @@ public class MainApp extends Application {
 		startServer();
 
 		initRootLayout();
-		// showImageSelection();
 		// Open the project depending on the last image available
 		if (filteredImage != null) {
 			showPerikymataCount();
@@ -213,11 +212,6 @@ public class MainApp extends Application {
 	public void startServer() {
 		Runnable initializeServer = () -> {
 			try {
-
-				// if (restart) {
-				// stopServer();
-				// }
-
 				ArrayList<String> command = new ArrayList<String>();
 				if (SystemUtil.isWindows()) {
 					// run start server command
@@ -237,10 +231,6 @@ public class MainApp extends Application {
 				}
 				ProcessBuilder process = new ProcessBuilder(command);
 				process.start();
-
-				// } catch (IOException e) {
-				// getLogger().log(Level.SEVERE, "Exception starting server from
-				// sript", e);
 			} catch (Exception e) {
 				getLogger().log(Level.SEVERE, "Exception restarting server. Can't restart because is not running.", e);
 			}
@@ -637,6 +627,7 @@ public class MainApp extends Application {
 			Parent parent = (Parent) loader.load();
 			Stage window = new Stage();
 			window.setScene(new Scene(parent));
+			window.getIcons().add(new Image(this.getClass().getResource("/rsc/Tooth-icon.png").toExternalForm()));
 			window.setTitle("Temporary Folder Selection");
 			window.show();
 
@@ -999,48 +990,13 @@ public class MainApp extends Application {
 					stopServer();
 					System.exit(-1);
 				} catch (ConnectException e) {
-					// getLogger().log(Level.SEVERE, "Exception occur closing
-					// server.", e);
 					Platform.runLater(() -> {
-						// Alert alert = new Alert(Alert.AlertType.ERROR);
-						// Stage window = (Stage)
-						// alert.getDialogPane().getScene().getWindow();
-						// window.getIcons()
-						// .add(new
-						// Image(this.getClass().getResource("/rsc/Tooth-icon.png").toExternalForm()));
-						// alert.setTitle("Error closing server");
-						// alert.setHeaderText("Can't close server\n");
-						// alert.setContentText(
-						// "Cant't close server because is not running. This
-						// application will close.");
-						// Optional<ButtonType> option = alert.showAndWait();
-
-						// if (option.get().equals(ButtonType.OK)) {
 						System.exit(-1);
-						// }
-
 					});
 				} catch (Exception e) {
-					// getLogger().log(Level.SEVERE, "Exception occur closing
-					// server.", e);
-					// Platform.runLater(() -> {
-					// Alert alert = new Alert(Alert.AlertType.ERROR);
-					// Stage window = (Stage)
-					// alert.getDialogPane().getScene().getWindow();
-					// window.getIcons()
-					// .add(new
-					// Image(this.getClass().getResource("/rsc/Tooth-icon.png").toExternalForm()));
-					// alert.setTitle("Error closing server");
-					// alert.setHeaderText("Can't close server.\n");
-					// alert.setContentText("Can't close server. This
-					// application will close.");
-					// Optional<ButtonType> option = alert.showAndWait();
-
-					// if (option.get().equals(ButtonType.OK)) {
-					System.exit(-1);
-					// }
-
-					// });
+					Platform.runLater(() -> {
+						System.exit(-1);
+					});
 				}
 			}
 		});

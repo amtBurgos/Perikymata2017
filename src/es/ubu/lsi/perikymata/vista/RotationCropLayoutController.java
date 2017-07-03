@@ -377,6 +377,9 @@ public class RotationCropLayoutController {
 		ButtonType doneButtonType = new ButtonType("Done", ButtonData.OK_DONE);
 		dialog.getDialogPane().getButtonTypes().addAll(doneButtonType, ButtonType.CANCEL);
 
+		Stage window = (Stage) dialog.getDialogPane().getScene().getWindow();
+		window.getIcons().add(new Image(this.getClass().getResource("/rsc/Tooth-icon.png").toExternalForm()));
+
 		// Create the username and password labels and fields.
 		GridPane grid = new GridPane();
 		grid.setHgap(10);
@@ -754,16 +757,6 @@ public class RotationCropLayoutController {
 			}
 		});
 	}
-
-	// private <T extends Node> void removeRectanglesFromView(T object) {
-	// pane.getChildren().removeIf(new Predicate<T>() {
-	// @Override
-	// public boolean test(T o) {
-	//
-	// return true;
-	// }
-	// });
-	// }
 
 	/**
 	 * Validate a input for rotation.

@@ -22,6 +22,7 @@
             </items>
           </Menu>
 
+			<!-- Uncomment for debug application, is useful for moving through the application fastly
           <Menu mnemonicParsing="false" text="Stage">
             <items>
               <MenuItem mnemonicParsing="false" onAction="#windowImageSelection" text="Select images" />
@@ -29,7 +30,7 @@
                   <MenuItem mnemonicParsing="false" onAction="#windowPerikymataCount" text="Count perikymata" />
             </items>
           </Menu>
-
+ 			-->
             <Menu mnemonicParsing="false" text="Configuration">
                <items>
                   <MenuItem mnemonicParsing="false" onAction="#handleTempFolder" text="Set temporary folder" />

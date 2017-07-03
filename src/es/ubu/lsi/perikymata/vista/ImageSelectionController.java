@@ -126,17 +126,10 @@ public class ImageSelectionController {
 		File file = fileChooser.showOpenDialog(mainApp.getPrimaryStage());
 
 		if (file != null) {
-
-			// java.awt.Image full = new Opener().openImage(file.getParent(),
-			// file.getName()).getImage();
 			BufferedImage full = null;
 			try {
 
 				full = ImageIO.read(file);
-
-				// try (FileOutputStream fileStream = new FileOutputStream(
-				// new File(Paths.get(mainApp.getProjectPath(), "Full_Image",
-				// "Full_Image.png").toString()))) {
 				FileOutputStream fileStream = new FileOutputStream(
 						new File(Paths.get(mainApp.getProjectPath(), "Full_Image", "Full_Image.png").toString()));
 
@@ -155,8 +148,6 @@ public class ImageSelectionController {
 
 			mainApp.setFullImage(SwingFXUtils.toFXImage(full, null));
 			previewImage.setImage(mainApp.getFullImage());
-			// AMT
-			// mainApp.setFilteredImage(mainApp.getFullImage());
 		}
 	}
 
@@ -190,7 +181,8 @@ public class ImageSelectionController {
 						mainApp.getLogger().log(Level.SEVERE, "Exception occur opening fragment files.", e);
 						Alert alert = new Alert(Alert.AlertType.INFORMATION);
 						Stage window = (Stage) alert.getDialogPane().getScene().getWindow();
-						window.getIcons().add(new Image(this.getClass().getResource("/rsc/Tooth-icon.png").toExternalForm()));
+						window.getIcons()
+								.add(new Image(this.getClass().getResource("/rsc/Tooth-icon.png").toExternalForm()));
 						alert.setTitle("Error opening or coping fragments.");
 						alert.setHeaderText("Can't open or copy fragment file.\n");
 						alert.setContentText("Cant open or copy the image to stitch with path:\n" + file.toString());

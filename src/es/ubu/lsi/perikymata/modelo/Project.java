@@ -40,11 +40,6 @@ public class Project {
 	 */
 	private String projectName;
 
-//	/**
-//	 * List of applied filters.
-//	 */
-//	private List<Filter> filterList;
-
 	/**
 	 * List of the elements used to draw the free-draw line.
 	 */
@@ -92,29 +87,6 @@ public class Project {
 	public void setProjectName(String projectName) {
 		this.projectName = projectName;
 	}
-
-//	/**
-//	 * Getter for the list of filters, used to read from a XML. If you want to
-//	 * add a new filter, see:
-//	 *
-//	 * @see FiltersXmlAdapter
-//	 * @return list of filters.
-//	 */
-//	@XmlElement(name = "filter")
-//	@XmlJavaTypeAdapter(FiltersXmlAdapter.class)
-//	public List<Filter> getFilterList() {
-//		return filterList;
-//	}
-
-//	/**
-//	 * Setter for the list of applied filters.
-//	 *
-//	 * @param filterList
-//	 *            applied filters.
-//	 */
-//	public void setFilterList(List<Filter> filterList) {
-//		this.filterList = filterList;
-//	}
 
 	/**
 	 *
