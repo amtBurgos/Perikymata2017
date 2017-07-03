@@ -326,9 +326,11 @@ public class PerikymataCountController {
 							mainApp.getLogger().log(Level.SEVERE, "Error marking Perikymata.", e);
 							Platform.runLater(() -> {
 								Alert alert = new Alert(Alert.AlertType.ERROR);
+								Stage window = (Stage) alert.getDialogPane().getScene().getWindow();
+								window.getIcons().add(new Image(this.getClass().getResource("/rsc/Tooth-icon.png").toExternalForm()));
 								alert.setTitle("Error calculating perikymata");
 								alert.setHeaderText("Can not count perikymata\n");
-								alert.setContentText("Can not count perikymata.");
+								alert.setContentText("Line can not exceed image limits.");
 								alert.showAndWait();
 							});
 						} finally {
