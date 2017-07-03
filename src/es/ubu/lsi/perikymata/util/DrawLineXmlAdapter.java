@@ -18,15 +18,13 @@ package es.ubu.lsi.perikymata.util;
  */
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 
-import es.ubu.lsi.perikymata.modelo.Project;
 import javafx.scene.shape.LineTo;
 import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.PathElement;
 
 /**
  * Class used to pass a pathElement from XML to an object and vice versa.
- * 
- * @see Project#getFilterList()
+ *
  * @author Sergio Chico Carrancio
  */
 public class DrawLineXmlAdapter extends XmlAdapter<String, PathElement> {

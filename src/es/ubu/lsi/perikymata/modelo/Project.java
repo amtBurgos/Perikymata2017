@@ -178,7 +178,7 @@ public class Project {
 	/**
 	 * Setter for the temporary folder.
 	 *
-	 * @param tempFolderPath
+	 * @param tempFolderPath path to the temporary folder
 	 */
 	public void setTemporaryFolder(String tempFolderPath) {
 		this.temporaryFolder = tempFolderPath;

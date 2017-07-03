@@ -60,7 +60,7 @@ public class ClientSocket {
 	/**
 	 * ClientSocket constructor.
 	 *
-	 * @throws UnknownHostException
+	 * @throws ConnectException
 	 *             invalid host
 	 * @throws IOException
 	 *             Server not ready
@@ -75,8 +75,10 @@ public class ClientSocket {
 	/**
 	 * Test the connection sending a message.
 	 *
-	 * @return
+	 * @return true/false if handshake successful
+	 *
 	 * @throws IOException
+	 *             IOException
 	 */
 	public boolean handshake() throws IOException {
 		boolean correct = false;

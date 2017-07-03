@@ -408,6 +408,7 @@ public class ImageSelectionController {
 	 * initialize is called, there is no reference to the mainapp.
 	 *
 	 * @param mainApp
+	 *            main application
 	 */
 	public void setMainApp(MainApp mainApp) {
 		this.mainApp = mainApp;

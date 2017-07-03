@@ -56,7 +56,7 @@ public class Request {
 	 *            image to filter
 	 * @param savePath
 	 *            save path
-	 * @param savePathOverlaped
+	 * @param savePathOverlapped
 	 *            save path for the overlapped image
 	 */
 	public Request(int code, String imagePath, String savePath, String savePathOverlapped) {
@@ -77,7 +77,7 @@ public class Request {
 	 *            image to filter
 	 * @param savePath
 	 *            save path
-	 * @param savePathOverlaped
+	 * @param savePathOverlapped
 	 *            save path for the overlapped image
 	 * @param detectLinesOrNot
 	 *            1 or 0 if the user wants line detection

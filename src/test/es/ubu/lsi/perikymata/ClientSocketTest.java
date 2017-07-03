@@ -83,6 +83,7 @@ public class ClientSocketTest {
 	 * Initialize environment.
 	 *
 	 * @throws java.lang.Exception
+	 *             Sockets Exceptions
 	 */
 	@Before
 	public void setUp() throws Exception {
@@ -93,6 +94,7 @@ public class ClientSocketTest {
 	 * Actions to make at the end.
 	 *
 	 * @throws java.lang.Exception
+	 *             Sockets Exceptions
 	 */
 	@After
 	public void tearDown() throws Exception {

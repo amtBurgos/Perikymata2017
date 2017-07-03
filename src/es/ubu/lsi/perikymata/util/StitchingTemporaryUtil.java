@@ -155,6 +155,8 @@ public class StitchingTemporaryUtil {
 	 *
 	 * @param path
 	 *            of the image
+	 * @param isResource
+	 *            true/false if is an internal resource
 	 * @return string array with the name and extension of the image
 	 */
 	public String[] getNameAndExtension(String path, boolean isResource) {

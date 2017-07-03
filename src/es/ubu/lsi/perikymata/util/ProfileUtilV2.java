@@ -156,6 +156,8 @@ public class ProfileUtilV2 {
 	 * line.
 	 *
 	 * @author Sergio Chico Carrancio
+	 * @param freeDrawPathList
+	 *            pixels path
 	 * @return List of coordinates of the pixels under the line.
 	 *
 	 */

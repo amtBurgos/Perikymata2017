@@ -686,8 +686,8 @@ public class PerikymataCountController {
 		zoomMinusBtnImage.setImage(new Image(this.getClass().getResource("/rsc/Zoom-Minus-icon.png").toExternalForm()));
 
 		// Inflate advanced options combobox
-		perikymataOrientationCombobox.setItems(FXCollections.observableArrayList("Vertical", "Vertical Right", "Vertical Left",
-																				"Vertical 2", "Vertical Right 2", "Vertical Left 2"));
+		perikymataOrientationCombobox.setItems(FXCollections.observableArrayList("Vertical", "Vertical Right",
+				"Vertical Left", "Vertical 2", "Vertical Right 2", "Vertical Left 2"));
 		perikymataOrientationCombobox.getSelectionModel().selectFirst();
 	}
 
@@ -795,6 +795,7 @@ public class PerikymataCountController {
 	 * initialize is called, there is no reference to the mainapp.
 	 *
 	 * @param mainApp
+	 *            main application
 	 */
 	public void setMainApp(MainApp mainApp) {
 		drawLineBtn.setSelected(false);

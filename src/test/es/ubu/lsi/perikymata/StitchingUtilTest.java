@@ -48,6 +48,7 @@ public class StitchingUtilTest {
 	 * Operations executed before every test.
 	 *
 	 * @throws java.lang.Exception
+	 *             Exception
 	 */
 	@Before
 	public void setUp() throws Exception {
@@ -58,6 +59,7 @@ public class StitchingUtilTest {
 	 * Operations executed after every test.
 	 *
 	 * @throws java.lang.Exception
+	 *             Exception
 	 */
 	@After
 	public void tearDown() throws Exception {
@@ -128,6 +130,7 @@ public class StitchingUtilTest {
 	 * content is the same.
 	 *
 	 * @throws IOException
+	 *             IOException
 	 */
 	@Test
 	public void CopyFileProperlyTest() throws IOException {

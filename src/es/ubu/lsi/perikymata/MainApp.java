@@ -174,6 +174,7 @@ public class MainApp extends Application {
 	 * Launches the applications, no args needed.
 	 *
 	 * @param args
+	 *            application arguments
 	 */
 	public static void main(String[] args) {
 		launch(args);
@@ -400,7 +401,6 @@ public class MainApp extends Application {
 	 *
 	 * @param file
 	 *            XML project.
-	 * @throws IOException
 	 */
 	public void loadProjectFromFile(File file) {
 		try {
@@ -618,6 +618,9 @@ public class MainApp extends Application {
 
 	/**
 	 * Shows the Temporary folder selection Window.
+	 *
+	 * @param showCancel
+	 *            true/false enable/disable cancel button
 	 */
 	public void showTemporaryFolderSelection(boolean showCancel) {
 		try {
@@ -833,7 +836,7 @@ public class MainApp extends Application {
 	 * Creates a new project (folder structure and project xml) by choosing a
 	 * file-chooser.
 	 *
-	 * @return
+	 * @return true/false
 	 */
 	public Boolean createProject() {
 		FileChooser fileChooser = new FileChooser();
