@@ -1,29 +1,17 @@
-# Perikymata 
-######Análisis paleontológico de piezas dentales
-######Paleontological analisys of dental pieces
+# Perikymata 2.0
+###### Análisis paleontológico de piezas dentales v2.0
+###### Paleontological analisys of dental pieces v2.0
 
-This applications tries to help to detect Perikymata in a tooth image taken by a electronic microscope.
+This application continues the work started at <a href="https://github.com/Serux/perikymata">the previous version of this project</a>.
 
-This application Is divided in three stages:
-* Stage1:
-  * Panorama union of tooth images (or giving the full image from the start).
-* Stage2:
-  * Prewitt and Gauss filtering for helping the visualization of perikymata.
-* Stage3:
-  * Marking the regions of interest of the image (start and end of the perikymata zone to calculate the deciles, and start-end of the "measure" to get the real distance between perikymata on the image).
-  * Drawing a line and try to auto-mark real perikymata over that line, corrections can be made on errors.
-  * Export of the image data on a CSV with the following format
+Teeth remains are one of the most important elements for taking data about the age, the diet and physical problem of the hominid.
+Teeth have lines along the enamel, they area called perikymata. 
 
-```
-"Project name"
-Measure unit,"measure unit"
-Decile size,"measure size, calculated in the measure unit"
+Detect perikymata is very useful for get information about the hominid. 
 
-Decile,Coordinates,Distance to previous
-"number of decile","X Y coordinates","Distance in the measure unit to previous"
+This second version of the application improves the image filtering process for detecting them.
 
-Perikymata per decile
-1,2,3,4,5,6,7,8,9,10
-"perikymata in decile 1","perikymata in decile 2",...
-```
-
+It has three main stages:
+- Stitching stage: in this stage, the user selects some tooth fragments images taking by an electronic microscope. Then, the application stitching them together for getting a complete tooth image.
+- Rotation and Crop stage: the user can prepare the imagen for the next stage rotating it and cropping the cuspel of the tooth. Then, the user can introduce the measure units and value for the perikymata calculation.
+- Filter and export data stage: this stage allows the user to apply an image filtering process to detect perikymata and finally mark them in the image. All data can be exported to CSV file.
