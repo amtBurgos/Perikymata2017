@@ -1,0 +1,171 @@
+\capitulo{4}{Técnicas y herramientas}
+
+\begin{comment}
+Esta parte de la memoria tiene como objetivo presentar las técnicas metodológicas y las herramientas de desarrollo que se han utilizado para llevar a cabo el proyecto. Si se han estudiado diferentes alternativas de metodologías, herramientas, bibliotecas se puede hacer un resumen de los aspectos más destacados de cada alternativa, incluyendo comparativas entre las distintas opciones y una justificación de las elecciones realizadas. 
+No se pretende que este apartado se convierta en un capítulo de un libro dedicado a cada una de las alternativas, sino comentar los aspectos más destacados de cada opción, con un repaso somero a los fundamentos esenciales y referencias bibliográficas para que el lector pueda ampliar su conocimiento sobre el tema.
+\end{comment}
+
+\section{Metodología SCRUM}
+SCRUM ha sido la metodología usada a lo largo del desarrollo del proyecto. Es una metodología ágil que se caracteriza por un desarrollo software en iteraciones (\textit{sprints}). 
+
+Al inicio de cada \textit{sprint} se realiza una reunión donde se definen los objetivos y requisitos a cumplir durante la iteración, esto forma lo que llamamos el \textit{sprint backlog}. 
+
+La duración de cada \textit{sprint} para este proyecto ha sido, normalmente, de una semana, aunque a veces se ha visto aumentada debido a coincidencias con periodos vacacionales largos o cuando se estimaba más tiempo del habitual para los requisitos del \textit{sprint backlog} en la reuniones.
+
+SCRUM está orientado a la entrega de software funcional de forma rápida, es decir, cada una o pocas iteraciones tendremos una versión del producto, lo que permite obtener una mayor calidad en el software. 
+
+Al contrario que las metodologías tradicionales, con SCRUM se reacciona de manera rápida ante los cambios producidos y se reflexiona sobre el rumbo que debe tomar el proyecto durante su desarrollo.
+
+La mayor ventaja que ha aportado a este proyecto es, como mencionábamos, la capacidad de reaccionar antes los cambios, ya que se han necesitado realizar muchas pruebas hasta llegar a la versión final, sobre todo en lo referente a qué filtros aplicar para la detección de perikymata. 
+
+\newpage
+\section{Gestión del proyecto y control de versiones}
+A fin de poder desarrollar el proyecto siguiendo la metodología SCRUM se ha utilizado ZenHub como sistema de gestión de proyectos y \textit{git} como sistema de control de versiones utilizando un repositorio en GitHub.
+
+\subsection{Git y GitHub}
+\textit{Git} \cite{wiki:git} es un software de control de versiones de código abierto y gratuito que, entre otras cosas, permite la creación de ramas en las que trabajar sobre distintos aspectos, y posibilita su posterior integración en una única rama o revertir los cambios realizados. Podemos descargar \textit{git} desde: \url{https://git-scm.com/downloads}.
+
+GitHub (figura \ref{fig:GitHubLogo}) es una plataforma online basada en \textit{git}, que permite la creación de repositorios públicos\footnote{La plataforma dispone de planes de pago para obtener repositorios privados.} y gratuitos, siendo importante de cara al trabajo en equipo y a la realización de mejoras gracias a los \textit{issues} que cualquiera puede sugerir. En el siguiente enlace encontramos información sobre los distintos elementos y operaciones en GitHub: \url{https://help.github.com/articles/github-glossary/}
+
+\imagenCustom{img/Herramientas/GitHubLogo}{Logo de GitHub}{GitHubLogo}{0.5}
+
+También es interesante GitHub Desktop, la herramienta \textit{git} proporcionada por GitHub. Dispone de una interfaz sencilla para interactuar con los repositorios en GitHub. Podemos descargarla desde: \url{https://desktop.github.com/}
+
+\subsection{ZenHub}
+ZenHub es una plataforma de gestión de proyectos que se integra en GitHub, instalándose en el navegador mediante una extensión. Podemos descárgalo desde \url{https://www.zenhub.com/}. 
+
+Nos proporciona un tablero, como el de la figura \ref{fig:img/Herramientas/boardZenHub}, en el que podremos observar, organizar e interaccionar fácilmente con los \textit{issues} que vamos creando, los \textit{milestones} (\textit{sprints}) y los colaboradores del proyecto.
+\imagen{img/Herramientas/boardZenHub}{Tablero ZenHub}
+
+A cada \textit{issue} podemos asignarle una etiqueta que defina su finalidad. Las utilizadas en este proyecto han sido: \textit{bug}, \textit{documentación}, \textit{pruebas}, \textit{mejoras} y \textit{nuevas funcionalidades}. 
+
+También permite la visualización de los \textit{burndown charts}, que contienen la progresión en la resolución de los \textit{issues} a lo largo de cada \textit{sprint}, como en la figura \ref{fig:img/Herramientas/burndownChart}.
+\imagen{img/Herramientas/burndownChart}{Burndown Chart}
+
+\newpage
+\section{Java y JavaFX}
+Al igual que la versión anterior del proyecto \cite{perikymataV1}, se han utilizado Java y JavaFX para el desarrollo de la aplicación con la que interacciona el usuario. Se valoró también la idea de rehacer toda la aplicación en Python, dado la utilización de este para los filtros, pero finalmente se rechazó por la cantidad de tiempo que supondría y teniendo en cuenta que la mejora no sería demasiado notable. 
+
+\subsection{Java}
+Java \cite{ubu:Metodologia} es un lenguaje orientado a objetos, de alto nivel y estáticamente tipado. El programador se encarga de escribir las clases que son compiladas y ejecutadas en la Máquina Virtual Java (JVM). Estas clases pueden ser transportadas y reutilizadas fácilmente en otros entornos donde tengamos una JVM. En la figura \ref{fig:JavaLogo} podemos ver el logo de Java.
+
+La versión utilizada ha sido Java 8 y podemos conseguirla aquí: \\ \url{http://www.oracle.com/technetwork/java/javase/downloads/}
+
+\imagenCustom{img/Herramientas/JavaLogo}{Logo de Java}{JavaLogo}{0.4}
+
+\subsection{JavaFX} \label{th:JavaFX}
+JavaFX \cite{JavaFX} es una herramienta incluida en las instalaciones de Java, tanto en el kit de desarrollador JDK, como en el entorno de ejecución JRE, y provee un conjunto de paquetes gráficos para desarrollar aplicaciones de cliente enriquecidas, que pueden usarse incluso en páginas web\footnote{Para ello es necesario un plugin. Más información aquí: \url{http://www.oracle.com/technetwork/java/index-jsp-141438.html}.}. Desde JavaFX podemos  acceder a todas las características y librerías de Java. 
+
+La interfaz de usuario puede ser escrita completamente mediante una clase Java, pero JavaFX también permite crear vistas en código FXML\footnote{Código tipo XML.} que después son cargadas por una clase controlador en la aplicación, y que nos posibilita definir las acciones que se deben llevar a cabo cuando el usuario interactúa con los distintos elementos.
+
+Se ha utilizado también JavaFX Scene Builder 2.0, una herramienta que permite la creación de vistas de manera visual e interactiva además de proporcionarnos el cuerpo de la clase controlador a la que esté asociada.
+
+La descarga de Scene Builder podemos encontrarla aquí: 
+
+\url{https://goo.gl/gZMvXe}
+
+Como podemos intuir, en este proyecto se ha continuado utilizando el patrón Modelo-Vista-Controlador (MVC) implementado en la versión anterior \cite{perikymataV1}. En el modelo encontramos clases Java, en la vista tenemos archivos FXML y los controladores serán clases que accederán a los elementos de las vistas y que desarrollarán la lógica de la aplicación.
+
+También se ha utilizado JavaFX para la lectura de las imágenes en vez de ImageJ \cite{ImageJ}, que usaba la versión anterior del proyecto, con lo que eliminamos una dependencia innecesaria.
+
+\section{Python y Scikit-Image}
+\label{th:PythonYSkimage}
+\subsection{Python} \label{th:Python}
+Python \cite{wiki:Python} es un lenguaje interpretado, multiplataforma y multiparadigma de manera que puede usarse con una orientación a objetos o de forma funcional. 
+
+Es un lenguaje dinámicamente tipado, por lo que permite que se asigne una variable con un valor de tipo distinto que con el que se había inicializado.
+
+Algunos de los objetivos más importantes que persigue este lenguaje son la legibilidad y transparencia en la escritura de código. 
+
+Otro de los aspectos importantes de Python, es la cantidad de módulos y paquetes de los que disponemos. Encontramos por ejemplo, el caso de Anaconda, que instala Python e incluye una gran variedad de módulos para interactuar con datos científicos.
+
+Encontramos dos versiones del mismo, la versión 2 y la 3. En este proyecto se ha elegido desarrollar con la versión 3 debido a que, en un futuro no muy lejano, será la versión que predominará\footnote{En 2020 acabará el mantenimiento oficial: \url{https://pythonclock.org/}.} y también porque actualmente viene incluido en las distribuciones Linux, lo cual evita que el usuario deba realizar más pasos para instalar nuestra aplicación en esos sistemas operativos. 
+
+Actualmente 344 de los 360 paquetes más usados en Python son soportados por la versión 3\footnote{Podemos ver el contador de los paquetes más populares disponibles en Python3 aquí: \url{http://py3readiness.org/}.} y algunos de ellos como los Jupyter Notebooks ya no soportan Python2 en sus últimas versiones\footnote{Desde IPhyton no soportan Python2 a partir de la versión 6: \url{http://ipython.readthedocs.io/}.}.
+
+
+Podemos descargarlo aquí:
+
+\url{https://www.continuum.io/downloads}.
+
+
+\subsection{Scikit-Image} \label{th:Skimage}
+\textit{Scikit-Image} (figura \ref{fig:SkimageLogo}) es módulo que contiene algoritmos de procesamiento de imágenes y visión computacional, y complementa a \textit{SciPy} \cite{Scipy}, otro módulo utilizado para computación científica en Python.
+
+\imagenCustom{img/Herramientas/SkimageLogo}{Logo de \textit{Scikit-Image}}{SkimageLogo}{0.6}
+
+Es código abierto y aquí podemos encontrar su repositorio en GitHub: \\ \url{https://github.com/scikit-image/scikit-image}.
+
+Se ha utilizado la última versión estable disponible en el momento del desarrollo de este proyecto, la versión 0.13.0.
+
+Esta ha sido la alternativa a ImageJ \cite{ImageJ} para Java utilizada para procesar las imágenes y aplicar filtros. Se ha elegido junto a Python por su sencillez a la hora de desarrollar y aplicar la técnica que nos ha permitido realzar las perikymata.
+
+\section{Jupyter Notebooks} \label{th:JupyterNotebooks}
+
+Jupyter Notebooks \cite{jupyterNotebook} es una aplicación cliente-servidor, que puede ser ejecutada en el equipo local y sirve para editar \textit{notebooks}: documentos que incluyen código Python ejecutable y también elementos de texto enriquecido.
+
+Ha sido de gran importancia para realizar pruebas con los distintos filtros propuestos pues permite ver los resultados de manera rápida y sencilla.
+
+Esta aplicación viene incluida en la instalación de Anaconda.
+
+\section{OpenCV} \label{th:OpenCV}
+OpenCV \cite{OpenCVManual} es una librería utilizada para visión computacional, es multiplataforma\footnote{Incluye también entornos móviles como Android e iOS.}, de código abierto y oficialmente da soporte a lenguajes como C++, Java y Python, aunque pueden encontrarse versiones para Ruby e incluso .NET\footnote{Más información en \url{http://www.emgu.com/wiki/index.php/Emgu_CV}.}.
+
+En la versión anterior \cite{perikymataV1} del proyecto, era utilizada para el desarrollo de la aplicación de \textit{stitching} en C++, que se encargaba de unir las imágenes. En este proyecto también se ha probado a utilizarla con Python, aunque el resultado no fue satisfactorio y se desechó su utilización.
+
+La versión de OpenCV utilizada en este proyecto ha sido la 2.4.11 en vez de continuar con la 3.1 por las razones que comentaremos más adelante en la sección \ref{ar:stitchingWindows}.
+
+
+\section{IDEs}
+Un IDE es un entorno de desarrollo que incluye elementos como un editor de texto, un depurador o hasta un compilador e intérprete.
+
+A lo largo del proyecto se han utilizado varios IDEs dependiendo del lenguaje con el que trabajar.
+
+\subsection{Eclipse} \label{th:Eclipse}
+Eclipse es uno de los entornos de desarrollo para Java más popular, y mediante distintos plugins puede ser utilizado para desarrollar en otros lenguajes. Se distribuye bajo una licencia de código abierto (Eclipse Public License). He elegido Eclipse porque es el IDE con el que he trabajado en Java a lo largo del grado. La versión utilizada ha sido \textit{Eclipse Neon} 4.6.
+
+Podemos encontrar esta y muchas otras versiones en el siguiente enlace: \url{https://www.eclipse.org/downloads/}
+
+\subsection{PyCharm} \label{th:PyCharm}
+PyCharm es un IDE para desarrollar código Python, creado por la famosa compañía JetBrains\footnote{Más información en su página web \url{https://www.jetbrains.com/}}, especializada en crear herramientas para desarrolladores. 
+
+Se ha utilizado la versión \textit{Community Edition} 2016.3.3, gratuita y de código abierto. Podemos descargarlo desde:
+\url{https://www.jetbrains.com/pycharm/download/}
+
+\subsection{Visual Studio}\label{th:VisualStudio}
+Visual Studio es un IDE desarrollado por Microsoft. Actualmente se encuentra en la versión de 2017, aunque se ha utilizado la versión gratuita de 2013 (\textit{Visual Studio Express}) para poder compilar la aplicación de stitching para sistemas de 32 y 64 bits junto con OpenCV, como comentaremos en la sección \ref{ar:stitchingWindows}.
+
+La versión gratuita más actual podemos encontrarla en: \url{https://www.visualstudio.com/es/downloads/}
+
+\section{Otras herramientas}
+En este apartado se comentarán otras herramientas que se han utilizado a lo largo del proyecto.
+
+\subsection{PyInstaller} \label{th:PyInstaller}
+Esta herramienta permite crear un ejecutable a partir de código Python, con la intención de simplificar el proceso de instalación. Para ello cuenta con una opción \textit{onefile}, que empaqueta el interprete de Python y los paquetes de los que dependa el código, de modo que solo se necesita el ejecutable resultante para que funcione nuestra aplicación.
+
+Aunque se han realizado pruebas de exportación con PyInstaller de manera satisfactoria, no se ha podido incluir debido a problemas en el ejecutable generado al haber submódulos de Python que no se han podido encontrar, por lo que se decidió utilizar Miniconda\footnote{Descarga básica que contiene Python y un gestor de paquetes \textit{conda}.}.
+
+Más información sobre PyInstaller: \url{http://www.pyinstaller.org/}
+
+\subsection{VirtualBox}
+VirtualBox es una aplicación open source y multiplataforma que nos permite virtualizar unidades de disco donde poder instalar distintas distribuciones de sistemas operativos.
+
+A cada virtualización se le pueden modificar una gran variedad de características, como por ejemplo, la memoria RAM, el espacio del disco, el número de procesadores reales que se le cede desde el equipo anfitrión y aspectos relativos al audio, pantalla y red.
+
+En este proyecto se ha utilizado para virtualizar cuatro distribuciones de sistemas operativos, dos sistemas operativos Windows 7, uno de 32 bits y otro de 64 y dos sistemas Ubuntu 16.04 LTS, uno de 32 bits y otro de 64. 
+
+Podemos descargar VirtualBox desde: \url{https://www.virtualbox.org/} y Ubuntu desde: \url{https://www.ubuntu.com/download}
+
+\subsection{Latex}
+\LaTeX{} \cite{wiki:latex} es un procesador de texto basado en instrucciones que permite generar documentos de alta calidad. 
+
+Suele ser usado en la creación de documentos científicos. Su propósito general es centrarse en el contenido del documento por encima del diseño.
+
+Entre sus puntos fuertes, destacan el poder incluir y personalizar una gran variedad de comandos mediante la importación de paquetes para obtener el documento deseado.
+
+Se ha usado \LaTeX{} siguiendo la plantilla proporcionada por la universidad y escribiendo en ShareLatex\footnote{Acceso a ShareLatex: \url{https://es.sharelatex.com/}}, una plataforma online que permite escribir documentos \LaTeX{} y visualizar el resultado en formato PDF de forma rápida además de colaborar escribiendo en otros documentos en grupo.
+
+\subsection{Google Scholar}
+Google Scholar (Google Académico) es el buscador de documentos científicos de Google. Entre otras cosas, permite acceder a artículos de revistas científicas, tesis, memorias, informes y extractos de libros técnicos. Permite también, subir documentos propios para que estén accesibles y puedan ser citados por cualquier persona.
+
+Ha sido de gran ayuda para encontrar información sobre temas de detección de bordes y para citar los documentos consultados.

@@ -1,0 +1,190 @@
+\capitulo{5}{Aspectos relevantes del desarrollo del proyecto}
+
+\begin{comment}
+Este apartado pretende recoger los aspectos más interesantes del desarrollo del proyecto, comentados por los autores del mismo.
+Debe incluir desde la exposición del ciclo de vida utilizado, hasta los detalles de mayor relevancia de las fases de análisis, diseño e implementación.
+Se busca que no sea una mera operación de copiar y pegar diagramas y extractos del código fuente, sino que realmente se justifiquen los caminos de solución que se han tomado, especialmente aquellos que no sean triviales.
+Puede ser el lugar más adecuado para documentar los aspectos más interesantes del diseño y de la implementación, con un mayor hincapié en aspectos tales como el tipo de arquitectura elegido, los índices de las tablas de la base de datos, normalización y desnormalización, distribución en ficheros3, reglas de negocio dentro de las bases de datos (EDVHV GH GDWRV DFWLYDV), aspectos de desarrollo relacionados con el WWW...
+Este apartado, debe convertirse en el resumen de la experiencia práctica del proyecto, y por sí mismo justifica que la memoria se convierta en un documento útil, fuente de referencia para los autores, los tutores y futuros alumnos.
+\end{comment}
+
+
+
+\section{Requisitos generales}
+\label{ObjetivosComunesC5}
+Creo conveniente nombrar los requisitos generales que se establecieron en la versión anterior del proyecto \cite{perikymataV1} para conocer cual es el objetivo que se persigue.
+Sobre la aplicación de usuario:
+\textit{
+\begin{itemize}
+	\item Permite la unión de las imágenes automáticamente o semiautomáticamente para obtener una imagen completa de la pieza dental.
+	\item Proporciona una interfaz gráfica al usuario, en la cual se pueden aplicar una serie de filtros sobre una imagen de una pieza dental para poder diferenciar las perikymata más fácilmente. 
+	\item Pide la interacción del usuario para trazar una línea que atraviesa las zonas donde las perikymata estén más marcadas.
+	\item Realiza el cálculo y muestra el número total de perikymata detectados y el número de perikymata por decil (división en diez partes de la zona donde aparecen perikymata).
+\end{itemize}
+}
+\begin{flushright}
+\small{\emph{(Sergio Chico Carrancio, 2016 \cite{perikymataV1})}}
+\end{flushright}
+
+%\pagebreak
+\newpage
+
+\section{Stitching}
+
+La aplicación de \textit{stitching} se encarga de unir las imágenes de fragmentos del diente que han sido tomadas por un microscopio electrónico, para que el usuario no tenga que recurrir a software de terceros.
+
+En este proyecto se han tenido que solucionar errores relacionados con esta aplicación y además, se han valorado otras formas de desarrollarla con la intención de que mejorase. Para ello debemos hablar de los temas que veremos a continuación.
+
+\subsection{Stitching en Windows}
+\label{ar:stitchingWindows}
+En la versión anterior del proyecto \cite{perikymataV1}, se decidió utilizar OpenCV (sección \ref{th:OpenCV}) para desarrollar, en C++, una aplicación que realizase la operación de \textit{stitching} con las imágenes. Se utilizó la última versión disponible de la librería en ese momento, la versión 3.1. Esta versión incluye sus librerías ya compiladas para Windows con el IDE Visual Studio (sección \ref{th:VisualStudio}) para arquitecturas de 64 bits.
+
+Como Java puede ser ejecutado en sistemas de 32 bits, es una limitación que, por parte de la aplicación de \textit{stitching}, el proyecto quede restringido a sistemas de 64 bits, por lo que se buscó una versión anterior de OpenCV, en concreto la versión 2.4.11, que permite obtener un ejecutable de 32 bits y así abrirse a más sistemas. Por supuesto, se probó que el resultado fuese el mismo que con la otra versión más moderna.
+
+Otra limitación solucionada en cuanto a la aplicación de \textit{stitching} era que, para poder unir las imágenes, el ejecutable debía estar en la misma carpeta que la aplicación Java junto con sus dependencias \textit{dlls}.
+
+La versión 2.4.11 de OpenCV para Windows trae ya compilado su código fuente en forma de librerías dinámicas o estáticas y a la hora de crear una aplicación se utilizan por defecto las dinámicas con la idea de que quien haga uso de la aplicación tenga instalado en su sistema la misma versión de OpenCV. 
+
+Eliminar esta dependencia de las \textit{dlls} en la misma carpeta se solucionó configurando Visual Studio para que utilizase las librerías estáticas. Curiosamente las librerías estáticas compiladas de la versión 2.4.11 solo dan soporte hasta la versión 2013 de Visual Studio, por lo hubo que utilizar esa versión más antigua del IDE\footnote{También podría haberse compilado el código fuente con \textit{CMake}.}.
+
+\pagebreak
+\subsection{Stitching en Linux}
+Como este proyecto también buscaba dar soporte a más sistemas, se ha usado OpenCV para crear un ejecutable de \textit{stitching} que pueda ser utilizado en sistemas Linux\footnote{Se ha desarrollado en Ubuntu 16.04 LTS para 32 y 64 bits.}.
+
+Para ello, se ha tenido que descargar el código fuente de OpenCV y \textit{CMake} para poder compilar la aplicación, de nuevo, configurando un uso de las librerías en modo estático para no generar dependencias. 
+
+Se obtuvo un ejecutable de 32 bits y se encontró que no funcionaba en Ubuntu de 64 bits, por lo que se compiló otro para 64.
+ 
+\subsection{Errores encontrados y sus soluciones}
+La aplicación Java se encarga de ejecutar la aplicación de \textit{stitching} indicándole, en los argumentos, las imágenes a juntar. A veces las imágenes no se podían unir, y se encontró que el error era que las imágenes estaban en rutas con al menos un espacio en blanco y el ejecutable no era capaz de gestionarlo.
+
+Se propuso utilizar las carpetas temporales por defecto de los sistemas Windows y Linux en las que copiar el ejecutable de \textit{stitching} y las imágenes a juntar para solucionar el problema. 
+
+En Linux es una buena solución porque la carpeta temporal suele ser \textit{/tmp}, que tiene permisos \textit{777}, y pueden usar todos los usuarios salvo que el administrador lo modifique. 
+
+En Windows se encuentra definida en la variable de entorno \textit{temp}, que suele apuntar a la carpeta \textit{C:/Users/NOMBRE/AppData/Local/Temp/} que es donde recurre Java si no se le indica a la máquina virtual (JVM) ninguna otra carpeta con el comando \textit{java -Djava.io.tmpdir=CARPETA}.
+
+Como vemos, las carpetas temporales pueden llegar a ser muy variables y para solucionarlo, además de poder elegir la carpeta por defecto, se ha añadido una opción para que el usuario seleccione una carpeta temporal válida de su preferencia (figura \ref{fig:tmpFolder}).
+
+\imagenCustom{img/AspectosRelevantes/TemporaryFolder}{Opción de carpeta temporal}{tmpFolder}{0.7}
+
+Cuando se inicia la aplicación, si ya hay un proyecto creado, se cargan sus imágenes desde la carpeta \textit{Fragments}. Se encontró que no solo se cargaban las imágenes, sino todos los ficheros de la carpeta, y a la hora de unir las imágenes evidentemente, fallaba. La solución fue añadir un filtro para que únicamente se aceptasen ficheros que son imágenes que puede usar la aplicación.
+
+\subsection{Stitching con Python}
+\label{ar:stitchingPython}
+Como previsiblemente el procesado de la imagen del diente para resaltar las perikymata se iba a realizar en Python, se valoró realizar el \textit{stitching} con este lenguaje puesto que otro de los objetivos del proyecto es buscar otras alternativas no probadas en la versión anterior del proyecto \cite{perikymataV1}. 
+
+Tras investigar en la web, la recomendaciones sugerían utilizar OpenCV para Python. Durante el proceso, se realizaba un búsqueda de los puntos comunes de las imágenes a unir, como en la figura \ref{fig:img/AspectosRelevantes/StitchingAlternativo_PuntosComunes}.
+
+\imagen{img/AspectosRelevantes/StitchingAlternativo_PuntosComunes}{Puntos comunes de \textit{stitching} con Python}
+
+Después se unían las imágenes teniendo como resultado la imagen de la figura \ref{fig:img/AspectosRelevantes/StitchingAlternativo_Resultado}.
+\imagen{img/AspectosRelevantes/StitchingAlternativo_Resultado}{Resultado de \textit{stitching} con Python}
+
+Este resultado es peor que con la aplicación en C++ (también desarrollada en OpenCV) porque, como se ve, se nota la unión de la imágenes y el resultado no queda armonizado, es decir, no se consigue una homogeneización en el color y la intensidad en la unión las dos imágenes. 
+
+Por todo esto, se decidió no invertir más tiempo en la operación de \textit{stitching} y continuar con los demás aspectos del proyecto.
+
+\section{Imágenes de dientes}
+Tanto este proyecto como el anterior, han estado basados fundamentalmente en las perikymata de las dos imágenes de dientes que fueron facilitadas desde el Laboratorio de la Evolución Humana. A lo largo de los archivos del proyecto podemos encontrarlas nombradas como \textit{diente 1} y \textit{diente 2}. 
+
+Estas dos imágenes han sido la únicas disponibles hasta, prácticamente, el último mes de desarrollo del proyecto.
+
+Realizar pruebas sobre la primera de ellas (figura \ref{fig:Diente1}) ha sido complicado, porque a simple vista la mayoría de las perikymata ni siquiera se intuían. Conforme avanzaba el proyecto, se desechó la idea de trabajar sobre la imagen del diente 1 porque los filtrados probados no eran lo suficientemente prometedores en ningún caso.
+\imagenCustom{img/AspectosRelevantes/Diente1}{Imagen del diente 1}{Diente1}{1}
+
+A falta de más imágenes, se continuó trabajando sobre el \textit{diente 2} (figura \ref{fig:Diente2}), que respondía mejor a los filtrados aplicados.
+
+Estas dos imágenes de los dientes generaban incertidumbre respecto a cual es el caso habitual de las imágenes, es decir, si normalmente las perikymata son distinguibles o no.
+
+\imagenCustom{img/AspectosRelevantes/Diente2}{Imagen del diente 2}{Diente2}{1}
+\newpage
+A finales de mayo se consiguieron más imágenes y de hecho, las perikymata se aprecian bastante mejor que en la dos primeras como veremos en el apartado \ref{ar:procesadoFinal}. 
+
+Cuando nos facilitaron más, nos comentaron que es complicado obtener imágenes de dientes, porque en muchas ocasiones las pocas muestras que hay están muy deterioradas y necesitan ser cuidadosamente limpiadas antes de tomar las fotografías con el microscopio electrónico.
+
+%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Primeros filtrados}
+\label{ar:PrimerosFiltrados}
+
+Al principio, se trabajó elaborando un procesado basado en el filtro Frangi (sección \ref{Frangi}).
+
+Para poder comprobar como de eficaz era el filtrado se utilizaron máscaras. Una máscara es una imagen elaborada por una persona que sirve para evaluar de manera objetiva métodos de visión artificial.
+
+Se tomaron fragmentos pequeños de la imagen donde aparecían las perikymata a modo de prototipo. Con estos fragmentos, se elaboraron máscaras donde se marcaban las zonas de la imagen que sí eran perikymata, se procesaban con el filtrado y se comparaban con los resultados del procesado con Frangi sobre un fragmento sin alterar (figura \ref{fig:MascaraResultadoFrangi}).
+
+\imagenCustomSinRef{img/AspectosRelevantes/MascaraYResultadoFrangi}{Procesado Frangi con la imagen (izda.) y la máscara (dcha.)}{MascaraResultadoFrangi}{0.8}{Procesado Frangi con la imagen y la máscara}
+
+El resultado fue muy satisfactorio, pero al aplicarlo a una imagen del tamaño de las que se utilizan en la aplicación, no fue suficientemente bueno, encontrando que las perikymata no eran capaces de distinguirse como vemos en la figura \ref{fig:FrangiGrande} (las imágenes han sido recortadas para apreciar el resultado). 
+
+\imagenCustom{img/AspectosRelevantes/FrangiProcesadoDiente2}{Procesado Frangi sobre el diente 2}{FrangiGrande}{0.7}
+
+Con esas imágenes con líneas indistinguibles se trató de reutilizar y modificar algunas funciones del Trabajo de Fin de Grado de Ismael Tobar (sección \ref{TFGisma}), que utilizan teoría de grafos \cite{wiki:TeoriaGrafos}, para unir las líneas verticales y formar las perikymata, aunque la mala visibilidad no permitía identificar correctamente a qué perikyma\footnote{\textit{Perikyma} es el singular de \textit{perikymata}.} correspondía cada línea (figura \ref{fig:FrangiLineas}). Este proceso también tenía un coste computacional alto por lo que se desechó finalmente.
+
+\imagenCustom{img/AspectosRelevantes/DeteccionFrangi}{Detección de líneas sobre la imagen procesada}{FrangiLineas}{0.7}
+
+Con estos resultados, se dio más importancia a preparar y realzar las perikymata de una manera lo suficientemente buena antes de detectarlas y para ello finalmente se utilizó un filtrado basado en Kirsch (sección \ref{Kirsch}), mediante sus distintas orientaciones \cite{scholar:venmathi2016kirsch}, siguiendo el proceso que se comentará en el apartado \ref{ar:procesadoFinal}.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Servidor en Python y PyInstaller}
+Todo el procesado que se mencionará en la siguiente sección es llevado a cabo en un servidor desarrollado en Python que atiende las peticiones de la aplicación Java a través de sockets.
+
+Al principio, se pensó en utilizar la herramienta PyInstaller (sección \ref{th:PyInstaller}) para conseguir un ejecutable sin dependencias y así evitar más instalaciones. Al igual que con el ejecutable de \textit{stitching}, lo arrancaríamos desde Java.
+
+En las pruebas realizadas con PyInstaller, los ejecutables tardaban bastante en arrancar, debido a que tenían contenido el código de todos los módulos usados y de las dependencias de estos, además del intérprete de Python para poder ser ejecutado.
+
+Configurándolo adecuadamente, la exportación era satisfactoria, pero cuando se añadió el módulo de sockets fue imposible realizarla por lo que en la instalación de la aplicación finalmente debería tenerse como requisito tener instalado Python 3. En las últimas distribuciones Linux viene incluido, pero en Windows no, por lo que se pensó utilizar Miniconda3.
+
+Se pensó distribuir el servidor de Python utilizando Anaconda Projects\footnote{Más información aquí: \url{http://anaconda-project.readthedocs.io/en/latest/}.}, que si se tiene \textit{conda} instalado, permite descargar el proyecto con un comando. 
+
+Finalmente este paso se consideró innecesario porque era más sencillo incluir el servidor con el resto de la aplicación y elaborar una serie de scripts para Linux y Windows que instalaran \textit{scikit-image} (sección \ref{th:PythonYSkimage}) y sus dependencias.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newpage
+
+\section{Procesado de la imagen final}
+\label{ar:procesadoFinal}
+Como bien se recoge en la memoria y anexos de la versión anterior del proyecto \cite{perikymataV1}, el filtrado de la imagen consistía en aplicar una reducción de ruido con un filtro gaussiano \cite{wiki:gaussianNoise} y después aplicar un filtro Prewit \cite{wiki:Prewitt} para realzar las perikymata, todo ello con parámetros que podía definir el usuario.
+
+Con la intención de resaltar mejor las perikymata, se ha realizado otro proceso de filtrado que comparte características con otros proyectos de fin de grado como mencionaremos más adelante en la sección \ref{TrabajosRelacionados} sobre trabajos relacionados.
+
+A continuación se mostrarán los resultados del proceso de filtrado utilizando los conceptos explicados en la sección de conceptos teóricos.
+
+\subsection{Imagen inicial}
+Después de unir las imágenes mediante el \textit{stitching} encontraremos una imagen completa de una pieza dental como la figura \ref{fig:PiezaDental}
+\imagenCustom{img/AspectosRelevantes/ImagenPrueba}{Pieza dental}{PiezaDental}{1}
+A continuación veremos los cambios que se van produciendo en la imagen según aplicamos los distintos procesos.
+
+\subsection{Ecualización adaptativa y reducción de ruido}
+Con la ecualización adaptativa (sección \ref{EcualizacionAdaptativa}) aplicada de manera local mediante el algoritmo \textit{CLAHE} \cite{wiki:CLAHE} conseguimos una imagen en la que los bordes quedan más contrastados. A ello le reducimos el ruido mediante una función que utiliza el Algoritmo \textit{Chambolle} (sección \ref{ReduccionRuido}) y obtenemos una imagen como en la figura \ref{fig:DienteSinRuido}.
+\imagenCustom{img/AspectosRelevantes/EcualizadaRuido}{Imagen del diente ecualizada y sin ruido}{DienteSinRuido}{1}
+
+\subsection{Filtro Kirsch}
+Aplicando un filtro Kirsch (sección \ref{Kirsch}) \cite{scholar:venmathi2016kirsch} de orientación Este\footnote{Recordemos que el filtro Este se caracteriza por tener todos los valores \textit{+5} del kernel en la zona Este de la matriz.} mediante la operación de convolución (sección \ref{ct:convolucion}), conseguimos marcar más las zonas verticales dando un resultado como en la figura \ref{fig:DienteKirsch}. 
+\imagenCustom{img/AspectosRelevantes/Kirsch}{Imagen del diente con un filtro Kirsch Este}{DienteKirsch}{1}
+
+\newpage
+\subsection{Binarización}
+La binarización (sección \ref{Binarizacion}) permitirá tener únicamente dos colores en la imagen, como en la figura \ref{fig:DienteBinarizado}. A nivel de computador, se interpreta como una matriz de dos dimensiones con valores \textit{true} y \textit{false}.
+\imagenCustom{img/AspectosRelevantes/Binarizada}{Imagen del diente binarizada}{DienteBinarizado}{1}
+Como vemos, esta imagen justifica bien todo el proceso, pues ya obtenemos un resultado donde una persona puede distinguir, de manera aceptable, las perikymata.
+
+\subsection{Esqueletonización y detección de líneas}
+La esqueletonización (sección \ref{Esqueletonizacion}) permitirá reducir las líneas gruesas de la imagen binarizada a una anchura de un píxel. Además, se eliminarán objetos pequeños de la imagen que puedan interferir en el proceso. Después, mediante el uso de una función que utiliza la Transformada de Hough (sección \ref{Hough}), se detectarán las líneas que tienen la orientación que nos interesa y se marcarán en la imagen, como podemos ver en la figura \ref{Esqueletonizacion} (Se ha recortado la imagen para apreciar la esqueletonización y detección de perikymata).
+
+\imagenCustom{img/AspectosRelevantes/EsqueletonizacionPequeno}{Imagen esqueletonizada con detección de líneas}{Esqueletonizacion}{1}
+
+\subsection{Resultado y presentación}
+Una vez realizado todo el proceso, se plasman las líneas detectadas sobre la imagen original y después, es responsabilidad del usuario dibujar una línea que atraviese la zona de la imagen en la que mejor se ven las perikymata.
+
+Seguidamente, el usuario pedirá a la aplicación que marque las perikymata que atraviesan la línea, y para ello se hace uso del Modelo HSV (sección \ref{ModeloHSV}) para, finalmente, presentar una imagen como la figura \ref{fig:Resultado}.
+\imagenCustom{img/AspectosRelevantes/Resultado}{Imagen con perikymata detectadas}{Resultado}{1}
+
+Este resultado y su presentación, difieren notablemente (gracias al filtrado aquí descrito) de lo que obtendríamos utilizando la versión anterior de la aplicación sobre la misma pieza dental. 
+
+Si observamos detenidamente la figura \ref{fig:ResultadoViejo}, sí que se detectaban perikymata, pero había fallos en algunas zonas y en otras se marcaban más de las que deberían. Esto es debido a que se usaba un filtrado básico y una variable \textit{umbral} para la detección. Si el valor de esta variable era alto, no se detectaban perikymata y si era bajo, se marcaban más de las necesarias, por lo que en el punto medio, algunas las marcaba bien, otras mal y otras no las marcaba.
+\imagenCustom{img/AspectosRelevantes/ResultadoViejo}{Imagen con perikymata detectadas en la versión anterior}{ResultadoViejo}{1}
+
+A la vista de los resultados, podemos afirmar que se ha mejorado notablemente la detección de la perikymata y por tanto, se ha cumplido el objetivo principal de este proyecto.
+

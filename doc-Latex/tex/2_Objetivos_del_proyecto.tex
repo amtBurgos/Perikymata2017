@@ -1,0 +1,56 @@
+\capitulo{2}{Objetivos del proyecto}
+
+\begin{comment}
+Este apartado explica de forma precisa y concisa cuales son los objetivos que se persiguen con la realización del proyecto. Se puede distinguir entre los objetivos marcados por los requisitos del software a construir y los objetivos de carácter técnico que plantea a la hora de llevar a la práctica el proyecto.
+\end{comment}
+
+\section{Objetivos generales}
+
+De la versión anterior del proyecto \cite{perikymataV1} heredamos una serie de requisitos generales acerca de la aplicación a desarrollar:
+\begin{itemize}
+    \item Se deben poder por unir los fragmentos para conseguir una imagen completa del diente.
+    \item El usuario debe poder aplicar un filtro o filtros a fin de resaltar las perikymata. 
+    \item La corona del diente se dividirá en diez partes (deciles) sobre la que el usuario dibujará una línea para poder automarcar las perikymata detectadas.
+    \item Los datos conseguidos sobre el número de perikymata y su localización podrán ser exportados a un fichero.
+\end{itemize}
+
+Teniendo en cuenta esos objetivos, se profundizará en mejorar la detección y automarcado de las perikymata gracias a la aplicación de otros filtros de imagen y procedimientos más adecuados para resaltarlas.
+
+\newpage
+
+\section{Objetivos específicos}
+
+\subsection{Unión de imágenes (\textit{stitching})}
+Como mencionábamos en la introducción, la primera fase será la unión de imágenes (\textit{stitching} de aquí en adelante), que nos permitirá obtener una imagen completa de la pieza dental a partir de las imágenes de fragmentos tomadas por un microscopio electrónico. Los objetivos en esta fase serán:
+\begin{itemize}
+    \item Investigar, valorar y probar la utilización de otro lenguaje de programación para realizar el \textit{stitching}.
+    \item Eliminar la dependencia total de archivos de bibliotecas de enlace dinámicos (\textit{dll}) que en la versión anterior necesitaban estar en la misma ruta que la aplicación Java para funcionar.
+    \item Conseguir que la aplicación de \textit{stitching} sea multiplataforma de modo que no esté restringida a sistemas Windows de 64 bits. 
+    \item Solucionar el error a la hora de hacer \textit{stitching} con imágenes en ciertas rutas.
+\end{itemize}
+
+\subsection{Filtrado de imagen y detección de perikymata}
+El filtrado de la imagen completa del diente es la parte más importante del proyecto puesto que un buen filtrado permitirá resaltar mejor las perikymata. Los objetivos de esta fase son:
+\begin{itemize}
+    \item Investigar otros filtros de imagen relacionados con la detección de bordes.
+    \item Realizar y documentar pruebas de los diferentes filtros, los distintos métodos empleados y como afectarán a la detección de líneas.
+    \item Elaborar un procedimiento que, aplicado junto con los de nuevos filtros de imagen, permita marcar mejor las perikymata que con el filtro Prewitt \cite{wiki:Prewitt}.
+    \item Emplear una técnica de detección de líneas adecuada en base al proceso de filtrado que se utilice finalmente.
+\end{itemize}
+
+\subsection{Aplicación}
+A nivel de la aplicación marcaremos los siguiente objetivos:
+\begin{itemize}
+    \item Adaptar la aplicación Java para seleccionar el subprograma de \textit{stitching} adecuado en base al sistema operativo y la arquitectura en la que nos encontremos.
+    \item Incluir la opción de seleccionar una carpeta para los archivos temporales del \textit{stitching}.
+    \item Integrar adecuadamente en la aplicación el nuevo proceso de filtrado que pueda surgir.
+    \item Incluir un modo sencillo de filtrado por defecto para facilitar al usuario la interacción con la aplicación y también, un modo avanzado con el que el usuario pueda modificar los posibles parámetros del filtrado.
+\end{itemize}
+
+\subsection{Corrección de errores}
+\begin{itemize}
+    \item Revisar elementos de la aplicación como el sistema de log y mejorar la eficacia en la fase de automarcado de las perikymata. 
+    \item Localizar y solucionar el error que se produce en la carga de imágenes al reabrir un proyecto.
+    \item Encontrar y solucionar los errores reportados por el cliente.
+    \item Investigar otros fallos y, en caso de no conseguir solucionarlos, documentarlos como líneas de trabajo futuras.
+\end{itemize}

@@ -1,0 +1,105 @@
+\apendice{Especificación de Requisitos}
+
+\section{Introducción}
+En esta sección se hablará de los requisitos y casos de uso que han dado la hoja ruta a seguir para el desarrollo de la aplicación.
+\section{Objetivos generales}
+Los objetivos generales que persigue la aplicación, nos vienen dados desde el proyecto anterior \cite{perikymataV1}. Son los siguientes:
+\begin{itemize}
+    \item La aplicación debe poder unir las de imágenes de fragmentos del diente para ofrecer al usuario una imagen completa.
+    \item Se debe poder aplicar un filtro o filtros para resaltar las perikymata de la imagen completa de la pieza dental. 
+    \item Se debe poder delimitar la corona del diente en la imagen y dividirla en deciles sobre los que se dibujará una línea en la que se marcarán las perikymata detectadas.
+    \item Todos los datos generados podrán ser guardados de forma persistente.
+    \item Se deben corregir errores y mejorar cada una de las etapas mencionadas en la medida de lo posible, a fin de ser más eficaz en la detección de perikymata.
+\end{itemize}
+
+\pagebreak
+\section{Catalogo de requisitos}
+Los requisitos que debe satisfacer la aplicación son:
+\begin{itemize}
+        \item Se podrá introducir una imagen completa de una pieza dental. En caso de ser imágenes de fragmentos, se unirán formando la imagen completa.
+        \item Se podrá preparar la imagen completa para su uso a lo largo de la aplicación.
+        \item Se podrá aplicar un filtro a la imagen para resaltar las perikymata.
+        \item Se detectarán y marcarán la perikymata en la imagen filtrada de manera automática, aunque el usuario podrá intervenir para corregir posibles errores.
+        \item La aplicación guardará de manera automática las imágenes generadas y el usuario podrá exportar los datos generados.
+        \item La aplicación deberá proporcionar las funcionalidades básicas de cualquier aplicación.
+\end{itemize}
+
+\section{Especificación de requisitos}
+
+En este apartado se indicarán las especificación de los requisitos a cumplir.
+
+\begin{itemize}
+        \item RF-1: Introducir la imagen o imágenes de la pieza dental que usará la aplicación para conseguir una imagen completa.
+            \begin{itemize}
+                \item RF-1.1: Indicar un conjunto de imágenes y unirlas (\textit{stitching}).
+                    \begin{itemize}
+                        \item RF-1.1.1: Indicar un conjunto de imágenes válidas para unir que representan los fragmentos del diente.
+                        \item RF-1.1.2: Unir la imágenes para obtener una imagen dental completa.
+                    \end{itemize}
+                \item RF-1.2: Indicar una imagen que represente la pieza dental completa.
+            \end{itemize}              
+                      
+        \item RF-2: Preparar la imagen y datos para las etapas posteriores.
+            \begin{itemize}
+                \item RF-2.1: Rotar y recortar la imagen para orientar las perikymata de la forma más vertical posible y delimitar la zona de acción.
+                \item RF-2.2: Indicar la escala a la que se encuentra la imagen de la pieza dental.      
+            \end{itemize}
+        
+        \pagebreak        
+        \item RF-3: Filtrar la imagen del diente y llevar a cabo la detección de perikymata.
+            \begin{itemize}
+                \item RF-3.1: Delimitar, de manera automática, los deciles de la corona dental.
+                \item RF-3.2: Filtrar la imagen del diente gracias a un modo por defecto.
+                \item RF-3.3: Filtrar la imagen del diente gracias a un modo avanzado con distintos parámetros de filtrado.
+                \item RF-3.4: Dibujar una línea y marcar perikymata automáticamente.
+                \begin{itemize}
+                        \item RF-3.4.1: Dibujar una línea que atraviese las perikymata.
+                        \item RF-3.4.2: Automarcar todas las perikymata que sean posibles. 
+                \end{itemize}
+                \item RF-3.5: Añadir o eliminar perikymata sobre la imagen filtrada.
+            \end{itemize}        
+        
+        \item RF-4: Guardar todos los datos generados\footnote{Los cálculos realizados no se incluyen.}, incluidas las imágenes que intervienen en el proceso.
+            \begin{itemize}
+                \item RF-4.1: Guardar las imágenes que aporte el usuario y las que genere la aplicación en las carpetas del proyecto.
+                \item RF-4.2: Almacenar, en formato \textit{csv}, los resultados generados sobre la distancia entre cada perikyma\footnote{\textit{Perikyma} es el singular de \textit{perikymata}.} y su localización en los deciles.
+            \end{itemize}
+            
+        \item RF-5: Proporcionar acceso en todo momento a funcionalidades básicas de la aplicación.
+            \begin{itemize}
+                \item RF-5.1: Hacer uso de las \textit{migas de pan}.
+                \begin{itemize}
+                        \item RF-5.1.1: Ver la etapa actual de la aplicación en la que se encuentre el usuario.
+                        \item RF-5.1.2: Retroceder a etapas anteriores de la aplicación.
+                \end{itemize}
+                \item RF-5.2: Abrir, cerrar y guardar el proyecto actual en cualquier momento.
+                \item RF-5.3: Indicar la carpeta temporal que se usará en la operación de \textit{stitching}, sino, se usará la carpeta por defecto del sistema. 
+                \item RF-5.4: Ayudar al usuario con explicaciones de cada componente por medio de \textit{tooltips}.
+                \item RF-5.5: Permitir interactuar al usuario con terceras aplicaciones que utilice la propia aplicación.
+            \end{itemize}
+    
+\end{itemize}    
+    \pagebreak
+    Como requisitos no funcionales encontraremos los siguientes:
+    \begin{itemize}
+            \item RNF-1: Se corregirán los errores reportados y los nuevos que surjan, en la medida de lo posible. 
+            \item RNF-2: Se tratará de hacer más sencilla e intuitiva la aplicación.
+            \item RNF-3: Se investigarán nuevas formas de implementación de cada etapa de la aplicación.
+    \end{itemize}
+
+\subsection{Diagrama de casos de uso}
+
+En la figura \ref{fig:img/Requisitos/DiagramaCUPerikymataFINAL} podemos ver el diagrama general de casos de uso.
+
+\imagenDos{img/Requisitos/DiagramaCUPerikymataFINAL}{Diagrama general de casos de uso}{1}
+
+En las figuras \ref{fig:img/Requisitos/CU1}, \ref{fig:img/Requisitos/CU2}, \ref{fig:img/Requisitos/CU3}, \ref{fig:img/Requisitos/CU4}, \ref{fig:img/Requisitos/CU5} y \ref{fig:img/Requisitos/CU6} podemos observar la especificación de cada caso de uso.
+
+\imagenDos{img/Requisitos/CU1}{Caso de uso 1}{1}\pagebreak
+\imagenDos{img/Requisitos/CU2}{Caso de uso 2}{1}\pagebreak
+\imagenDos{img/Requisitos/CU3}{Caso de uso 3}{1}\pagebreak
+\imagenDos{img/Requisitos/CU4}{Caso de uso 4}{1}\pagebreak
+\imagenDos{img/Requisitos/CU5}{Caso de uso 5}{1}\pagebreak
+\imagenDos{img/Requisitos/CU6}{Caso de uso 6}{1}\pagebreak
+
+

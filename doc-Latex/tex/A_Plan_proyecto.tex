@@ -1,0 +1,444 @@
+\apendice{Plan de Proyecto Software}
+
+\section{Introducción}
+En este apartado se expondrá la metodología y planificación del proyecto adoptada así como las herramientas utilizadas.
+
+La metodología de desarrollo ágil utilizada ha sido \emph{SCRUM}. Cada semana o semana y media se realizaba una reunión con los tutores para definir y organizar las tareas a realizar durante el siguiente \textit{sprint}.
+
+Como sistema de control de versiones se ha usado \emph{git} mediante un repositorio online en GitHub y su aplicación \emph{GitHub Desktop} para Windows y la herramienta de git que ofrece \emph{Eclipse} para entornos Linux.
+
+Se ha utilizado también \emph{ZenHub}, un plugin para navegadores que se integra en GitHub y permite la gestión del proyecto incluyendo además la posibilidad de ver distintos gráficos para comprobar como van los avances. Ha sido muy útil para organizar las tareas y poder seguir la metodología \emph{SCRUM}.
+
+\newpage
+
+\section{Planificación temporal}
+A continuación se muestra el avance a lo largo de las iteraciones que forman el proyecto:
+
+\subsection{Sprint 1: }
+27/01/2017 - 03/02/2017 (figura \ref{fig:img/BurndownCharts/chart1})
+
+\imagen{img/BurndownCharts/chart1}{Burndown Chart Sprint 1}
+
+\begin{itemize}
+    \item Instalación y preparación de maquinas virtuales.
+    \item Recompilar y probar la aplicación de \textit{stitching} que hay hecha en un sistema Linux de 64 bits.
+    \item Adaptar la aplicación Java para el \textit{stitching} en Linux de 64 bits.
+    \item Recompilar \textit{Stitching.exe} para sistemas Windows de 32 bits.
+\end{itemize}
+
+Este \textit{sprint} me ha servido para familiarizarme con el proyecto, preparar su entorno y empezar a trabajar con la aplicación de \textit{stitching} a revisar, centrándome en su recompilación para que pueda ser ejecutado en sistemas de distintas arquitecturas y distintos sistemas operativos. 
+
+\newpage
+
+\subsection{Sprint 2:}
+04/02/2017 - 15/02/2017 (figura \ref{fig:img/BurndownCharts/chart2})
+
+\imagen{img/BurndownCharts/chart2}{Burndown Chart Sprint 2}
+
+\begin{itemize}
+    \item Probar \textit{stitching} Linux en equipos Linux de 32 bits.
+    \item Recompilar \textit{stitching} para Linux 32 bits.
+    \item Adaptar la aplicación para que seleccione un \textit{stitching} u otro dependiendo del sistema operativo y la arquitectura.
+    \item Comenzar la memoria.
+\end{itemize}
+
+En este \textit{sprint} se ha realizado la recompilación del \textit{stitching} para distribuciones Linux de 32 bits. No ha sido posible utilizar esta versión en sistemas Linux de 64 bits, por lo que se ha decidido que el \textit{stitching} para 64 bits forme parte de la aplicación también. 
+
+\newpage
+
+\subsection{Sprint 3:} 
+17/02/2017 - 01/03/2017 (figura \ref{fig:img/BurndownCharts/chart3})
+
+\imagen{img/BurndownCharts/chart3}{Burndown Chart Sprint 3}
+
+\begin{itemize}
+    \item Comprobar el uso de carpetas temporales y permisos con Java.
+    \item Crear una opción de seleccionar un carpeta para archivos temporales.
+    \item Adaptar el código Java para extraer los fragmentos de las imágenes de rutas sin espacios en blanco.
+    \item Adaptar el código Java para comprobar que los fragmentos no están en una ruta con espacios en blanco.
+    \item Continuar la documentación.
+\end{itemize}
+
+La aplicación de \textit{stitching} no funcionaba en determinadas ocasiones, se ha detectado que es debido a que la ruta de las imágenes contienen espacios en blanco. Para solucionarlo se ha decidido usar una carpeta temporal válida donde poder hacer el \textit{stitching} sin problemas. Esta carpeta es la carpeta temporal del sistema por defecto o una que elija el usuario.
+
+\newpage
+
+\subsection{Sprint 4:} 
+26/02/2017 - 02/03/2017 (figura \ref{fig:img/BurndownCharts/chart4})
+
+\imagen{img/BurndownCharts/chart4}{Burndown Chart Sprint 4}
+
+\begin{itemize}
+    \item Solucionar el error ejecución de \textit{stitching} desde el archivo ejecutable \textit{.jar}.
+    \item Realizar un test unitario sobre la clase \textit{StitchingTemporaryUtil.java}.
+    \item Utilizar distintos parámetros mediante \textit{interact} de los \textit{Jupyter notebooks} para comprobar la eficacia en la detección de bordes sobre las imágenes disponibles.
+\end{itemize}
+
+La aplicación Java, cuando se exportaba a un fichero \textit{jar}, no podía hacer uso de la aplicación de \textit{stitching} que tenía comprimida en dentro de la carpeta \textit{rsc}. Se ha adaptado el código para que la aplicación Java pueda descomprimirla y usarla. También se ha comenzado la búsqueda de filtros más adecuados para la detección de perikymata usando los \textit{Jupyter notebooks}.
+
+Al finalizar este sprint se ha sacado una \textit{release} en su versión 1.1 porque el cliente necesita hacer uso de la aplicación ahora que ya tiene solucionado el error del \textit{stitching}.
+
+\newpage
+
+\subsection{Sprint 5:}
+03/03/2017 - 03/03/2017 (figura \ref{fig:img/BurndownCharts/chart5})
+
+\imagen{img/BurndownCharts/chart5}{Burndown Chart Sprint 5}
+
+\begin{itemize}
+    \item Estudiar el funcionamiento de la matriz Hessiana y el filtro Frangi para su aplicación a la detección de bordes.
+    \item Probar si directamente \textit{ImageJ} para Java resulta más sencillo de aplicar que \textit{Scikit-Image} para Python.
+    \item Comenzar a evaluar como de buena es una propuesta filtrada.
+\end{itemize}
+
+\textit{ImageJ} es una librería usada para el procesamiento de imagen que pensábamos emplear, aunque finalmente se va a utilizar \textit{Scikit-Image} para Python porque es más sencillo de usar y aprender. Además, permite ver los resultados de manera rápida a través de los \textit{notebooks}. Posteriormente, todo el código Python habrá que buscar alguna manera de exportarlo a algún ejecutable que pueda ser llamado desde Java.
+
+El filtro de Frangi es con el que he comenzado y una posible forma de evaluar su eficacia es mediante la \textit{distancia de Levenshtein}\footnote{Se obtuvo una implementación de aquí: \url{https://es.wikipedia.org/wiki/Distancia_de_Levenshtein}.}.
+
+\newpage
+
+\subsection{Sprint 6:}
+11/03/2017 - 17/03/2017 (figura \ref{fig:img/BurndownCharts/chart6})
+
+\imagen{img/BurndownCharts/chart6}{Burndown Chart Sprint 6}
+
+\begin{itemize}
+    \item Comparar máscara y nuevo método con los datos del CSV.
+    \item Realizar evaluación sobre imágenes filtradas (método antiguo Prewitt). Modificar el umbral para realizar las pruebas.
+    \item Obtener recursivamente imágenes para pruebas.
+    \item Crear módulo en Python para la nueva técnica de filtrado.
+    \item Investigar las mejores opciones para exportar la aplicación de Python a ejecutables.
+    \item Crear test con imágenes de distintos tamaños.
+    \item Probar paso a paso ejecución del filtro nuevo con una imagen grande.
+\end{itemize}
+
+En este \textit{sprint} se ha creado una máscara de usuario para comparar con los resultados del filtro de Frangi sobre distintas imágenes. 
+
+Los resultados eran prometedores hasta que se han realizado pruebas con una imagen de un diente, en tamaño más grande, y los resultado son notablemente peor que sobre un trozo pequeño de imagen.
+
+Se ha buscado también, crear una función que permita optimizar los parámetros para obtener los mejores resultados sobre la \textit{distancia de Levenshtein}.
+
+\newpage
+
+\subsection{Sprint 7:}
+18/03/2017 - 24/03/2017 (figura \ref{fig:img/BurndownCharts/chart7})
+
+\imagen{img/BurndownCharts/chart7}{Burndown Chart Sprint 7}
+
+\begin{itemize}
+    \item Incluir y ver que resultados da el filtro Prewitt con el nuevo método.
+    \item Crear un notebook paso a paso para encontrar errores e incluir mejoras.
+    \item Preparar un script para utilizar PyInstaler (instalar todo primero).
+\end{itemize}
+
+En esta iteración se han realizado más pruebas, añadiendo al método creado el filtro Prewitt, para ver como mejora o empeora el resultado sobre una imagen de diente a tamaño completo. También se ha decidido utilizar PyInstaller para exportar código Python a un ejecutable porque es el único de varias alternativas que lo crea con todas las dependencias comprimidas.
+
+\newpage
+
+\subsection{Sprint 8:}
+25/03/2017 - 31/03/2017 (figura \ref{fig:img/BurndownCharts/chart8})
+
+\imagen{img/BurndownCharts/chart8}{Burndown Chart Sprint 8}
+
+\begin{itemize}
+    \item Probar si PyInstaller realiza correctamente las importaciones de los módulos en Python.
+    \item Probar la binarización de imagen antes de aplicar Frangi.
+    \item Probar la utilización de umbrales adaptativos para la imagen.
+    \item Incluir en la función a optimizar el tratamiento de excepciones.
+    \item Crear una máscara del diente 2.
+\end{itemize}
+
+En el pequeño script de prueba realizado con PyInstaler no ha habido problemas y funciona correctamente, pero al exportar todo el código Python, la aplicación no consigue funcionar. Queda pendiente para la próxima iteración.
+
+Los umbrales adaptativos han funcionado correctamente y se incluirán en la versión final del procesado de imagen. Para próximos sprints se va a probar con la imagen del diente 2 porque la del diente 1 no es muy apta para los procesados, también se tiene incertidumbre porque solo hay dos imágenes de dientes y se desconoce cual es el caso normal que se encuentran en el Laboratorio de la Evolución Humana, que sea una imagen donde no se aprecian las perikymata o que se vean de forma aceptable.
+
+\newpage
+
+\subsection{Sprint 9:}
+01/04/2017 - 08/04/2017 (figura \ref{fig:img/BurndownCharts/chart9})
+
+\imagen{img/BurndownCharts/chart9}{Burndown Chart Sprint 9}
+
+\begin{itemize}
+    \item Probar el \textit{.exe} conseguido con PyInstaller con rutas absolutas.
+    \item Probar el \textit{.exe} conseguido con PyInstaller con imagen hardcodeada.
+    \item Probar el procesado con el diente 2.
+    \item Continuar la documentación.
+\end{itemize}
+Se han probado distintas opciones sobre el ejecutable en Windows que crea PyInstaler con el código en Python y se ha descubierto la necesidad de incluir unos archivos llamados \textit{hooks-files} para importar módulos ocultos de Python, por lo que la exportación se realiza satisfactoriamente.
+
+Con la imagen del diente 2 el procesado gana eficacia. Descartamos por tanto, basar el código en conseguir que sea eficaz en la imagen del diente 1 ya que se intuye que el proceso falla más porque en la imagen no se ven las perikymata, que porque el proceso esté mal desarrollado.
+
+El proyecto sobre dietas \cite{dietasIsma} ya tiene implementado funciones para trabajar con líneas, se probarán en el próximo \textit{sprint}.
+
+\newpage
+
+\subsection{Sprint 10:}
+10/04/2017 - 17/04/2017 (figura \ref{fig:img/BurndownCharts/chart10})
+\imagen{img/BurndownCharts/chart10}{Burndown Chart Sprint 10}
+\begin{itemize}
+    \item Estudiar el \textit{notebook} proporcionado sobre extracción de líneas.
+    \item Revisar el algoritmo \textit{k\_components}  para adaptar o reutilizar.
+    \item Realizar pruebas incluyendo el filtrado por direcciones.
+    \item Implementar una función para cargar recursivamente imágenes de una carpeta.
+\end{itemize}
+
+En este \textit{sprint} se ha revisado la clase de Python \textit{Procesado.py} del trabajo de dietas \cite{dietasIsma} porque incluye un algoritmo de detección y unión de líneas usando teoría de grafos. 
+
+Finalmente no se han utilizado las funciones relacionadas con los grafos, sino que se ha modificado el uso de la función de la \textit{Transformada de Hough} para operar en ciertos ángulos detectando líneas satisfactoriamente.
+
+Investigando se han encontrado otros filtros como Sobel \cite{wiki:Sobel} y Kirsch \cite{scholar:venmathi2016kirsch}, que se probarán más adelante, porque resaltan bordes en direcciones personalizadas.
+
+\newpage
+
+\subsection{Sprint 11:}
+18/04/2017 - 21/04/2017 (figura \ref{fig:img/BurndownCharts/chart11})
+\imagen{img/BurndownCharts/chart11}{Burndown Chart Sprint 11}
+\begin{itemize}
+    \item Probar el filtro Sobel sobre la imagen completa del diente.
+    \item Implementar una función para usar el operador de Kirsch.
+    \item Probar el operador de Kirsch con diferentes filtrados.
+    \item Añadir el filtrado por direcciones.
+    \item Aplicar la operación de convolución manualmente con varios operadores. 
+\end{itemize}
+
+Los resultados con el operador de Kirsch, basado en este artículo \cite{scholar:venmathi2016kirsch}, son los más prometedores porque las perikymata no están siempre en la misma dirección y Kirsch permite elegir la orientación. 
+
+Sobel \cite{wiki:Sobel} queda descartado por ser demasiado simple (solo opera en los ejes \textit{x} e \textit{y}).
+
+\newpage
+
+\subsection{Sprint 12:}
+22/04/2017 - 28/04/2017 (figura \ref{fig:img/BurndownCharts/chart12})
+\imagen{img/BurndownCharts/chart12}{Burndown Chart Sprint 12}
+\begin{itemize}
+    \item Probar el operador de Kirsch sobre el diente 1.
+    \item Crear una función en Python que aplique el nuevo procesado de imagen basado en Kirsch. 
+\end{itemize}
+
+Al probar Kirsch sobre el diente 1, se detectan mejor algunas perikymata pero queda confirmado que la imagen del diente 1 no es adecuada para procesar, porque no se aprecian bien las perikymata.
+
+En la reunión se ha hablado de simplificar la vista de conteo de perikymata y así ahorrar trabajo al usuario en la aplicación Java.
+
+\newpage
+
+\subsection{Sprint 13:}
+29/04/2017 - 05/05/2017 (figura \ref{fig:img/BurndownCharts/chart13})
+\imagen{img/BurndownCharts/chart13}{Burndown Chart Sprint 13}
+\begin{itemize}
+    \item Crear una función para rotar la imagen los grados que indique el usuario.
+    \item Modificar la aplicación Java para recortar la imagen del diente.
+    \item Ajustar la aplicación Java para incluir un \textit{BorderPane} con las nuevas funcionalidades.
+    \item Ajustar el proceso de rotación para que la imagen se vea rotada.
+\end{itemize}
+
+En este \textit{sprint} se ha creado una nueva vista para rotar la imagen y que el usuario deje las perikymata de manera vertical para poder aplicar el filtro Kirsch y que las detecte correctamente.
+
+\newpage
+
+\subsection{Sprint 14:}
+06/05/2017 - 11/05/2017 (figura \ref{fig:img/BurndownCharts/chart14})
+\imagen{img/BurndownCharts/chart14}{Burndown Chart Sprint 14}
+\begin{itemize}
+    \item Estudiar la unión de la aplicación Java con la aplicación Python vía sockets.
+    \item Crear un botón para restablecer la vista de una imagen recortada.
+    \item Pasar la funcionalidad de medida de la escala desde la vista de conteo de perikymata a la vista de rotación de la imagen.
+    \item Poner un fondo negro para el recortado de la imagen.
+    \item Poner una imagen al botón de recortado.
+    \item Limitar la rotación que se puede aplicar.
+\end{itemize}
+
+En esta iteración se ha mejorado la vista y la funcionalidad de rotación y recorte de la imagen.
+
+\newpage
+\subsection{Sprint 15:}
+12/05/2017 - 17/05/2017 (figura \ref{fig:img/BurndownCharts/chart15})
+\imagen{img/BurndownCharts/chart15}{Burndown Chart Sprint 15}
+\begin{itemize}
+    \item Incluir la creación de una carpeta \textit{Crop\_Image} para guardar la imagen recortada.
+    \item Crear un prototipo de conexión Java-Python a través de sockets.
+    \item Definir un protocolo de comunicación entre Java y Python.
+    \item Implementar una función de \textit{handshake} entre Java y Python.
+    \item Estudiar documento de reconstrucción de la corona del diente.
+    \item Limpiar la vista de conteo de perikymata.
+    \item Incluir migas de pan a lo largo de la aplicación.
+\end{itemize}
+
+Se ha terminado la funcionalidad de rotación y recortado de la imagen y se ha creado un prototipo de conexión por sockets en Python y Java donde Java es el servidor y Python el cliente. Se ha hablado en la que reunión que, para la siguiente iteración, queda pendiente cambiarlo para que el servidor sea Python.
+
+Se han incluido las migas de pan en la aplicación para que el usuario sepa en que etapa está y para que sea más fácil moverse por la aplicación.
+
+La reconstrucción de la corona permitirá calcular mejor las perikymata, se prevé una reunión con el personal del Laboratorio de la Evolución Humana para que nos expliquen el proceso de reconstrucción y dependiendo de su complejidad incluirlo en este proyecto o no.
+
+\newpage
+
+\subsection{Sprint 16:}
+18/05/2017 - 29/05/2017 (figura \ref{fig:img/BurndownCharts/chart16})
+\imagen{img/BurndownCharts/chart16}{Burndown Chart Sprint 16}
+\begin{itemize}
+    \item Implementar una función en Java para detectar píxeles rojos.
+    \item Cambiar el servidor y cliente en Java y Python.
+    \item Preparar el servidor en Python para la conexión con Java.
+    \item Prepara la aplicación Java para la conexión con el servidor de Python.
+    \item Arreglar el funcionamiento de las migas de pan.
+    \item Arreglar el error detectado en la etapa de selección de imágenes.
+    \item Aumentar la fuente y poner en negrita las migas de pan dependiendo donde nos encontremos.
+\end{itemize}
+
+En este sprint se han solucionado errores con las migas de pan y se ha localizado el origen y solucionado el error reportado que sucedía a veces al abrir la aplicación; en la carga inicial de imágenes, carga todos los elementos de la carpeta sean o no imágenes, lo cual da error al hacer el \textit{stitching}.
+
+Se han modificado la aplicaciones de Java y Python y ya se comunican correctamente a través de sockets.
+
+La detección de píxeles rojos se hace usando el modelo RGB \cite{wiki:RGB} y en la reunión se ha hablado de usar el modelo HSI \cite{wiki:spaceHSV_HSI_HSL} que permite ser más preciso en cuando al rojo.
+
+\newpage
+
+\subsection{Sprint 17:}
+30/05/2017 - 06/06/2017 (figura \ref{fig:img/BurndownCharts/chart17})
+\imagen{img/BurndownCharts/chart17}{Burndown Chart Sprint 17}
+\begin{itemize}
+    \item Incluir opciones avanzadas en la aplicación Java para aplicar filtros. 
+    \item Redefinir el protocolo de comunicación en la parte del servidor Python.
+    \item Utilizar el color HSI para extraer el color rojo de los píxeles, en vez de usar el RGB.
+    \item Modificar procesado para guardar la imagen original con líneas detectadas superpuestas.
+    \item Modificar la interfaz Java para alternar la imagen filtrada y la imagen filtrada con líneas superpuestas.
+    \item Eliminar los falsos positivos al detectar perikymata.
+    \item Separarlas coordenadas en la exportación de datos a \textit{csv}.
+    \item Añadir el icono de zoom e icono de dibuja línea en la interfaz de conteo de perikymata.
+    \item Escribir la introducción y objetivos de la memoria.
+\end{itemize}
+
+En este \textit{sprint} se han mejorado aspectos generales de la aplicación y del guardado de las imágenes filtradas. Además, se ha continuado con la memoria.
+
+Finalmente se ha usado el espacio de color HSV\footnote{Llamado HSB en Java.} que sigue permitiéndonos conocer el matiz del color.
+
+También se han encontrado errores en la interfaz de la aplicación al pasar a pantallas de tamaño 1366x768. Este error es debido a que el desarrollo de la aplicación ha sido en una pantalla de tamaño 1920x1080.
+
+\subsection{Sprint 18:}
+07/06/2017 - 15/06/2017
+\imagen{img/BurndownCharts/chart18}{Burndown Chart Sprint 18}
+
+\begin{itemize}
+    \item Revisar la introducción y objetivos.
+    \item Arreglar el redimensionado de la aplicación.
+    \item Arreglar la petición de opciones avanzadas en el servidor Python.
+    \item Documentar los conceptos teóricos.
+    \item Implementar el correcto cerrado del servidor desde Java.
+\end{itemize}
+
+En esta iteración se han solucionado errores con las vistas de la aplicación y con la petición de filtrado avanzado.
+
+Para el próximo \textit{sprint} se adecuará la aplicación para su funcionamiento en entornos Linux y se lanzará una pre-release.
+
+\newpage
+
+\subsection{Sprint 19:}
+16/06/2017 - 22/06/2017 (figura \ref{fig:img/BurndownCharts/chart19})
+\imagen{img/BurndownCharts/chart19}{Burndown Chart Sprint 19}
+\begin{itemize}
+    \item Volver a buscar formas de exportar el servidor de Python.
+    \item Documentar Técnicas y Herramientas.
+    \item Revisar el \textit{combobox} de selección de kernel en opciones avanzadas de filtrado.
+    \item Mejorar la eficiencia en el guardado de las imágenes filtradas.
+    \item Crear el manual de instalación y lanzar una release prototipo.
+    \item Realizar arreglos en la aplicación para poder instalarla adecuadamente.
+    \item Corregir las vistas para entornos Linux.
+    \item Corregir el cargado de imágenes en Linux.
+\end{itemize}
+
+Este \textit{sprint} se ha caracterizado por preparar la aplicación para su instalación, probarla y adaptarla para entornos Linux.
+
+Se han encontrado problemas a la hora de ver las vistas adecuadamente usando Ubuntu y la aplicación a veces se vuelve inestable, pero es usable.
+
+Para la última iteración se terminará la memoria, se organizarán las pruebas realizadas en los \textit{Jupyter notebooks} y se finalizará el desarrollo de la aplicación.
+
+\subsection{Sprint 20:}
+23/06/2017 - 02/07/2017 (figura \ref{fig:img/BurndownCharts/chart20})
+\imagen{img/BurndownCharts/chart20}{Burndow Chart Sprint 20}
+Este último \textit{sprint} pone fin al proyecto, las tareas más relevantes han sido:
+\begin{itemize}
+    \item Finalizar toda la documentación del proyecto.
+    \item Dar los últimos retoques a la aplicación.
+    \item Organizar el contenido del proyecto.
+    \item Solucionar los últimos errores encontrados.
+\end{itemize}
+
+\newpage
+\section{Estudio de viabilidad}
+
+En esta sección se hablará del apartado económico que concierne al desarrollo del proyecto. También trataremos el tema de su viabilidad legal.
+
+\subsection{Viabilidad económica}
+
+A continuación iremos nombrando y justificando todos los gastos que hubiera tenido el proyecto si no hubiera formado parte del plan de estudios del grado y se aplicase en un entorno real.
+
+En la descripción del TFG se estima que el trabajo del alumno consiste en 300 horas, pero esto está alejado de la realidad por lo que usamos la herramienta ZenHub y a cada \textit{issue} le añadimos un valor numérico para estimar el tiempo. 
+
+Cada unidad de tiempo añadida ha sido tomada con un valor real de 2 horas y tenemos 230 puntos por lo que la estimación de las horas invertidas quedaría en 460 horas.
+
+En el proyecto anterior \cite{perikymataV1} se estimó la hora de trabajo del programador en 15\euro{} por lo que el coste del proyecto en mano de obra habría sido de:
+\[15\text{\euro}/\text{h}\times 460\text{h}=6900\text{\euro} \]
+Con este resultado tenemos que tener en cuenta el coste de la seguridad social que podemos obtener desde su página oficial\footnote{Página de la seguridad Social: \url{https://goo.gl/zRVeq9}.} y que nos dice que han de tenerse en cuenta los siguientes impuestos:
+ \begin{itemize}
+     \item Contingencias comunes: 23,60\%.
+     \item Contrato duración determinada Tiempo parcial\footnote{Tomaremos que el proyecto tiene la duración de 5 meses a tiempo parcial.}: 6,70\%.
+     \item Fondo de Garantía Salarial: 0,20\%.
+     \item Formación Profesional: 0,60\%.
+ \end{itemize}
+
+Esto nos da un total de un 31,1\% en impuestos lo cual hace que el gasto destinado a la seguridad social sea de:
+\[6900\text{\euro}\times 31,1\%=2139\text{\euro} \]
+
+\newpage
+También tenemos que valorar el coste de las herramientas hardware y software utilizadas en este proyecto de las cuales han tenido costes las siguientes:
+\begin{itemize}
+    \item Equipo de desarrollo (ordenador portátil): 730\euro{}.
+    \item Periféricos usados (ratón, teclado y pantalla): 250\euro{}.
+    \item Licencia Windows para usar en la máquina virtual: 121\euro{}\footnote{Se aplica el descuento a estudiantes. Fuente: \url{https://goo.gl/PwrrcP}.} .
+\end{itemize}
+
+El equipo de desarrollo y los periféricos hacen un total de 980\euro{} y según la agencia tributaria\footnote{Tablas de amortización 2017: \url{https://goo.gl/UTCRK9}.} los equipos para procesos de información tienen una vida útil de 8 años y este proyecto ha tenido una duración de 5 meses, 
+lo cual nos deja unos costes de amortización de:
+
+\[\frac{980\text{\euro}}{12 \text{ Meses}\times8 \text{ Años}} \times 5 \text{ Meses} =  51,04\text{\euro{}} \]
+
+La licencia para la máquina virtual se ha usado durante los 5 meses de duración del proyecto pues continuamente se han tenido que probar los cambios realizados. Se estima su vida útil en 6 años por lo que sus costes de amortización serían los siguientes:
+
+\[\frac{121\text{\euro}}{12 \text{ Meses}\times6 \text{ Años}} \times 5 \text{ Meses} =  8,40\text{\euro{}} \]
+
+Esto nos deja un coste total en las herramientas utilizadas de 59.44\euro{}.
+
+Con todos los costes mencionados, el desglose e importe final podemos observarlo en la tabla \ref{tabla:tablaCostes}
+
+
+\tablaSmall{Costes del proyecto}{ll}{tablaCostes}{Costes & Importe\\}{
+Personal & 6900\euro{}\\ 
+Seguridad Social & 2139\euro{}\\ 
+Herramientas & 59,44\euro{}\\ 
+Total & 9098,44\euro{}\\ }
+
+\subsection{Viabilidad legal}
+
+La versión anterior del proyecto \cite{perikymataV1} usa una licencia GPL \cite{wiki:GPL} lo cual obliga a que esta también lo tenga y que la aplicación siga siendo software libre. Las nuevas partes añadidas como el servidor en Python y nuevos ficheros se les ha dotado también de una licencia GPL para mantener la coherencia de en toda la aplicación.
+
+En este proyecto se ha prescindido de algunas librerías que usaba la versión anterior pero se han utilizado otras nuevas. También se han seguido usando las mismas imágenes e iconos que en la versión anterior además de añadir otros.
+
+En la tabla \ref{tabla:licencias} podemos ver las licencias de las herramienta utilizadas.
+
+
+\tablaSmall{Herramientas utilizadas y sus licencias}{l l}{licencias}{Herramienta & Licencia\\}{
+Java JavaFX & Oracle Binary Code License\\
+Python 3 & PSF License\\
+Scikit-Image & BSD License\\
+Numpy & BSD License \\
+OpenCV & BSD License \\
+Eclipse & Eclipse Public License\\
+Visual Studio & Microsoft Software License\\
+PyCharm & Apache 2.0 License \\
+PyInstaller & GPL License\\
+VirtualBox & GPL License\\ 
+White Square icon & Public Domain \\
+DesignContest Icons & CC Attribution 4.0\\
+IconsMind Icons & LinkWare \\
+
+}

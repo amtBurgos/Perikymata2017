@@ -1,0 +1,29 @@
+\capitulo{1}{Introducción}
+\label{i:intro}
+%Descripción del contenido del trabajo y del estructura de la memoria y del resto de materiales entregados.
+
+La antropología forense se centra en el estudio de las poblaciones humanas a nivel sociocultural y biológico. Esta ciencia unida a la paleontología nos permiten estudiar la evolución humana a partir de los restos fósiles encontrados, siendo de gran importancia a nivel mundial los encontrados en la sierra de Atapuerca en Burgos a partir a finales del siglo XX \cite{atapuercaYacimientos}.
+
+Dentro de estos restos, unos de los que más información aportan son los dientes, ya que nos permiten conocer detalles relativos a la edad de un homínido, a su alimentación, su velocidad de crecimiento y a enfermedades que padeció.
+
+Nuestro caso de estudio serán las perikymata. Son una serie de líneas que aparecen en el esmalte de la corona del diente durante de su formación. Tienen el aspecto de la figura \ref{fig:fragmentoInicio}.
+
+
+\imagenCustom{img/Dientes/Fragmento}{Fragmento de un diente}{fragmentoInicio}{0.4}
+
+
+Este proyecto colabora con el Laboratorio de Evolución Humana de la Universidad de Burgos cuyo personal investigador extrae información de las perikymata en un proceso manual: en primer lugar se toman varias imágenes de distintas zonas de un diente con un microscopio electrónico, luego se unen mediante una herramienta software como Gimp \cite{Gimp:online} y posteriormente se divide la corona del diente en 10 partes (deciles) en los que se marcan las perikymata.
+
+\label{IntroduccionProyecto}
+El proyecto anterior \cite{perikymataV1} automatizaba en parte esa tarea con una aplicación de escritorio que se desarrollaba en las siguientes fases: 
+\begin{itemize}
+    \item Unión de imágenes (\textit{stitching}). Gracias al zoom de un microscopio electró-nico se tomaban imágenes de distintas áreas de la pieza dental y estas se unían para conseguir una imagen completa sobre la que trabajar.
+    \item Filtrado de la imagen completa para resaltar las perikymata. Se aplicaba un filtro de desenfoque gaussiano \cite{wiki:gaussianNoise} para eliminar el ruido de la imagen y un filtro Prewit \cite{wiki:Prewitt} para resaltar las perikymata.
+    \item División de la corona en deciles y automarcado de las perikymata. El usuario indicaba donde empezaba y acababa la corona del diente para dividirla en deciles, además de indicar la escala de tamaño de la pieza y dibujar una línea que atravesase las perikymata. Posteriormente, se detectaban y se permitía al usuario añadirlas o quitarlas donde fuera necesario. 
+    \item Extracción de datos a un fichero. Se exportaban a un fichero \textit{csv} el número total de perikymata, sus coordenadas en la imagen, el decil al que pertenecen y la distancia a la perikymata anterior.
+\end{itemize}
+
+
+En este proyecto se partirán de los conceptos y técnicas desarrolladas en la versión anterior \cite{perikymataV1} con el fin último de mejorar la detección automática de las perikymata, dando especial importancia al procedimiento y filtros aplicados para resaltarlas. Además, se abordarán las complicaciones y deficiencias de las fases anteriores, así como los errores que los usuarios han reportado.
+
+Se incluirán también las pruebas realizadas, las herramientas utilizadas, la hoja de ruta a seguir, los problemas planteados durante el desarrollo de este proyecto y las soluciones desarrolladas para resolverlos.

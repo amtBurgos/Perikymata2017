@@ -54,3 +54,14 @@ Others/*
 *.useq
 PythonApp/.idea/workspace.xml
 PythonApp/.idea/workspace.xml
+!doc-Latex/img/*
+!doc-Latex/img/AspectosRelevantes/*
+!doc-Latex/img/BurndownCharts/*
+!doc-Latex/img/ConceptosTeoricos/*
+!doc-Latex/img/Dientes/*
+!doc-Latex/img/Diseno/*
+!doc-Latex/img/Herramientas/*
+!doc-Latex/img/ManualProgramador/*
+!doc-Latex/img/ManualUsuario/*
+!doc-Latex/img/Requisitos/*
+Thumbs.db

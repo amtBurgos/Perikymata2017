@@ -1,0 +1,38 @@
+\capitulo{6}{Trabajos relacionados}
+\label{TrabajosRelacionados}
+\begin{comment}
+Este apartado sería parecido a un estado del arte de una tesis o tesina. En un trabajo final grado no parece obligada su presencia, aunque se puede dejar a juicio del tutor el incluir un pequeño resumen comentado de los trabajos y proyectos ya realizados en el campo del proyecto en curso. 
+\end{comment}
+
+\section{Análisis paleontológico de piezas dentales - Sergio Chico Carrancio}
+\label{TFGsergio}
+El Trabajo de Fin de Grado de Sergio Chico es el precedente del que parte este proyecto. En los documentos que él elaboró, se detallan los primeros procesos desarrollados, las alternativas probadas, los resultados obtenidos y las decisiones que se fueron tomando, para crear una aplicación de escritorio basada en Java que permitiese detectar de forma automática la perikymata.
+
+Ha sido de gran ayuda de cara a no volver a valorar opciones que ya se habían probado. También ha servido para sentar las bases del desarrollo en el que primero hay que procesar la imagen para resaltar las perikymata y posteriormente detectarlas y automarcarlas.
+
+La vistas de la aplicación han sido modificas en esta versión, pero se ha continuado con la estructura general que en ese proyecto se decidió.
+
+El proyecto puede encontrarse en esta dirección:\\ \url{https://github.com/Serux/perikymata}
+
+\section{Estimación de la dieta por análisis de marcas dentales - Ismael Tobar García}
+\label{TFGisma}
+
+En el Trabajo de Fin de Grado de Ismael Tobar también se utilizaban los restos fósiles de los dientes para extraer información. En concreto, el proyecto trataba de estimar la dieta que consumían los homínidos a partir de las marcas que dejaban los alimentos en sus dientes. 
+
+El tipo de dieta se puede estimar en función de parámetros como la longitud y el ángulo de las marcas.
+
+El autor desarrolló un procesado que permitía detectar pequeños segmentos de las marcas, y utilizaba la Teoría de Grafos \cite{wiki:TeoriaGrafos} para unir los que pertenecían a la misma marca.
+
+El trabajo de Ismael Tobar fue un caso de éxito y ha tenido especial importancia en este proyecto porque usaba la funciones de binarización, esqueletonización y detección de líneas, entre otras, que desde las primeras reuniones con los tutores se pensó en aplicar a la detección de perikymata. 
+
+Otra función de este trabajo, como la de detectar y unir segmentos, se consiguió aplicar a la detección de perikymata sin éxito, debido a que las líneas verticales de la imagen esqueletonizada estaban demasiado juntas, como hemos comentado anteriormente en la figura \ref{fig:FrangiLineas} de la sección \ref{ar:PrimerosFiltrados}.
+
+Podemos acceder al proyecto de Ismael Tobar desde aquí:\\ \url{https://github.com/Itg0001/TFG_DietaPorDientes/}
+
+\section{Artículo sobre los Kernels de Kirsch}
+\label{articulosKirsch}
+En este artículo \cite{scholar:venmathi2016kirsch} se utiliza un algoritmo para realzar conjuntos de microcalcificaciones en mamografías usando los kernels de Kirsch en las ocho direcciones que define cualquier brújula: norte, noreste, este, sureste, etcétera.
+
+De este artículo surge la idea de usar las distintas direcciones de los kernels de Kirsch y aplicarlos al realce de las perikymata, porque en algunas imágenes encontrábamos que las líneas no eran puramente verticales u horizontales, y tener un kernel como el noroeste nos permitía marcar líneas verticales que también tienen zonas inclinadas hacia un lateral.
+
+El artículo puede descargarse desde aquí: \url{https://goo.gl/cjyucv}

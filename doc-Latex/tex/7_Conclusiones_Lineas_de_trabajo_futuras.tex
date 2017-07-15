@@ -1,0 +1,63 @@
+\capitulo{7}{Conclusiones y Líneas de trabajo futuras}
+
+\begin{comment}
+Todo proyecto debe incluir las conclusiones que se derivan de su desarrollo. Éstas pueden ser de diferente índole, dependiendo de la tipología del proyecto, pero normalmente van a estar presentes un conjunto de conclusiones relacionadas con los resultados del proyecto y un conjunto de conclusiones técnicas. 
+Además, resulta muy útil realizar un informe crítico indicando cómo se puede mejorar el proyecto, o cómo se puede continuar trabajando en la línea del proyecto realizado. 
+\end{comment}
+
+\section{Conclusiones}
+
+Este ha sido un proyecto muy interesante a muchos niveles. Al principio me llevó tiempo situarme, porque se partía de una aplicación ya hecha e implicaba tener que conocer a fondo todos los procesos y desarrollos aplicados, las alternativas valoradas y los resultados obtenidos previamente.
+
+La forma de resaltar las perikymata mezclando filtros de detección de bordes con otros procesos como la esqueletonización, requiere invertir mucho tiempo en pruebas porque se pueden combinar de muchas maneras, aunque el resultado general que se ha conseguido en esta versión del proyecto mejora bastante el anterior.
+
+En cuanto a la organización del código se ha tratado de ser continuista al añadir nuevas funcionalidades como el uso de carpetas temporales. También se ha intentado hacer que la aplicación sea algo más sencilla de usar para el usuario y se han añadido \textit{tooltips} a lo largo de la aplicación para explicar cual es el papel de cada elemento en la interfaz.
+
+Respecto a los filtros, ahora con un único botón se aplican por defecto los parámetros que en las pruebas se adaptaban mejor a las distintas imágenes para conseguir resultados aceptables. También se ha añadido una opción avanzada por si el usuario quiere ser más preciso respecto a ciertos parámetros.
+
+El dar soporte multiplataforma ha sido complicado, sobre todo en el tema de las vistas, porque en Linux la interfaz de JavaFX no se comporta igual que en Windows, siendo a veces inestable. Cada vez que se modificaba la interfaz, ha sido necesario cargar el proyecto en el entorno Linux de desarrollo y revisar que todos los componentes funcionaban igual que en Windows.
+
+En cuanto a mi experiencia personal, he podido aprender y trabajar con muchas tecnologías distintas, siendo Python la que más me ha gustado y la que más he agradecido por la facilidad a la hora de escribir código y realizar pruebas, algunas de ellas interactivas mediante \textit{notebooks}. 
+
+Este proyecto me ha permitido poner en práctica muchos de los conocimientos que he aprendido a lo largo del grado, de asignaturas como por ejemplo: Gestión de Proyectos, Sistemas Distribuidos, Hardware de Aplicación Específica, Ingeniería del Software y todas las relacionadas con programación. También ha sido gratificante poder trabajar en una aplicación que facilitará el trabajo a otras personas y desde luego, estoy satisfecho con los resultados obtenidos.
+
+\section{Líneas de trabajo futuras}
+
+A continuación se expondrán las posibles modificaciones y nuevos enfoques que podrían incluirse en futuras versiones para mejorar el funcionamiento y eficacia general de la aplicación:
+
+\subsection{Reconstrucción de la corona}
+Algunas piezas dentales no se encuentran en perfecto estado y tienen zonas de la corona rotas. Esto se traduce en que los deciles no están bien medidos y el área en el que está cada perikyma puede no ser la que debería. Por eso es importante tratar de recomponer la corona del diente si se encuentra dañada.
+
+Durante este proyecto se ha tenido acceso a un artículo\footnote{En la fecha de entrega de esta memoria el artículo aún no se ha publicado.} que explica la forma en la que se realiza manualmente esta reconstrucción de la corona.
+
+Desde un punto de vista de programación, creemos que la reconstrucción puede llevarse a cabo utilizando técnicas que utilicen un polinomio interpolador para estimar la curva de la zona de la corona dañada. Algunas de estas técnicas podrían llevarse a cabo en Python con librerías como Scipy\footnote{Aquí encontramos más información: \url{https://docs.scipy.org/doc/scipy/reference/tutorial/interpolate.html}.}.
+
+\subsection{Stitching}
+Actualmente, la aplicación de \textit{stitching} funciona correctamente si el usuario tiene especial cuidado seleccionando los fragmentos del diente y rotando todos para que queden orientados en el mismo sentido. El fallo reside en que a veces, cuando se introducen todos los fragmentos disponibles, obtenemos una imagen en negro.
+
+Tras muchas pruebas, se cree que el error es debido a que la aplicación no es capaz de gestionar la unión de dos fragmentos casi idénticos, y los rechaza realizando mal toda la unión.
+
+Se propone mejorar esta fase creando una vista que junte las imágenes de dos en dos de manera automática, y permita participar al usuario para que indique cuales son las correctas en caso de que falle o de que el resultado no sea el esperado.
+
+\subsection{Uso de servicios web}
+Otra posible mejora sería ofrecer la aplicación como un servicio web. Para ello habría que trasladar toda la aplicación\footnote{Como veíamos en la sección \ref{th:JavaFX}, JavaFX puede usarse en un navegador.} y sub-aplicaciones a un servidor. 
+
+El usuario únicamente debería disponer de conexión a Internet para poder realizar su trabajo, subiría las imágenes necesarias al servidor y después tendría que interactuar con la aplicación. Además, el mantenimiento y desarrollo serían más sencillos en cuanto a que no hay que tener cuidado en ajustar la aplicación para Windows y Linux con cada cambio. 
+
+También se tendrían ventajas en cuanto al sistemas de log, donde cada vez que se produjera un fallo, se podría enviar un correo al desarrollador indicando los errores.
+
+Otra posible interpretación sería tener la interfaz de usuario desarrollada con tecnología HTML5, CSS y Javascript que hiciera uso del procesado en Python que se ha propuesto en este proyecto.
+
+\subsection{Otras mejoras}
+Otras mejoras que se pueden incorporar son:
+\begin{itemize}
+\item En cada versión de este proyecto se debería invertir un tiempo en la investigación de nuevos filtros de detección de bordes y nuevos procesados, pues esta fase siempre será mejorable aunque ahora se encuentre en un punto más que aceptable.
+
+\item Se debería crear un sistema de ayuda en la propia aplicación, para que el usuario no necesitase los manuales en caso de duda.
+
+\item Se podría hacer un estudio con el personal del Laboratorio de la Evolución Humana, a fin de determinar cual es la mejor forma de diseñar las interfaces con las que interacciona el usuario.
+
+\item Si se descarta la opción de usar la aplicación como un servicio web, debería considerarse pasarla a Python íntegramente a fin de unificar el lenguaje con el que desarrollarla, ya que actualmente depende de Java con JavaFX, C++ y Python.
+
+\item En caso de continuar con la implementación que se ha seguido desde el proyecto anterior, habría que realizar mejoras en la estabilidad de la aplicación en Linux y por supuesto, pensar en nuevas formas de interacción sean intuitivas para el usuario.
+\end{itemize}

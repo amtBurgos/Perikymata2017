@@ -1,0 +1,147 @@
+\apendice{Documentación técnica de programación}
+
+\section{Introducción}
+En este apartado se describirán la estructura de directorios, el manual del programador, las pruebas del sistema y todos los elementos necesarios para poder compilar, instalar y ejecutar el proyecto.
+\section{Estructura de directorios}
+Tenemos dos aplicaciones, la aplicación principal en Java y el servidor en Python. Empezaremos por la estructura de directorios de la aplicación Java. 
+\begin{itemize}
+    \item \textit{src.es.ubu.lsi.perikymata}: Contiene el controlador principal \textit{MainApp.java} y los paquetes que desarrollan la aplicación siguiendo el patrón Modelo-Vista-Controlador.
+    \begin{itemize}
+        \item \textit{modelo}: contiene las clases del modelo, que permiten tener los datos del proyectos de forma persistente.
+        \item \textit{vista}: contiene los controladores y los archivos FXML que son las vistas de la aplicación Java.
+        \item \textit{util}: contiene el paquete \textit{sockets} y clases de utilidad que se usan para exportar los datos a \textit{csv}, obtener las perikymata de la imagen, leer datos de ficheros XML y hacer comprobaciones para la operación de \textit{stitching}.
+        \begin{itemize}
+            \item \textit{sockets}: Contiene la clase socket que hace de cliente y la clase que representa una petición al servidor.
+        \end{itemize}
+    \end{itemize}
+    \item \textit{src.rsc}: contiene el paquete \textit{stitching} y los iconos que utiliza la aplicación.
+    \begin{itemize}
+        \item \textit{stitching}: contiene los archivos relacionados con la operación de \textit{stitching}.
+        \begin{itemize}
+        \item \textit{bin}: contiene los ejecutable de \textit{stitching} para Windows\footnote{Para Windows solo tiene el ejecutable de 32 bits porque los sistemas de 64 si que pueden ejecutarlo.} y Linux (ficheros \textit{.ubu}).
+        \item \textit{source}: contiene el código fuente de la aplicación de \textit{stitching}. Está escrito en C++.
+    \end{itemize}
+    \end{itemize}    
+    \item \textit{src.test.es.ubu.lsi.perikymata}: contiene la pruebas unitarias sobre las clases de utilidad.
+\end{itemize}
+
+La aplicación en Python se encuentra en la carpeta \textit{PythonApp} y dentro encontramos la siguiente estructura:
+\begin{itemize}
+    \item \textit{src}:
+    \item \textit{Installation}:
+\end{itemize}
+
+\section{Manual del programador}
+A continuación, hablaremos de los aspectos relevantes que puedan servir de ayuda al programador y de las herramientas necesarias para continuar el desarrollo del proyecto.
+
+\subsection{Java 8, Eclipse y la aplicación Java}
+En primer lugar, será necesario descargar el kit de desarrollo de Java 8 (JDK\footnote{JDK 8: \url{https://goo.gl/KJ3ttC}.}). Se han utilizado expresiones \textit{lambda}, por lo que el uso de versiones anteriores queda descartado pues no tienen esa función. No deberían existir problemas en utilizar versiones superiores. 
+
+En el JDK ya encontramos lo necesario para poder usar JavaFX, pero para que sea más fácil el diseño de las vistas, se recomienda descargar JavaFX Scene Builder 2.0\footnote{Scene Builder: \url{https://goo.gl/X1vErn}.}, que es el que se ha usado en este proyecto. 
+
+La aplicación en Java ha sido desarrollada usando Eclipse y para cargarla solamente será necesario importar el proyecto. Podemos descargar Eclipse desde: \\
+\url{https://eclipse.org/}
+
+\subsection{Python 3, PyCharm y la aplicación servidor}
+Con Python 3, en concreto la versión 3.5, se ha desarrollado el servidor que atiende las peticiones de la aplicación Java para filtrar la imagen de la pieza dental. En las últimas distribuciones Linux viene incluido por defecto, pero en Windows es necesario instalarlo.
+
+Para el filtrado se ha utilizado \textit{Scikit-Image} 0.13.0, que es un paquete que contiene una gran cantidad de funciones orientadas al procesamiento de imagen para Python. 
+
+Tiene dependencias con otros paquetes como \textit{Numpy}, \textit{Sci-Py} y \textit{Matplotlib} por lo que para poder usarlo será necesario tenerlos instalados. 
+
+En Windows, la forma más rápida y cómoda de instalar todo es descargar e instalar Anaconda3, que incluye Python 3 y los paquetes que necesitamos, aunque también incluye muchos otros paquetes que no se utilizan.
+
+Encontramos Anaconda en el siguiente enlace:\\
+\url{https://www.continuum.io/downloads}.
+
+
+Otra opción es instalar Miniconda3 e instalar manualmente \textit{Scikit-Image} y sus dependencias, ya que Miniconda únicamente contiene el intérprete de Python y alguna funcionalidad muy básica.
+
+El IDE con el que se ha desarrollado todo el código Python, es PyCharm y se puede descargar desde aquí:\\ \url{https://www.jetbrains.com/pycharm/download/}
+
+Para cargar la aplicación de Python en PyCharm, únicamente importaremos la carpeta \textit{PythonApp}, que contiene el fichero que lanza el servidor y el fichero encargado del filtrado. 
+
+
+\subsection{\textit{Stitching}, OpenCV y Visual Studio}
+La versión anterior del proyecto \cite{perikymataV1} utilizaba OpenCV 3.1 para compilar la aplicación de \textit{stitching}, dando como resultado un ejecutable que solo corría en sistemas de 64 bits.
+
+Para poder tener un ejecutable de 32 bits se ha utilizado la versión 2.4.11 porque es la última que tiene compiladas las librerías de 32 bits para usar en Visual Studio. Tiene la restricción de que el último IDE compatible es Visual Studio 2013. Para que Visual Studio utilice las librerías estáticas, es necesario indicárselo en el apartado de propiedades del proyecto de \textit{stitching} que hayamos creado, como se muestra en la figura \ref{fig:img/ManualProgramador/StaticVisualStudio}
+
+\imagenDos{img/ManualProgramador/StaticVisualStudio}{Configuración de librerías estáticas}{1}
+
+
+OpenCV 2.4.11 lo descargaremos de aquí:\\ \url{https://goo.gl/9W8Mpr}
+
+Y Visual Studio 2013 desde aquí: \\
+\url{https://www.visualstudio.com/es/vs/older-downloads/}
+
+
+\subsection{Compilar la aplicación de \textit{stitching} en Ubuntu}
+
+Para compilar la aplicación de \textit{stitching} para Linux\footnote{En este proyecto, los desarrollos en Linux se han hecho utilizando Ubuntu 16.04 LTS.} se tiene que descargar OpenCV 2.4.11, compilar el código fuente usando \textit{CMake} para generar las librerías y después compilar la aplicación C++ configurando en modo estático las librerías de OpenCV mediante un archivo \textit{CMakeLists.txt}.
+
+Existen multitud de tutoriales\footnote{Manual de instalación en Linux de OpenCV: \url{https://goo.gl/L4go7Y}.} y \textit{scripts} que instalan OpenCV, uno de ellos que puede servir para instalar la versión 2.4.11 es el que hay en el siguiente repositorio: \\
+\url{https://gist.github.com/ceefour/9a54109d9e16050e6742}
+
+El fichero \textit{CMakeLists.txt} quedaría como en la figura \ref{fig:img/ManualProgramador/CMakeLists} y deberá estar situado en la misma carpeta que el código C++ de \textit{stitching}.
+
+\imagenDos{img/ManualProgramador/CMakeLists}{Fichero \textit{CMakeLists.txt}}{0.6}
+
+Después, únicamente abriríamos una terminal y ejecutaríamos los siguientes comandos:\\
+\centerline{\textit{\$ cmake .}}\\
+\centerline{\textit{\$ make}}
+
+\subsection{El filtrado}
+
+\section{Compilación, instalación y ejecución del proyecto}
+
+En primer lugar, se deberá descargar o clonar el proyecto desde el repositorio de GitHub: \\ \url{https://github.com/amtBurgos/Perikymata2017}
+
+En el repositorio no se encuentran las imágenes de las pruebas con \textit{Jupyter Notebooks}, los proyectos de prueba de la aplicación, ni los ficheros fuente de la documentación. Estos archivos vienen incluidos en el DVD que acompaña a la documentación.
+
+Para clonarlo (figura \ref{fig:img/ManualProgramador/importGit}), abrimos Eclipse y seleccionamos \textit{Importar}, \textit{Project from Git}, \textit{Clone URI} y pulsaremos los sucesivos \textit{siguientes} que aparezcan de modo que al final se habrá importado el proyecto. 
+
+\imagenDos{img/ManualProgramador/importGit}{Importar proyecto}{0.7}
+
+Una vez importado, tendremos una estructura como la figura \ref{fig:img/ManualProgramador/ProyectoImportado}
+
+\imagenDos{img/ManualProgramador/ProyectoImportado}{Proyecto importado}{0.42} 
+
+\newpage
+\subsection{Importar la aplicación Java}
+
+Para que la aplicación Java funcione, solo es necesario que esté la carpeta \textit{src}, aunque aquí nos aparezcan más.
+
+Para compilarlo
+
+La carpeta \textit{PythonApp} contiene los archivos necesarios para el funcionamiento del servidor de Python. Tiene que estar en la misma ruta del proyecto. Al igual que la carpeta \textit{prototypes}, no es necesaria que esté como carpeta en Eclipse (aunque sí tiene que estar físicamente), por lo que queda a elección del programador añadir un filtro de Eclipse para que la ignore.
+
+
+
+\subsection{Importar aplicación Python}
+Este paso se realiza después de descargabar el proyecto y configurarlo en Eclipse. Para poder importar la aplicación de Python, abriremos PyCharm y haremos clic en \textit{File}, \textit{Open} y seleccionaremos la carpeta \textit{PythonApp}.
+
+\subsection{Ejecución del proyecto}
+Para ejecutar el proyecto deberemos pulsar el icono de \textit{play} de Eclipse y seleccionar la aplicación principal \textit{MainApp} como en la figura \ref{fig:img/ManualProgramador/Ejecutar}.
+
+\imagenDos{img/ManualProgramador/Ejecutar}{Ejecutar aplicación}{0.42} 
+
+En Windows, esto hará que se habrá una ventana de comandos donde se ejecute el servidor, haciendo uso del fichero \textit{StartServerWindows.bat} que hay en la carpeta \textit{PythonApp} (por eso la aplicación Java y el servidor Python deben ir juntos). En Linux, el servidor corre en segundo plano, de modo que no se abrirá ninguna ventana.
+
+Se ha encontrado que, en algunas ocasiones, la aplicación Java no ha podido ejecutar el fichero \textit{.bat} por lo que si estamos en esa situación, habrá que ejecutar el servidor desde PyCharm primero y luego la aplicación Java desde Eclipse. En PyCharm solo hay que pulsar el botón de \textit{play} para arrancarlo.
+
+La aplicación Python no se compila porque es un lenguaje interpretado, sin embargo, la primera vez que se ejecute, tardará un rato en arrancar porque necesita crear algunos archivos en caché.
+
+\section{Pruebas del sistema}
+Disponemos de pruebas unitarias sobre las clases de utilidad en la aplicación Java. Para ello se ha seguido usando JUnit. Como nuevas pruebas respecto a la versión, encontramos la que prueba que la lanza un servidor y prueba que la clase \textit{ClientSocket.java} se conecte adecuadamente y mande una petición de filtrado válida al servido. También se prueba la clase \textit{StitchingUtil.java} que se encarga de validar y copiar los ficheros en la carpeta temporal para la operación de unión de imágenes. Podemos ver todas las pruebas unitarias en la figura \ref{fig:img/ManualProgramador/unitTest}. 
+
+\imagenDos{img/ManualProgramador/unitTest}{Pruebas unitarias}{0.55}
+
+En la carpeta \textit{prototypes} se incluyen los \textit{Jupyter notebooks} que han servido para realizar pruebas y desarrollar el filtrado final. Podemos ver todas las pruebas organizadas a partir del archivo \textit{Índice de pruebas y desarrollos.ipynb} (figura \ref{fig:img/ManualProgramador/pruebasNotebook}\footnote{En la figura se muestran las tres primeras.}). Cada prueba muestra el filtrado utilizado y como queda al aplicarlo a las imágenes de piezas dentales. 
+
+\newpage
+En el DVD aportado, esta carpeta contiene además todas las imágenes resultantes de los distintos filtrados. En cada subcarpeta se ha incluido un fichero \textit{info.txt} que explica el contenido 
+
+\imagenDos{img/ManualProgramador/pruebasNotebook}{Índice de pruebas}{0.6}
+
+Las pruebas sobre la interfaz se han realizado supervisando su correcto funcionamiento cada vez que se incluían cambios en los componentes.

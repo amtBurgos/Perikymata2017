@@ -1,0 +1,531 @@
+\documentclass[a4paper,11pt,twoside]{memoir}
+
+% Castellano
+\usepackage[spanish,es-tabla]{babel}
+\selectlanguage{spanish}
+\usepackage[utf8]{inputenc}
+\usepackage{placeins}
+\usepackage{subfig}
+%ANDRES
+\usepackage{float}
+\usepackage{amsmath, mathtools}
+
+\RequirePackage{booktabs}
+\RequirePackage[table]{xcolor}
+\RequirePackage{xtab}
+\RequirePackage{multirow}
+
+% Links
+\usepackage[colorlinks]{hyperref}
+\hypersetup{
+	allcolors = {red}
+}
+
+% Ecuaciones
+\usepackage{amsmath}
+
+% Rutas de fichero / paquete
+\newcommand{\ruta}[1]{{\sffamily #1}}
+
+% Párrafos
+\nonzeroparskip
+
+
+%%%%%%%%%%%   COMANDOS ANDRES  $$$$$$$$$$$$$$$$$$$$$$
+
+\usepackage{graphicx}
+\newcommand{\imagenCustom}[4]{
+	\begin{figure}[!h]
+		\centering
+		\includegraphics[width=#4\textwidth]{#1}
+		\caption{#2}
+		\label{fig:#3}
+	\end{figure}
+	\FloatBarrier
+}
+
+\newcommand{\imagenCustomSinRef}[5]{
+	\begin{figure}[!h]
+		\centering
+		\includegraphics[width=#4\textwidth]{#1}
+		\caption[#5]{#2}
+		\label{fig:#3}
+	\end{figure}
+	\FloatBarrier
+}
+%%%%%%%%%%%%%%%%%%%%%%%%%$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+
+% Imagenes
+\usepackage{graphicx}
+\newcommand{\imagen}[2]{
+	\begin{figure}[!h]
+		\centering
+		\includegraphics[width=0.9\textwidth]{#1}
+		\caption{#2}\label{fig:#1}
+	\end{figure}
+	\FloatBarrier
+}
+
+
+
+\newcommand{\imagenflotante}[2]{
+	\begin{figure}%[!h]
+		\centering
+		\includegraphics[width=0.9\textwidth]{#1}
+		\caption{#2}\label{fig:#1}
+	\end{figure}
+}
+
+
+
+% El comando \figura nos permite insertar figuras comodamente, y utilizando
+% siempre el mismo formato. Los parametros son:
+% 1 -> Porcentaje del ancho de página que ocupará la figura (de 0 a 1)
+% 2 --> Fichero de la imagen
+% 3 --> Texto a pie de imagen
+% 4 --> Etiqueta (label) para referencias
+% 5 --> Opciones que queramos pasarle al \includegraphics
+% 6 --> Opciones de posicionamiento a pasarle a \begin{figure}
+\newcommand{\figuraConPosicion}[6]{%
+  \setlength{\anchoFloat}{#1\textwidth}%
+  \addtolength{\anchoFloat}{-4\fboxsep}%
+  \setlength{\anchoFigura}{\anchoFloat}%
+  \begin{figure}[#6]
+    \begin{center}%
+      \Ovalbox{%
+        \begin{minipage}{\anchoFloat}%
+          \begin{center}%
+            \includegraphics[width=\anchoFigura,#5]{#2}%
+            \caption{#3}%
+            \label{#4}%
+          \end{center}%
+        \end{minipage}
+      }%
+    \end{center}%
+  \end{figure}%
+}
+
+%
+% Comando para incluir imágenes en formato apaisado (sin marco).
+\newcommand{\figuraApaisadaSinMarco}[5]{%
+  \begin{figure}%
+    \begin{center}%
+    \includegraphics[angle=90,height=#1\textheight,#5]{#2}%
+    \caption{#3}%
+    \label{#4}%
+    \end{center}%
+  \end{figure}%
+}
+% Para las tablas
+\newcommand{\otoprule}{\midrule [\heavyrulewidth]}
+%
+% Nuevo comando para tablas pequeñas (menos de una página).
+\newcommand{\tablaSmall}[5]{%
+ \begin{table}
+  \begin{center}
+   \rowcolors {2}{gray!35}{}
+   \begin{tabular}{#2}
+    \toprule
+    #4
+    \otoprule
+    #5
+    \bottomrule
+   \end{tabular}
+   \caption{#1}
+   \label{tabla:#3}
+  \end{center}
+ \end{table}
+}
+
+%
+% Nuevo comando para tablas pequeñas (menos de una página).
+\newcommand{\tablaSmallSinColores}[5]{%
+ \begin{table}[H]
+  \begin{center}
+   \begin{tabular}{#2}
+    \toprule
+    #4
+    \otoprule
+    #5
+    \bottomrule
+   \end{tabular}
+   \caption{#1}
+   \label{tabla:#3}
+  \end{center}
+ \end{table}
+}
+
+\newcommand{\tablaApaisadaSmall}[5]{%
+\begin{landscape}
+  \begin{table}
+   \begin{center}
+    \rowcolors {2}{gray!35}{}
+    \begin{tabular}{#2}
+     \toprule
+     #4
+     \otoprule
+     #5
+     \bottomrule
+    \end{tabular}
+    \caption{#1}
+    \label{tabla:#3}
+   \end{center}
+  \end{table}
+\end{landscape}
+}
+
+%
+% Nuevo comando para tablas grandes con cabecera y filas alternas coloreadas en gris.
+\newcommand{\tabla}[6]{%
+  \begin{center}
+    \tablefirsthead{
+      \toprule
+      #5
+      \otoprule
+    }
+    \tablehead{
+      \multicolumn{#3}{l}{\small\sl continúa desde la página anterior}\\
+      \toprule
+      #5
+      \otoprule
+    }
+    \tabletail{
+      \hline
+      \multicolumn{#3}{r}{\small\sl continúa en la página siguiente}\\
+    }
+    \tablelasttail{
+      \hline
+    }
+    \bottomcaption{#1}
+    \rowcolors {2}{gray!35}{}
+    \begin{xtabular}{#2}
+      #6
+      \bottomrule
+    \end{xtabular}
+    \label{tabla:#4}
+  \end{center}
+}
+
+%
+% Nuevo comando para tablas grandes con cabecera.
+\newcommand{\tablaSinColores}[6]{%
+  \begin{center}
+    \tablefirsthead{
+      \toprule
+      #5
+      \otoprule
+    }
+    \tablehead{
+      \multicolumn{#3}{l}{\small\sl continúa desde la página anterior}\\
+      \toprule
+      #5
+      \otoprule
+    }
+    \tabletail{
+      \hline
+      \multicolumn{#3}{r}{\small\sl continúa en la página siguiente}\\
+    }
+    \tablelasttail{
+      \hline
+    }
+    \bottomcaption{#1}
+    \begin{xtabular}{#2}
+      #6
+      \bottomrule
+    \end{xtabular}
+    \label{tabla:#4}
+  \end{center}
+}
+
+%
+% Nuevo comando para tablas grandes sin cabecera.
+\newcommand{\tablaSinCabecera}[5]{%
+  \begin{center}
+    \tablefirsthead{
+      \toprule
+    }
+    \tablehead{
+      \multicolumn{#3}{l}{\small\sl continúa desde la página anterior}\\
+      \hline
+    }
+    \tabletail{
+      \hline
+      \multicolumn{#3}{r}{\small\sl continúa en la página siguiente}\\
+    }
+    \tablelasttail{
+      \hline
+    }
+    \bottomcaption{#1}
+  \begin{xtabular}{#2}
+    #5
+   \bottomrule
+  \end{xtabular}
+  \label{tabla:#4}
+  \end{center}
+}
+
+
+
+\definecolor{cgoLight}{HTML}{EEEEEE}
+\definecolor{cgoExtralight}{HTML}{FFFFFF}
+
+%
+% Nuevo comando para tablas grandes sin cabecera.
+\newcommand{\tablaSinCabeceraConBandas}[5]{%
+  \begin{center}
+    \tablefirsthead{
+      \toprule
+    }
+    \tablehead{
+      \multicolumn{#3}{l}{\small\sl continúa desde la página anterior}\\
+      \hline
+    }
+    \tabletail{
+      \hline
+      \multicolumn{#3}{r}{\small\sl continúa en la página siguiente}\\
+    }
+    \tablelasttail{
+      \hline
+    }
+    \bottomcaption{#1}
+    \rowcolors[]{1}{cgoExtralight}{cgoLight}
+
+  \begin{xtabular}{#2}
+    #5
+   \bottomrule
+  \end{xtabular}
+  \label{tabla:#4}
+  \end{center}
+}
+
+
+
+\graphicspath{ {./img/} }
+
+% Capítulos
+\chapterstyle{bianchi}
+\newcommand{\capitulo}[2]{
+	\setcounter{chapter}{#1}
+	\setcounter{section}{0}
+	\chapter*{#2}
+	\addcontentsline{toc}{chapter}{#2}
+	\markboth{#2}{#2}
+}
+
+% Apéndices
+\renewcommand{\appendixname}{Apéndice}
+\renewcommand*\cftappendixname{\appendixname}
+
+\newcommand{\apendice}[1]{
+	%\renewcommand{\thechapter}{A}
+	\chapter{#1}
+}
+
+\renewcommand*\cftappendixname{\appendixname\ }
+
+% Formato de portada
+\makeatletter
+\usepackage{xcolor}
+\newcommand{\tutor}[1]{\def\@tutor{#1}}
+\newcommand{\course}[1]{\def\@course{#1}}
+\definecolor{cpardoBox}{HTML}{E6E6FF}
+\def\maketitle{
+  \null
+  \thispagestyle{empty}
+  % Cabecera ----------------
+\noindent\includegraphics[width=\textwidth]{cabecera}\vspace{1cm}%
+  \vfill
+  % Título proyecto y escudo informática ----------------
+  \colorbox{cpardoBox}{%
+    \begin{minipage}{.8\textwidth}
+      \vspace{.5cm}\Large
+      \begin{center}
+      \textbf{TFG del Grado en Ingeniería Informática}\vspace{.6cm}\\
+      \textbf{\LARGE\@title{}}
+      \end{center}
+      \vspace{.2cm}
+    \end{minipage}
+
+  }%
+  \hfill
+  \begin{minipage}{.20\textwidth}
+    \includegraphics[width=\textwidth]{escudoInfor}
+  \end{minipage}
+  \vfill
+  % Datos de alumno, curso y tutores ------------------
+  \begin{center}%
+  {%
+    \noindent\LARGE
+    Presentado por \@author{}\\ 
+    en Universidad de Burgos --- 3 de julio de 2017\\
+    Tutor: \@tutor{}\\
+  }%
+  \end{center}%
+  \null
+  \cleardoublepage
+  }
+\makeatother
+
+\newcommand{\nombre}{Andrés Miguel Terán} %%% cambio de comando
+
+% Datos de portada
+\title{Análisis paleontológico de piezas dentales 2.0}
+\author{\nombre}
+\tutor{Dr. José Francisco Díez Pastor \\ Tutor: Dr. Raúl Marticorena Sánchez}
+\date{3 de julio de 2017}
+
+\begin{document}
+
+\maketitle
+
+
+%\newpage\null\thispagestyle{empty}\newpage
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\thispagestyle{empty}
+
+
+\noindent\includegraphics[width=\textwidth]{cabecera}\vspace{1cm}
+
+\noindent D. José Francisco Díez Pastor y D. Raúl Marticorena Sánchez, profesores del departamento de Ingeniería Civil, área Lenguajes y Sistemas Informáticos.
+
+\noindent Exponen:
+
+\noindent Que el alumno D. \nombre, con DNI 71299912-G, ha realizado el Trabajo final de Grado en Ingeniería Informática titulado ``Análisis paleontológico de piezas dentales 2.0". 
+
+\noindent Y que dicho trabajo ha sido realizado por el alumno bajo la dirección de los que suscriben, en virtud de lo cual se autoriza su presentación y defensa. 
+
+\begin{center} %\large
+%3 de julio de 2017
+En Burgos, 3 de julio de 2017
+\end{center}
+
+\vfill\vfill\vfill
+
+% Author and supervisor
+\begin{minipage}{0.45\textwidth}
+\begin{flushleft} %\large
+Vº. Bº. del Tutor:\\[2cm] 
+D. José Francisco Díez Pastor
+\end{flushleft}
+\end{minipage}
+\hfill
+\begin{minipage}{0.45\textwidth}
+\begin{flushleft} %\large
+Vº. Bº. del Tutor:\\[2cm]
+D. Raúl Marticorena Sánchez
+\end{flushleft}
+\end{minipage}
+\hfill
+
+\vfill
+
+% para casos con solo un tutor comentar lo anterior
+% y descomentar lo siguiente
+%Vº. Bº. del Tutor:\\[2cm]
+%D. nombre tutor
+
+
+%%%%%%%%%%%%%%%%%% AGRADECIMIENTOS %%%%%%%%%%%
+\newpage\null\thispagestyle{empty}
+
+\newpage
+\pagenumbering{gobble}
+%\thispagestyle{empty}
+\renewcommand*\abstractname{Agradecimientos}
+\section*{\centerline{Agradecimientos}}
+
+Este proyecto pone punto y final a mi etapa de estudios en la universidad. \\
+En primer lugar, quiero agradecer a mis padres, Javier y María Jesús, el apoyo incondicional que me han brindado siempre, que ha sido de vital importancia para completar mi formación académica y mi desarrollo como persona.
+
+De forma especial, quiero dar las gracias a mis hermanas, Paula y Esther, por respetar mis horas de estudio, entenderme y sacarme una sonrisa en todo momento mostrándome su cariño.
+
+No puedo olvidarme de mis abuelos, tíos y primos cuyo apoyo y afecto nunca me han faltado. Gracias a mis amigos de siempre, que han sabido aceptar el tiempo que en ocasiones no he podido dedicarles, comprendiendo el esfuerzo y dedicación que estos estudios conllevan.
+
+Quiero dar reconocimiento a las grandes amistades que he forjado en mi paso por la universidad. Han compartido conmigo alegrías, inquietudes, y un sinfín de momentos inolvidables dentro y fuera de las aulas, y han sido para mí una fuente muy importante de motivación.
+
+Por último, también quiero dar gracias a la Universidad de Burgos y a todos los magníficos profesores con los que cuenta este grado, de los que he podido aprender mucho y me llevo una profesión que desarrollaré con pasión y orgullo durante toda mi vida.
+
+Por todo ello, gracias.
+
+
+\newpage\null\thispagestyle{empty}\newpage
+
+
+\frontmatter
+
+% Abstract en castellano
+\renewcommand*\abstractname{Resumen}
+\begin{abstract}
+La paleontología, junto con la antropología forense, permiten estudiar las poblaciones de la antigüedad a partir de sus restos fósiles. Uno de los elementos que más información nos dan son los dientes y en ellos las perikymata.
+
+Las perikymata son el resultado observable de la formación incremental del esmalte a lo largo de la corona de un diente; visualmente se asemejan a una serie de líneas.
+
+Tanto el número de perikymata, la distancia entre cada una y la zona de la corona en la que se encuentren son importantes para determinar el tipo de homínido al que pertenecen además de aportar información sobre la edad, la velocidad de crecimiento y posibles enfermedades que padeciese el individuo.
+
+La versión anterior de este proyecto \cite{perikymataV1} automatizaba parcialmente el trabajo a desarrollar para el estudio de las perikymata realizando una unión de imágenes de los fragmentos de un diente tomadas mediante un microscopio electrónico, aplicando varios filtros a la imagen resultante, automarcando las perikymata y finalmente extrayendo los datos.
+
+Este proyecto busca revisar, mejorar y corregir errores de cada una de las fases mediante modificaciones parciales o totales, siendo la del filtrado la más importante para la posterior detección de líneas, marcado de perikymata y extracción de datos.
+
+\end{abstract}
+
+\renewcommand*\abstractname{Descriptores}
+\begin{abstract}
+Perikymata, paleontología, unión de imágenes, filtrado de imágenes, detección de líneas.
+\end{abstract}
+
+\clearpage
+
+% Abstract en inglés
+\renewcommand*\abstractname{Abstract}
+\begin{abstract}
+Paleontology, together with forensic anthropology, allow us the study of ancient populations from their fossil remains. One of the elements that more information gives us are the teeth and within them the perikymata.
+
+Perikymata are the observable result of the incremental enamel formation along the crown of a tooth; they resemble a lines sequence.
+
+Number of perikymata, the distance between each other and the area of the crown in which they are found are important to determine the hominid specie to whom the tooth belongs. Futhermore they provide information about the age, the speed of development and possible diseases the individual may had had. 
+
+The previous version of this project \cite{perikymataV1} partially automated the work for the study of perikymata by stitching electron microscope tooth images, applying several filters to the final image, uto-marking perikymata and finally extracting the information.
+
+This project seeks to review, improve and correct errors of each stage performing partial or total modifications considering the filtering stage the most important one for the subsequent marking of perikymata and data extraction.
+
+\end{abstract}
+
+\renewcommand*\abstractname{Keywords}
+\begin{abstract}
+Perikymata, paleontology, image stitching, image filtering, lines detection.
+\end{abstract}
+
+\clearpage
+
+% Indices
+\tableofcontents
+
+\clearpage
+
+\listoffigures
+
+\clearpage
+
+%\listoftables
+\clearpage
+
+\mainmatter
+\include{./tex/1_Introduccion}
+\include{./tex/2_Objetivos_del_proyecto}
+\include{./tex/3_Conceptos_teoricos}
+\include{./tex/4_Tecnicas_y_herramientas}
+\include{./tex/5_Aspectos_relevantes_del_desarrollo_del_proyecto}
+\include{./tex/6_Trabajos_relacionados}
+\include{./tex/7_Conclusiones_Lineas_de_trabajo_futuras}
+
+
+\bibliographystyle{plain}
+\bibliography{bibliografia}
+
+%\bibliographystyle{IEEEtran}
+%\bibliography{IEEEabrv,bibliografia}
+
+\end{document}

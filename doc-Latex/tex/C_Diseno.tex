@@ -1,0 +1,79 @@
+\apendice{Especificación de diseño}
+
+\section{Introducción}
+En esta parte de los anexos se mostrará el diseño de la aplicación Java y el servidor desarrollado en Python encargado de darle el servicio de filtrado. Para ello, se incluirán elementos representativos como los diagramas de clases y de secuencia.
+
+Para su elaboración se ha hecho uso del programa de modelado Astah y de Object Aid, un plugin para Eclipse que permite realizar diagramas de clases y de secuencia.
+
+Las clases y operaciones desarrolladas son muy extensas para mostrarlas detalladamente, por los que se omitirán muchos detalles para ver lo esencial.
+
+\section{Diseño de datos}
+ 
+Para explicar el diseño de los datos, comenzaremos explicando la estructura exterior de la aplicación Java, que podemos ver en la figura \ref{fig:img/Diseno/PaquetesNivelCero}. En ella encontraremos los siguientes elementos:
+\begin{itemize}
+    \item Paquete \textit{es.ubu.lsi.perikymata}: contiene la aplicación principal, el modelo, las vistas y todas las clases utilizadas para desarrollar la funcionalidad de la aplicación.
+    \item Paquete \textit{rsc}: contiene las imágenes que usa la aplicación y los ejecutables para realizar la operación de \textit{stitching} en múltiples plataformas.
+    \item Paquete \textit{test.es.ubu.lsi.perikymata}: contiene las pruebas unitarias de la aplicación.
+\end{itemize}
+
+\imagenDos{img/Diseno/PaquetesNivelCero}{Estructura exterior}{0.5}
+
+Nos centraremos en el paquete que contiene la aplicación. En el encontraremos los paquetes y clases que se han continuado desarrollando según el patrón Modelo-Vista-Controlador (MVC) que heredamos de la aplicación anterior \cite{perikymataV1}. Los elementos que contiene son (figura \ref{fig:img/Diseno/MVC}):
+\begin{itemize}     
+    \item Paquete \textit{modelo}: están contenidas las clases necesarias para hacer persistentes los datos del proyecto.
+    \item Paquete \textit{vista}: contiene los archivos FXML que forman la interfaz de la aplicación y las clases que hacen de controlador para cada uno de ellos.
+    \item Paquete \textit{util}: Contiene las clases de utilidad para distintas operaciones.
+    \item \textit{MainApp.java}: Esta clase Java es el controlador principal de la aplicación. Permite lanzarla y se relaciona con los controladores de cada vista proporcionándoles acceso a elementos comunes y necesarios.
+\end{itemize}
+
+\imagenDos{img/Diseno/MVC}{Modelo-Vista-Controlador}{0.7}
+\pagebreak
+En la figura \ref{fig:img/Diseno/DiagramaGeneral} se muestran todas las clases y relaciones más importantes que intervienen en la aplicación. Se encuentran agrupadas por colores para facilitar su entendimiento. las agrupaciones se corresponden con los paquetes MCV que hemos descrito anteriormente.
+
+\imagenDos{img/Diseno/DiagramaGeneral}{Diagrama general de clases}{1.02}
+
+\begin{itemize}
+
+    \item La agrupación en color rojo contiene las clases del paquete \textit{vista} y son los controladores de los archivos FXML. Cada una de estas clases tiene como atributos los componentes definidos en los archivos FXML. Además, los métodos contienen el comportamiento de cada componente; estos son utilizados cuando el usuario interactúa con la aplicación (pulsar un botón, mover el ratón, desencadenar eventos, etc).
+    \item La agrupación azul muestra el controlador principal \textit{MainApp.java} que lanza aplicación principal entre otras cosas, como comentábamos anteriormente.
+    \item La agrupación en color morado se corresponde con el paquete \textit{modelo}. Las clases \textit{Project.java} y \textit{Measure.java} son las utilizadas para la persistencia de los datos de la aplicación.
+    \item La agrupación en color naranja se corresponde con el paquete \textit{util} y contiene clases relacionadas con la exportación a \textit{csv}, la operación de \textit{stitching} y el cálculo de perikymata . Encontramos además, un subpaquete \textit{sockets} que contiene las clases usadas para realizar las peticiones al servidor de Python.   
+\end{itemize}
+
+La aplicación de Python tiene únicamente dos ficheros contenidos en la carpeta \textit{src}, uno encargado de lanzar el servidor y otro que contiene el procedimiento necesario para filtrar las imágenes, como vemos en la figura \ref{fig:img/Diseno/PythonDiagram}.
+
+\imagenDos{img/Diseno/PythonDiagram}{Clases del servidor Python}{0.6}
+
+\section{Diseño procedimental}
+En este apartado comentaremos, de forma sencilla, el diseño de los procedimientos más importantes  que se llevan a cabo en la aplicación. Para ello nos apoyaremos en los diagramas de secuencia que veremos a continuación.
+
+\subsection{Stitching}
+En esta fase el usuario selecciona (mediante un botón) una imagen completa de un diente o varias imágenes que se unen en una usando el ejecutable de \textit{stitching} adecuado al sistema operativo y la arquitectura. Estos ejecutables los encontramos en el paquete \textit{rsc.stitching.bin}. La aplicación se encarga copiar las imágenes a la carpeta temporal definida y de crear los argumentos para el ejecutable con la ruta de las imágenes a juntar. Como resultado obtenemos una imagen completa del diente cargada en la aplicación.
+
+Podemos observar este procedimiento en la figura \ref{fig:img/Diseno/StitchingSecuence}.
+\imagenDos{img/Diseno/StitchingSecuence}{Diagrama de secuencia para la operación de \textit{stitching}}{0.8}
+
+\subsection{Rotación y recortado de imagen}
+Esta fase sirve para seleccionar la corona dental en la imagen y rotarla para hacer que las perikymata queden orientadas de forma vertical, así queda preparada la imagen para la fase de filtrado. Además, también se guarda la medida que servirá para saber la escala de la imagen y poder hacer bien el cálculo de la distancia de las perikymata.
+
+Este proceso se describe de forma sencilla en la figura \ref{fig:img/Diseno/RotationSecuence}
+\imagenDos{img/Diseno/RotationSecuence}{Diagrama de secuencia para rotación, recortado y medida de escala}{1}
+
+\pagebreak
+\subsection{Filtrado de la imagen}
+Este es el principio de la última fase de la aplicación (figura \ref{fig:img/Diseno/FilterSecuence}). El usuario usa el botón de filtrado por defecto o usa el filtrado avanzado modificando los parámetros que desee. 
+
+La aplicación Java se encarga de mandar una petición al servidor de Python vía sockets para filtrar la imagen. Cuando acaba de filtrar se lo comunica de nuevo a la aplicación principal. 
+
+Luego, se cargan en la aplicación dos imágenes filtradas, a una solo se la ha aplicado el filtro y a la otra además se la ha superpuesto la original. Así el usuario puede ver las perikymata detectadas con el proceso de filtrado sobre la original.
+
+\imagenDos{img/Diseno/FilterSecuence}{Diagrama de secuencia para el filtrado}{1}
+
+\newpage
+\subsection{Recuento de perikymata y exportación de datos}
+Este paso pone fin a la última fase de la aplicación (figura \ref{fig:img/Diseno/CountExportSecuence}).\\
+A partir de las imágenes filtradas que hemos comentado, el usuario pulsa un botón para dibujar una línea donde mejor se vean las perikymata y después pulsa otro botón para que la aplicación marque las que encuentre sobre esa línea y se las muestre. Después, con un botón, se exportan los resultados a un archivo \textit{csv}. 
+
+Los datos de donde se ha dibujado la línea y las perikymata marcadas también se guardan en el fichero XML del proyecto. También se permite al usuario que borre o añada perikymata donde sea necesario y para ello tenemos dos botones.
+
+\imagenDos{img/Diseno/CountExportSecuence}{Diagrama de secuencia para el filtrado}{1}
